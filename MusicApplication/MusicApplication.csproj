@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resource\Font\OpenSans\Apache License.txt" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-Bold.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-BoldItalic.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-ExtraBold.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-ExtraBoldItalic.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-Italic.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-Light.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-LightItalic.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-Regular.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-Semibold.ttf" />
+    <None Remove="Resource\Font\OpenSans\OpenSans-SemiboldItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Font\OpenSans\Apache License.txt" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-Bold.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-BoldItalic.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-ExtraBold.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-ExtraBoldItalic.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-Italic.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-Light.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-LightItalic.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-Regular.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-Semibold.ttf" />
+    <EmbeddedResource Include="Resource\Font\OpenSans\OpenSans-SemiboldItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Resource\Style\Other.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Style\Button.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Style\Geometry.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Style\Listview.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Style\Scrollbar.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Style\ScrollViewer.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Style\Slider.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Theme\Dark.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resource\Theme\Light.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

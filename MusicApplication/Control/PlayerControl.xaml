@@ -1,0 +1,243 @@
+﻿<UserControl x:Class="MusicApplication.Control.PlayerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicApplication.Control" d:DataContext="{d:DesignInstance Type=local:PlayerControlViewModel}"
+             mc:Ignorable="d" x:Name="UserControl" Background="{StaticResource PlayerControl.Background}"
+             d:DesignWidth="800" d:Foreground="White" Height="55" Padding="10,0,20,0">
+    <UserControl.Resources>
+
+        
+        <ControlTemplate x:Key="MediaPlayButtonTemplate" TargetType="{x:Type Button}">
+            <Border Background="Transparent">
+                <Path x:Name="contentPresenter" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True" VerticalAlignment="Center" 
+                                  Data="F1 M 7.24 2.52 C 6.813333 2.280001 6.366666 2.206669 5.9 2.300001 C 5.433333 2.393335 5.046666 2.613335 4.74 2.960001 C 4.433333 3.306669 4.28 3.733335 4.28 4.240001 L 4.28 16 C 4.28 16.506668 4.433333 16.933334 4.74 17.280001 C 5.046666 17.626667 5.433333 17.846668 5.9 17.940001 C 6.366666 18.033335 6.813333 17.960001 7.24 17.720001 L 17.719999 11.560001 C 18.093332 11.346668 18.346664 11.053335 18.48 10.680001 C 18.613333 10.306668 18.613333 9.933334 18.48 9.560001 C 18.346664 9.186668 18.093332 8.893334 17.719999 8.680001 Z"
+                      Fill="{TemplateBinding Background}" Stretch="Uniform" Height="12" Width="12"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="MediaBackButtonTemplate" TargetType="{x:Type Button}">
+            <Border Background="Transparent">
+                <Path x:Name="contentPresenter" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True" VerticalAlignment="Center" 
+                                  Data="F1 M 17.52 3.440001 C 17.52 3.226667 17.433332 3.040001 17.26 2.880001 C 17.086666 2.720001 16.886665 2.633335 16.66 2.620001 C 16.433332 2.606668 16.24 2.686668 16.08 2.860001 C 15.919998 3.033335 15.839998 3.226667 15.839999 3.440001 L 15.839999 16.800001 C 15.839998 17.013334 15.919998 17.200001 16.08 17.360001 C 16.24 17.52 16.433332 17.6 16.66 17.6 C 16.886665 17.6 17.08 17.52 17.24 17.360001 C 17.4 17.200001 17.48 17.013334 17.48 16.800001 L 17.48 3.440001 Z M 2.52 4.240001 C 2.493333 3.866667 2.606667 3.546667 2.86 3.280001 C 3.113333 3.013334 3.426666 2.853334 3.8 2.800001 C 4.173333 2.746668 4.506666 2.826668 4.8 3.040001 L 13.52 9.320001 C 13.946667 9.613335 14.153333 10.020001 14.139999 10.540001 C 14.126666 11.060001 13.906666 11.453335 13.48 11.720001 L 4.76 17.320002 C 4.44 17.533335 4.099999 17.606667 3.74 17.540001 C 3.38 17.473335 3.086666 17.306667 2.86 17.040001 C 2.633333 16.773335 2.52 16.453335 2.52 16.080002 Z "
+                                  Fill="{TemplateBinding Background}" Stretch="Uniform" Height="12" Width="12">
+                    <Path.RenderTransform>
+                        <ScaleTransform ScaleX="-1" CenterX="5.9"/>
+                    </Path.RenderTransform>
+                </Path>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="MediaForwardButtonTemplate" TargetType="{x:Type Button}">
+            <Border Background="Transparent">
+                <Path x:Name="contentPresenter" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True" VerticalAlignment="Center" 
+                                  Data="F1 M 17.52 3.440001 C 17.52 3.226667 17.433332 3.040001 17.26 2.880001 C 17.086666 2.720001 16.886665 2.633335 16.66 2.620001 C 16.433332 2.606668 16.24 2.686668 16.08 2.860001 C 15.919998 3.033335 15.839998 3.226667 15.839999 3.440001 L 15.839999 16.800001 C 15.839998 17.013334 15.919998 17.200001 16.08 17.360001 C 16.24 17.52 16.433332 17.6 16.66 17.6 C 16.886665 17.6 17.08 17.52 17.24 17.360001 C 17.4 17.200001 17.48 17.013334 17.48 16.800001 L 17.48 3.440001 Z M 2.52 4.240001 C 2.493333 3.866667 2.606667 3.546667 2.86 3.280001 C 3.113333 3.013334 3.426666 2.853334 3.8 2.800001 C 4.173333 2.746668 4.506666 2.826668 4.8 3.040001 L 13.52 9.320001 C 13.946667 9.613335 14.153333 10.020001 14.139999 10.540001 C 14.126666 11.060001 13.906666 11.453335 13.48 11.720001 L 4.76 17.320002 C 4.44 17.533335 4.099999 17.606667 3.74 17.540001 C 3.38 17.473335 3.086666 17.306667 2.86 17.040001 C 2.633333 16.773335 2.52 16.453335 2.52 16.080002 Z "
+                                  Fill="{TemplateBinding Background}" Stretch="Uniform" Height="12" Width="12"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="MediaPauseButtonTemplate" TargetType="{x:Type Button}">
+            <Border Background="Transparent">
+                <Path x:Name="contentPresenter" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True" VerticalAlignment="Center" 
+                                  Data="F1 M 12 3.6 C 12 3.200003 12.146666 2.853334 12.44 2.560001 C 12.733333 2.266668 13.093332 2.120001 13.52 2.120001 L 15.52 2.120001 C 15.919998 2.120001 16.266665 2.266668 16.559999 2.560001 C 16.853333 2.853334 17 3.213335 17 3.640001 L 17 16.6 C 17 17.026669 16.853333 17.386667 16.559999 17.68 C 16.266665 17.973335 15.906665 18.120001 15.48 18.120001 L 13.52 18.120001 C 13.093332 18.120001 12.733333 17.973335 12.44 17.68 C 12.146666 17.386667 12 17.026669 12 16.6 Z M 3 3.6 C 3 3.200003 3.146667 2.853334 3.44 2.560001 C 3.733333 2.266668 4.093333 2.120001 4.52 2.120001 L 6.52 2.120001 C 6.92 2.120001 7.266666 2.266668 7.56 2.560001 C 7.853333 2.853334 8 3.213335 8 3.640001 L 8 16.6 C 8 17.026669 7.853333 17.386667 7.56 17.68 C 7.266666 17.973335 6.906667 18.120001 6.48 18.120001 L 4.52 18.120001 C 4.093333 18.120001 3.733333 17.973335 3.44 17.68 C 3.146667 17.386667 3 17.026669 3 16.6 Z" Fill="{TemplateBinding Background}"
+                      Stretch="Uniform" Height="12" Width="12"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="MediaButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource MediaButton.Background}"/>
+            <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+        </Style>
+
+
+        <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
+            <Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Grid x:Name="TemplateRoot" ClipToBounds="True" Background="Transparent">
+                            <Rectangle x:Name="PART_Track" Fill="{TemplateBinding Background}" Height="4" VerticalAlignment="Center"/>
+                            <Border x:Name="PART_Indicator" ClipToBounds="True" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}" Height="4" VerticalAlignment="Center"/>
+                            </Border>
+                            <!--#region NewRegion<Border Width="{Binding Width,ElementName=PART_Indicator}" HorizontalAlignment="Left" ClipToBounds="False">
+                                <Ellipse x:Name="thumb" Fill="White" Height="{TemplateBinding Height}" Width="{TemplateBinding Height}" VerticalAlignment="Center" HorizontalAlignment="Right" SnapsToDevicePixels="True" ClipToBounds="False"/>
+                            </Border> -->
+                            <!--#endregion-->
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Maximum" Value="0">
+                                <Setter TargetName="PART_Indicator" Property="Visibility" Value="Hidden"/>
+                                <Setter TargetName="PART_Track" Property="Rectangle.Fill" Value="{StaticResource MediaSlider.Backgound.Deactive}"/>
+                            </Trigger>
+                            <!--Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Indicator" Storyboard.TargetProperty="Height"
+                                                             To="7.1" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="PART_Track" Storyboard.TargetProperty="Height"
+                                                             To="7.1" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Indicator" Storyboard.TargetProperty="Height"
+                                                             To="4" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="PART_Track" Storyboard.TargetProperty="Height"
+                                                             To="4" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                    
+                                </Trigger.ExitActions>
+                            </Trigger-->
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <local:PlayerControlViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type UserControl}">
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}">                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Style>
+    <Border Padding="5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding CurrentTimeString}" Margin="5,0" d:Text="0:00"/>
+
+            <Slider Visibility="Hidden"   Grid.Column="2" VerticalAlignment="Center" TickPlacement="None" Minimum="0" IsSelectionRangeEnabled="True" IsMoveToPointEnabled="True" SelectionStart="0" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" Foreground="#FFA77825" BorderBrush="{x:Null}" Background="#FF6B6B6B" ToolTip="{Binding CurrentTimeString}"
+                       Value="{Binding CurrentTimeTotalSeconds,Mode=TwoWay}"
+                       Maximum="{Binding TotalTimeTotalSeconds}"/>
+
+            <ProgressBar x:Name="TimeProgressbar"  Grid.Column="3" Style="{StaticResource ProgressBarStyle1}" VerticalAlignment="Center" Height="26" Margin="10,0" ClipToBounds="False" Maximum="{Binding TotalTimeTotalSeconds}"
+                     MouseMove="TimeProgressBar_MouseMove" MouseUp="ProgressBar_MouseUp" MouseDown="ProgressBar_MouseDown" Value="{Binding CurrentTimeTotalSeconds}"
+                         ValueChanged="TimeProgressBar_ValueChanged"
+                         Foreground="{StaticResource MediaSlider.Foreground}" Background="{StaticResource MediaSlider.Backgound.Active}"/>
+            <Ellipse x:Name="EllipseThumb" Height="12" Width="12" Fill="{StaticResource SliderThumb.Static.Background}" Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="3" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TotalTimeString}" Margin="5,0" d:Text="0:00"/>
+
+            <ProgressBar x:Name="VolumeProgressbar" Grid.Column="4" Height="26" Width="100" Style="{StaticResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
+                         Maximum="1" Minimum="0" Value="{Binding Volume,Mode=TwoWay}" Foreground="{StaticResource MediaSlider.Foreground}" Background="{StaticResource MediaSlider.Backgound.Active}"
+                         MouseMove="VolumeProgressbar_MouseMove" MouseDown="ProgressBar_MouseDown" MouseUp="ProgressBar_MouseUp" ValueChanged="VolumeProgressbar_ValueChanged"/>
+            <Ellipse x:Name="EllipseThumbVol" Height="12" Width="12" Fill="{StaticResource SliderThumb.Static.Background}" Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="4" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="29,0,0,0"/>
+
+            <!--Slider x:Name="VolumeSlider" Grid.Column="4" Width="100" HorizontalAlignment="Right" TickPlacement="None" IsSelectionRangeEnabled="True" SelectionStart="0" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" Foreground="{StaticResource MediaSlider.Foreground}" Background="{StaticResource MediaSlider.Backgound.Active}" VerticalAlignment="Center"
+                    Minimum="0" Maximum="1" LargeChange="0.05" IsMoveToPointEnabled="True" Margin="8"
+                    Value="{Binding Volume,Mode=TwoWay}" BorderBrush="{x:Null}"/-->
+
+            <Grid Grid.Row="1" Grid.Column="0" Height="37" Width="111" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Command="{Binding PreviousAudioFileCommand }">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediaButton}">
+                            <Setter Property="Template" Value="{StaticResource MediaBackButtonTemplate}"/>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Grid.Column="2"
+                    Command="{Binding PlayPauseCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediaButton}">
+                            <Setter Property="Template" Value="{StaticResource MediaPlayButtonTemplate}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPlaying,Mode=OneWay}" Value="True">
+                                    <Setter Property="Template" Value="{StaticResource MediaPauseButtonTemplate}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Grid.Column="3" Command="{Binding NextAudioCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediaButton}">
+                            <Setter Property="Template" Value="{StaticResource MediaForwardButtonTemplate}"/>
+                        </Style>
+                    </Button.Style>
+
+                </Button>
+            </Grid>
+            <Button Content="o" VerticalAlignment="Top" HorizontalAlignment="Left" Background="Black" BorderThickness="0"
+            Command="{Binding OpenFileCommand}" Visibility="Hidden"/>
+
+
+        </Grid>
+    </Border>
+</UserControl>

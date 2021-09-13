@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Geometry x:Key="RestoreGeometry">F1 M 20 15.996094 L 15.996094 15.996094 L 15.996094 20 L 0 20 L 0 4.003906 L 4.003906 4.003906 L 4.003906 0 L 20 0 Z M 14.003906 5.996094 L 2.001953 5.996094 L 2.001953 17.998047 L 14.003906 17.998047 Z M 17.998047 2.001953 L 5.996094 2.001953 L 5.996094 4.003906 L 15.996094 4.003906 L 15.996094 14.003906 L 17.998047 14.003906 Z</Geometry>
+    <Geometry x:Key="CloseGeometry">F1 M 11.416016 10 L 20 18.583984 L 18.583984 20 L 10 11.416016 L 1.416016 20 L 0 18.583984 L 8.583984 10 L 0 1.416016 L 1.416016 0 L 10 8.583984 L 18.583984 0 L 20 1.416016 Z</Geometry>
+    <Geometry x:Key="MinimizeGeometry">F1 M 20 7.998047 L 20 10 L 0 10 L 0 7.998047 Z</Geometry>
+    <Geometry x:Key="MaximizeGeometry">F1 M 20 0 L 20 20 L 0 20 L 0 0 Z M 17.998047 2.001953 L 2.001953 2.001953 L 2.001953 17.998047 L 17.998047 17.998047 Z</Geometry>
+
+</ResourceDictionary>

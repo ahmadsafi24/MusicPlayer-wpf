@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="MusicApplication.View.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicApplication.View"
+             xmlns:control="clr-namespace:MusicApplication.Control"
+             xmlns:viewmodel="clr-namespace:MusicApplication.ViewModel"
+             mc:Ignorable="d"
+             x:Name="mainview" d:DesignWidth="673.449" d:DesignHeight="440.302"
+             Background="{StaticResource MainView.Background}"
+             Foreground="{StaticResource MainView.Foreground}"
+             Padding="0">
+    <DockPanel LastChildFill="True">
+        <control:Menubar DockPanel.Dock="Top" Background="#19878787"/>
+        <control:PlayerControl DockPanel.Dock="Bottom" BorderBrush="#595B5B5B" BorderThickness="0,1,0,0"/>
+        <control:MediaInfoCard DockPanel.Dock="Bottom"/>
+        <Grid DockPanel.Dock="Top" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="170"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <control:Playlist Grid.Column="0"/>
+            <GridSplitter Width="5"/>
+        </Grid>
+    </DockPanel>
+</UserControl>

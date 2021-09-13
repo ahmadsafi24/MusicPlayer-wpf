@@ -227,3 +227,7 @@ FakesAssemblies/
 *.pdb
 *.dll
 *.v2
+*.pubxml
+MusicApplication/.vscode/launch.json
+MusicApplication/.vscode/tasks.json
+MusicApplication/Properties/PublishProfiles/FolderProfile.pubxml

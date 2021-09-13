@@ -227,3 +227,4 @@ FakesAssemblies/
 *.pdb
 *.dll
 *.v2
+*.pubxml

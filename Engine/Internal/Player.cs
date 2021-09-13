@@ -57,23 +57,12 @@ namespace Engine.Internal
             {
                 try
                 {
-                    if (value < 0)
-                    {
-                        WaveOutEvent.Volume = ToSingle(0);
-                    }
-                    else if (value > 1)
-                    {
-                        WaveOutEvent.Volume = ToSingle(1);
-                    }
-                    else
-                    {
-                        WaveOutEvent.Volume = ToSingle(value);
-                    }
+                    WaveOutEvent.Volume = value < 0 ? ToSingle(0) : value > 1 ? ToSingle(1) : ToSingle(value);
                     Events.AllEvents.InvokeVolumeChanged();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    _ = MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -94,14 +83,9 @@ namespace Engine.Internal
 
         internal static TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
 
-        private static string TimeSpanToString(TimeSpan timeSpan, string stringformat)
-        {
-            return timeSpan.ToString(stringformat);
-        }
+        internal static string CurrentTimeString => CurrentTime.ToString(stringformat);
 
-        internal static string CurrentTimeString => TimeSpanToString(CurrentTime, stringformat);
-
-        internal static string TotalTimeString => TimeSpanToString(TotalTime, stringformat);
+        internal static string TotalTimeString => TotalTime.ToString(stringformat);
         #endregion
 
         #region Tasks
@@ -130,7 +114,7 @@ namespace Engine.Internal
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    _ = MessageBox.Show(ex.Message);
                     throw;
                 }
 
@@ -193,21 +177,20 @@ namespace Engine.Internal
             CurrentPlaybackState = PlaybackState.Closed;
         }
 
-        internal static void Seek(double totalseconds)
+        internal static async Task SeekAsync(double totalseconds)
         {
             try
             {
-
-                CurrentTime = TimeSpan.FromSeconds(totalseconds);
+                await Task.Run(() =>
+                {
+                    CurrentTime = TimeSpan.FromSeconds(totalseconds);
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
-                throw;
+                _ = MessageBox.Show(ex.Message);
             }
         }
-
-
 
         internal static void ChangeEqualizerBand(int bandIndex, float Gain, float Bandwidth, float Frequency)
         {
@@ -348,7 +331,6 @@ namespace Engine.Internal
             Close();
             GC.Collect();
         }
-
 
         internal static async void Open()
         {

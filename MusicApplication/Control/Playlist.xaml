@@ -10,10 +10,10 @@
         <local:PlaylistViewModel/>
     </UserControl.DataContext>
     <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+        <Grid DockPanel.Dock="Top">
             <TextBlock Text="Playlist"/>
-            <TextBlock Text=""/>
-        </StackPanel>
+            <!--TextBlock Text="{Binding Playlist.Count,FallbackValue=0}" HorizontalAlignment="Right"/-->
+        </Grid>
         <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,0">
             <StackPanel Orientation="Horizontal">
                 <Button Content="Add" Click="ButtonAdd_Click"/>

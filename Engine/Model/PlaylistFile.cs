@@ -92,22 +92,25 @@ namespace Engine.Model
         internal async void AddRange(string[] filepathlist)
         {
             await Task.Run(() =>
-              {
-                  foreach (string path in filepathlist)
-                  {
-                      FileList.Add(new AudioFile(path));
-                  }
-              });
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    foreach (string path in filepathlist)
+                    {
+                        FileList.Add(new AudioFile(path));
+                    }
+                });
+            });
             FireUpdatedEvent();
         }
 
-        internal void ClearAndNotify()
+        internal void Clear()
         {
             FileList.Clear();
             FireUpdatedEvent();
         }
 
-        internal void Clear()
+        internal void ClearSilent()
         {
             FileList.Clear();
             FileList = null;

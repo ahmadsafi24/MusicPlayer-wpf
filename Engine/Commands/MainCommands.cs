@@ -20,7 +20,7 @@ namespace Engine.Commands
         public static void Pause() => Player.Pause();
         public static void Close() => Player.Close();
 
-        public static void Seek(double value) => Player.Seek(value);
+        public static void Seek(double value) => Player.SeekAsync(value);
 
         public static void VolumeUp(double value) => ChangeVolume(Player.Volume += value);
         public static void VolumeDown(double value) => ChangeVolume(Player.Volume -= value);

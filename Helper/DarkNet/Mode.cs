@@ -1,6 +1,8 @@
-﻿namespace darknet {
+﻿namespace darknet
+{
 
-    public enum Mode {
+    public enum Mode
+    {
 
         Auto,
         Light,

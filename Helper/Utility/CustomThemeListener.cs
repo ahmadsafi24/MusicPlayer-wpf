@@ -65,9 +65,7 @@ namespace Helper.Utility
             Update();
         }
 
-        public static bool Getmode()
-        {
-            return CurrentIsDark;
-        }
+        public static bool IsDark { get => CurrentIsDark; }
     }
 }
+

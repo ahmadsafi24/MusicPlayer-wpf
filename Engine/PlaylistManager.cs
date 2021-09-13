@@ -1,19 +1,27 @@
 ﻿using Engine.Events.Base;
 using Engine.Model;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Engine
 {
     public static class PlaylistManager
     {
+        public static void Initialize()
+        {
+            Playlist.Add(new PlaylistFile());
+        }
         public static int PlaylistCurrentFileIndex { get; set; }
-        public static PlaylistFile Playlist { get; } = new();
+        public static List<PlaylistFile> Playlist { get; set; } = new();
         public static event EventHandlerNull PlaylistCurrentFileChanged;
 
         public static AudioFile CurrentFileTag { get; set; }
+        public static List<AudioFile> PlaylistItems { get => Playlist[0].FileList; }
 
         private static void FindFileInPlaylist(string file)
         {
-            int i = Playlist.FindItem(file);
+            int i = Playlist[0].FindItem(file);
             if (i != -1)
             {
                 PlaylistCurrentFileIndex = i;
@@ -23,7 +31,7 @@ namespace Engine
 
         public static void FindCurrentFile()
         {
-            int i = Playlist.FindItem(CurrentFileTag?.FilePath);
+            int i = Playlist[0].FindItem(CurrentFileTag?.FilePath);
             if (i != -1)
             {
                 PlaylistCurrentFileIndex = i;
@@ -33,14 +41,27 @@ namespace Engine
 
         //
 
-        public static void Add(string File)
+        public static void Add(int PlaylistIndex, string File)
         {
-            Playlist.AddItem(File);
+            Playlist[PlaylistIndex].AddItem(File);
         }
 
-        public static void Remove(int index)
+        public static async Task AddRangeAsync(int PlaylistIndex, string[] Files)
         {
-            Playlist.FileList.RemoveAt(index);
+            await Task.Run(() =>
+            {
+                Playlist[PlaylistIndex].AddRange(Files);
+            });
+        }
+
+        public static void Remove(int PlaylistIndex, int index)
+        {
+            Playlist[PlaylistIndex].FileList.RemoveAt(index);
+        }
+
+        public static void Clear()
+        {
+            Playlist[0].Clear();
         }
         //
     }

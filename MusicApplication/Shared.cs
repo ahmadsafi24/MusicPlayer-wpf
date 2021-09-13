@@ -1,7 +1,5 @@
-﻿using System.Windows;
-using Helper.Utility;
+﻿using Helper.Utility;
 using Engine.Commands;
-using Engine.Events;
 
 namespace MusicApplication
 {
@@ -11,9 +9,6 @@ namespace MusicApplication
         {
             OpenFileLocation.Open(MainCommands.Source);
         }
-        //public static string TimeSpanToStringFormat { get; } = "mm\\:ss";
-
-
     }
 
 }

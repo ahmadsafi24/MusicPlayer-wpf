@@ -32,7 +32,7 @@
     <StackPanel  VerticalAlignment="Top" Background="Transparent">
         <Grid x:Name="grid" Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="62"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -41,31 +41,14 @@
                 <RowDefinition Height="19"/>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
-            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="4" Background="{StaticResource MediaCover.Background}" BorderBrush="{StaticResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5">
+            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="0" BorderBrush="{StaticResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5">
                 <Border.Effect>
                     <DropShadowEffect Color="{Binding Color, Source={StaticResource MediaCover.Background}}" ShadowDepth="0" Opacity="0.495" BlurRadius="20" />
                 </Border.Effect>
-                <Border.Style>
-                    <Style TargetType="{x:Type Border}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding TagFile.Cover}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                <Image Source="{Binding TagFile.Cover}" RenderOptions.BitmapScalingMode="HighQuality" ClipToBounds="True">
-                    <Image.Style>
-                        <Style TargetType="{x:Type Image}">
-                            <Setter Property="Visibility" Value="Visible"/>
-                            <Style.Triggers>
-                                <Trigger Property="Source" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
+                <Border.Background>
+                    <SolidColorBrush Color="{Binding Color, Source={StaticResource MediaCover.Background}}" Opacity="0.2" />
+                </Border.Background>
+                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" ClipToBounds="True"/>
             </Border>
             <TextBlock Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding TagFile.Artist,FallbackValue=Artist}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="DemiBold"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding TagFile.Title,FallbackValue=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>

@@ -11,7 +11,7 @@
     </UserControl.DataContext>
     <DockPanel LastChildFill="True">
         <Grid DockPanel.Dock="Top">
-            <TextBlock Text="Playlist"/>
+            <TextBlock Text="Playlist" Margin="5"/>
             <!--TextBlock Text="{Binding Playlist.Count,FallbackValue=0}" HorizontalAlignment="Right"/-->
         </Grid>
         <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,0">
@@ -32,22 +32,13 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel x:Name="grid"  Background="Transparent" MouseLeftButtonDown="Item_MouseLeftButtonDown" Tag="{Binding FilePath}" Orientation="Horizontal">
-                        <Border d:Visibility="Collapsed"  Height="46" HorizontalAlignment="Left" BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}" BorderThickness="1" Margin="2" CornerRadius="2" Grid.RowSpan="3">
+                    <StackPanel x:Name="grid"  Background="Transparent" MouseLeftButtonDown="Item_MouseLeftButtonDown" Orientation="Horizontal">
+                        <Border d:Visibility="Collapsed"  Height="46" Width="46" HorizontalAlignment="Left" BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}" BorderThickness="1" Margin="2" CornerRadius="2" Grid.RowSpan="3">
                             <Border.Background>
                                 <SolidColorBrush Color="{Binding Color, Source={StaticResource MediaCover.Background}}" Opacity="0.5"/>
                             </Border.Background>
-                            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding Cover}" RenderOptions.BitmapScalingMode="Unspecified"/>
+                            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding Cover.Result,IsAsync=True,FallbackValue={x:Null}}" RenderOptions.BitmapScalingMode="Unspecified"/>
 
-                            <Border.Style>
-                                <Style TargetType="{x:Type Border}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Cover}" Value="{x:Null}">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
                         </Border>
                         <StackPanel Margin="5,0,0,0" Orientation="Vertical" VerticalAlignment="Stretch">
                             <TextBlock FontSize="10" Margin="0,2"

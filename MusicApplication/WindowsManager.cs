@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.Commands;
 using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace MusicApplication
@@ -21,9 +22,10 @@ namespace MusicApplication
                 };
                 Application.Current.Resources.MergedDictionaries[0] = Dark;
             }
+            Debug.WriteLine("ApplyWindowsThemeCompleted");
         }
 
-        public static void StartApp()
+        public static void StartApp(string[] args)
         {
             ApplyWindowsTheme();
             MainCommands.Initialize();
@@ -36,6 +38,8 @@ namespace MusicApplication
 
         public static void WindowInitialized(Window Window)
         {
+
+
             _ = Window.Activate();
             Window.BringIntoView();
 
@@ -57,10 +61,10 @@ namespace MusicApplication
 
             Window.AllowDrop = true;
             Window.DragEnter += (_, e) => e.Effects = DragDropEffects.All;
-            Window.Drop += (_, e) =>
+            Window.Drop += async (_, e) =>
             {
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
-                PlaylistManager.AddRangeAsync(0, dropitems);
+                await PlaylistManager.AddRangeAsync(0, dropitems);
                 MainCommands.Source = dropitems[0];
             };
         }

@@ -185,7 +185,7 @@ namespace MusicApplication.Control
 
         private void NextAudio()
         {
-            ItemPlayManager.NextAudio();
+            PlaylistManager.PlayNext();
         }
 
         private DelegateCommand previousAudioFileCommand;
@@ -193,7 +193,7 @@ namespace MusicApplication.Control
 
         private void PreviousAudioFile()
         {
-            ItemPlayManager.PreviousAudioFile();
+            PlaylistManager.PlayPrevious();
         }
     }
 

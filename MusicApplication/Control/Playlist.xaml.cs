@@ -2,6 +2,7 @@
 using Engine.Commands;
 using Engine.Model;
 using MusicApplication.ViewModel.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,13 +22,13 @@ namespace MusicApplication.Control
     {
         public Playlist()
         {
-            InitializeComponent();/*
-            Player.PlaylistCurrentFileChanged += async () =>
+            InitializeComponent();
+            PlaylistManager.PlaylistCurrentFileChanged += async () =>
             {
                 listView.ScrollIntoView(listView.SelectedItem);
                 await Task.Delay(0);
-            };*/
-            PlaylistManager.Playlist[0].PlaylistUpdated += async () =>
+            };
+            PlaylistManager.Playlists[0].PlaylistUpdated += async () =>
             {
                 listView.Focus();
                 await Task.Delay(0);
@@ -50,7 +51,7 @@ namespace MusicApplication.Control
             if (e.ClickCount >= 2)
             {
                 StackPanel item = (StackPanel)sender;
-                MainCommands.Source = item.Tag.ToString();
+                MainCommands.Source = PlaylistManager.PlaylistItems[listView.SelectedIndex].FilePath;
             }
         }
 
@@ -73,8 +74,9 @@ namespace MusicApplication.Control
 
         private async void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            string file = await Helper.Utility.FileOpenPicker.GetFileAsync();
-            PlaylistManager.Add(0, file);
+            string[] files = await Helper.Utility.FileOpenPicker.GetFileAsync();
+
+            await PlaylistManager.AddRangeAsync(0, files);
         }
     }
 
@@ -84,7 +86,7 @@ namespace MusicApplication.Control
         public ObservableCollection<AudioFile> Playlist { get; set; } = new();
         public PlaylistViewModel()
         {
-            PlaylistManager.Playlist[0].PlaylistUpdated += async () =>
+            PlaylistManager.Playlists[0].PlaylistUpdated += async () =>
             {
 
                 await Task.Run(() =>
@@ -94,14 +96,14 @@ namespace MusicApplication.Control
                 });
             };
 
-            /* Player.PlaylistCurrentFileChanged += async () =>
-             {
-                 await Task.Run(() =>
-                 {
-                     SelectedIndex = Player.PlaylistCurrentFileIndex;
-                     NotifyPropertyChanged(nameof(SelectedIndex));
-                 });
-             };*/
+            PlaylistManager.PlaylistCurrentFileChanged += async () =>
+            {
+                await Task.Run(() =>
+                {
+                    SelectedIndex = PlaylistManager.OpenedFileIndex;
+                    NotifyPropertyChanged(nameof(SelectedIndex));
+                });
+            };
         }
 
         public int SelectedIndex { get; set; }

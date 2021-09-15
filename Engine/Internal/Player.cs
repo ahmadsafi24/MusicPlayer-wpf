@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -10,21 +12,21 @@ using PlaybackState = Engine.Enums.PlaybackState;
 namespace Engine.Internal
 {
     //ToDo Reader.WaveFormat.BitsPerSample
-    internal static class Player
+    internal sealed class Player
     {
         #region Root
 
         private static MediaFoundationReader Reader;
+        private static ISampleProvider SampleProvider => Reader.ToSampleProvider();
+        private static Equalizer Equalizer8band => new(SampleProvider, EqualizerBand);
         private static WaveOutEvent WaveOutEvent = new();
-        private static Equalizer Equalizer8band;
-        private static ISampleProvider SampleProvider;
+
         private static readonly DispatcherTimer CurrentTimeWatcher = new();
         private static readonly EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
-        internal static RepeatMode RepeatMode { get; set; } = RepeatMode.CurrentFile;
         internal static EqualizerBand[] EqualizerBand { get; set; }
 
         private static string source;
-        internal static string Source { get => source; set { source = value; OpenFile(value); } }
+        internal static string Source { get => source; set { source = value; OpenFile(value); Debug.WriteLine(value); } }
 
         private static async void OpenFile(string value)
         {
@@ -37,7 +39,10 @@ namespace Engine.Internal
             InitalEqualizer();
             CurrentTimeWatcher.Interval = TimeSpan.FromMilliseconds(100);
             CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
+            WaveOutEvent = new WaveOutEvent();
             WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
+
+            Debug.WriteLine("PlayerInitialized");
         }
 
         #endregion
@@ -64,6 +69,18 @@ namespace Engine.Internal
                 {
                     _ = MessageBox.Show(ex.Message);
                 }
+            }
+        }
+
+        internal static void Seek(double totalseconds)
+        {
+            try
+            {
+                CurrentTime = TimeSpan.FromSeconds(totalseconds);
+            }
+            catch (Exception ex)
+            {
+                _ = MessageBox.Show(ex.Message);
             }
         }
 
@@ -96,26 +113,22 @@ namespace Engine.Internal
             {
                 try
                 {
-                    Close();
+                    Stop();
 
-                    WaveOutEvent = new WaveOutEvent();
                     Reader = new MediaFoundationReader(File);
-                    SampleProvider = Reader.ToSampleProvider();
-                    Equalizer8band = new Equalizer(SampleProvider, EqualizerBand);
                     WaveOutEvent.Init(Equalizer8band);
 
                     /*{//test for no eq
                         WaveOutEvent.Init(new AudioFileReader(File));
                     }*/
 
-                    PlaylistManager.CurrentFileTag = new(File);
+                    PlaylistManager.FindOpenedFileIndex();
                     CurrentPlaybackState = PlaybackState.Opened;
                     Play();
                 }
                 catch (Exception ex)
                 {
                     _ = MessageBox.Show(ex.Message);
-                    throw;
                 }
 
             });
@@ -143,11 +156,15 @@ namespace Engine.Internal
 
         internal static async void OpenFilePicker()
         {
-            string f = await Helper.Utility.FileOpenPicker.GetFileAsync();
-            if (System.IO.File.Exists(f))
+            string[] files = await Helper.Utility.FileOpenPicker.GetFileAsync();
+            foreach (var file in files)
             {
-                await OpenFileAsync(f);
+                if (System.IO.File.Exists(file))
+                {
+                    PlaylistManager.Add(0, file);
+                }
             }
+            Source = files[0];
         }
 
         internal static void Play()
@@ -207,67 +224,27 @@ namespace Engine.Internal
 
         private static PlaybackState _CurrentPlaybackState;
 
-
-
         internal static PlaybackState CurrentPlaybackState
         {
             get => _CurrentPlaybackState;
             set
             {
+                Debug.WriteLine(value.ToString());
                 _CurrentPlaybackState = value;
                 Events.AllEvents.InvokePlaybackStateChanged(value);
-                switch (value)
+                if (value is PlaybackState.Playing)
                 {
-                    case PlaybackState.Unknown:
-                        break;
-                    case PlaybackState.Failed:
-                        CurrentTimeWatcher.Stop();
-                        break;
-                    case PlaybackState.Opened:
-                        break;
-                    case PlaybackState.Paused:
-                        break;
-                    case PlaybackState.Playing:
-                        CurrentTimeWatcher.Start();
-                        break;
-                    case PlaybackState.Stopped:
-                        break;
-                    case PlaybackState.Ended:
-                        OnPlaybackEnded();
-                        break;
-                    case PlaybackState.Closed:
-                        CurrentTimeWatcher.Stop();
-                        break;
-                    default:
-                        break;
+                    CurrentTimeWatcher.Start();
                 }
-
+                else if (value == PlaybackState.Ended)
+                {
+                    PlaylistManager.PlaybackEnded();
+                }
+                else
+                {
+                    CurrentTimeWatcher.Stop();
+                }
             }
-        }
-
-        private static void OnPlaybackEnded()
-        {
-            switch (RepeatMode)
-            {
-                case RepeatMode.Stop:
-                    Stop();
-                    break;
-                case RepeatMode.Close:
-                    Close();
-                    break;
-                case RepeatMode.CurrentFile:
-                    Stop();
-                    CurrentTime = TimeSpan.FromSeconds(0);
-                    Play();
-                    break;
-                case RepeatMode.NextFile:
-                    break;
-                case RepeatMode.CurrentPlaylist:
-                    break;
-                default:
-                    break;
-            }
-
         }
 
         private static void CurrentTimeWatcher_Tick(object sender, EventArgs e)
@@ -276,9 +253,9 @@ namespace Engine.Internal
 
             if ((int)CurrentTime.TotalSeconds >= (int)TotalTime.TotalSeconds)
             {
-                Task.Delay(1000).Wait();
                 CurrentPlaybackState = PlaybackState.Ended;
             }
+            GC.Collect();
         }
 
         #endregion
@@ -292,8 +269,8 @@ namespace Engine.Internal
                 case EqualizerMode.NormalEqualizer8band:
                     EqualizerBand = new EqualizerBand[]
                     {
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 0 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 200, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 10 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 200, Gain = 10 },
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 400, Gain = 0 },
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 800, Gain = 0 },
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 1200, Gain = 0 },
@@ -318,23 +295,22 @@ namespace Engine.Internal
         }
         private static void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
         {
-            if (string.IsNullOrEmpty(e.Exception.Message))
+            if (string.IsNullOrEmpty(e.Exception?.Message))
             {
                 CurrentPlaybackState = PlaybackState.Stopped;
             }
-            _ = MessageBox.Show(e.Exception.Message);
+            else
+            {
+                _ = MessageBox.Show(e.Exception.Message);
+                CurrentPlaybackState = PlaybackState.Failed;
+            }
         }
         #endregion
 
         internal static void Dispose()
         {
             Close();
-            GC.Collect();
         }
 
-        internal static async void Open()
-        {
-            await OpenFileAsync(Source);
-        }
     }
 }

@@ -31,7 +31,7 @@ namespace Helper.Utility
             //GetFile();
         }
 
-        public static async Task<string> GetFileAsync()
+        public static async Task<string[]> GetFileAsync()
         {
             return await Task.Run(() =>
              {
@@ -45,7 +45,7 @@ namespace Helper.Utility
 
                      AddExtension = true,
                     //DefaultExt = ".mp3",
-                    Multiselect = false,
+                    Multiselect = true,
                      CheckFileExists = true,
                      CustomPlaces = CustomPlacelist,
                      InitialDirectory = "",
@@ -56,7 +56,7 @@ namespace Helper.Utility
                 //openFileDialog.FileOk = new System.ComponentModel.CancelEventHandler((object sender, System.ComponentModel.CancelEventHandler ea) => { });
                 if (IsFileOk)
                  {
-                     return openFileDialog.FileName.ToString();
+                     return openFileDialog.FileNames;
 
                  }
                  else

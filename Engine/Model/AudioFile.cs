@@ -1,59 +1,57 @@
-﻿using System.IO;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Media.Imaging;
 using ATL;
 
 namespace Engine.Model
 {
     public class AudioFile
     {
-        public string FilePath { get; set; }
-        public AudioFile()
-        {
-        }
+        private readonly string _fileName;
+
+        public string FilePath;
 
         public AudioFile(string file)
         {
-            if (File.Exists(file))
+            if (System.IO.File.Exists(file))
             {
                 FilePath = file;
             }
+
+            Track t = new(file);
+            Title = t.Title;
+            Artist = t.Artist;
+            Album = t.Album;
+            AlbumArtist = t.AlbumArtist;
+
         }
 
-        public bool FileExist => File.Exists(FilePath);
-        public string FileName => Path.GetFileName(FilePath);
-        public string FileNameWithoutExtension => Path.GetFileNameWithoutExtension(FilePath);
-        public string FileExtension => Path.GetExtension(FilePath);
-        public string FileDirectory => Path.GetDirectoryName(FilePath);
-        public string Title => new Track(FilePath).Title;
-        public string Artist => new Track(FilePath).Artist;
-        public string Album => new Track(FilePath).Album;
-        public string AlbumArtist => new Track(FilePath).AlbumArtist;
-        public BitmapImage Cover                          //=> Image.FromStream(new MemoryStream(tagfile.EmbeddedPictures[0]?.PictureData));
+        public string FileName => System.IO.Path.GetFileName(FilePath);
+        //public string FileNameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(FilePath);
+        //public string FileExtension => System.IO.Path.GetExtension(FilePath);
+        //public string FileDirectory => System.IO.Path.GetDirectoryName(FilePath);
+        public string Title { get; }
+        public string Artist { get; }
+        public string Album { get; }
+        public string AlbumArtist { get; }
+        private System.Threading.Tasks.Task<BitmapImage> _cover;
+        public System.Threading.Tasks.Task<BitmapImage> Cover                          //=> Image.FromStream(new MemoryStream(tagfile.EmbeddedPictures[0]?.PictureData));
         {
             get
             {
-                if (FilePath != null)
+                if (_cover == null)
                 {
-                    Track tagfile = new(FilePath);
-                    if (tagfile.EmbeddedPictures.Count > 0)
-                    {
-                        MemoryStream ms = new(tagfile.EmbeddedPictures[0]?.PictureData);
-                        _ = ms.Seek(0, SeekOrigin.Begin);
-                        BitmapImage bitmap = new();
-
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.CreateOptions = BitmapCreateOptions.DelayCreation;
-
-                        bitmap.BeginInit();
-                        bitmap.StreamSource = ms;
-                        bitmap.EndInit();
-                        return bitmap;
-                    }
+                    var temp = System.Threading.Tasks.Task.Run(() => Utility.Class1.ExtractCoverFastRender(FilePath));
+                    _cover = temp;
+                    return temp;
                 }
-                return null;
+                else
+                {
+                    return _cover;
+                }
             }
         }
-        public static AudioFile Empty = new();
+
+
+        public static AudioFile Empty = new("");
     }
 
     /* public TagFile TagFileEmpty

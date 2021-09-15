@@ -3,43 +3,45 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
-
+using System.Linq;
 namespace Engine.Model
 {
     //TODO use LINQ To search delete or.... 
     //use database as storage
     public class PlaylistFile
     {
-        internal PlaylistFile(AudioFile FirstItem)
+        public PlaylistFile()
         {
-            FileList = new();
-            FileList.Clear();
-            FileList.Add(FirstItem);
-            FireUpdatedEvent();
+            Items = new();
         }
 
-        internal PlaylistFile()
+        private List<AudioFile> _items;
+        public List<AudioFile> Items
         {
-            FileList = new();
-        }
-
-        private List<AudioFile> _fileList;
-        internal List<AudioFile> FileList
-        {
-            get => _fileList;
+            get => _items;
             set
             {
-                _fileList = value;
+                _items = value;
                 FireUpdatedEvent();
             }
         }
 
-        internal int FindItem(string searchfor)
+        internal int FindItemLinq(string searchQuery)
         {
-            int i = 0;
-            foreach (AudioFile item in FileList)
+            return Items.Select((AudioFile, index) => (AudioFile, index)).First(x => x.AudioFile.FilePath == searchQuery).index;
+        }
+
+        internal int FindItemlambda(string searchQuery)
+        {
+            return Items.FindIndex(x => x.FilePath == searchQuery);
+        }
+
+        internal int FindItemfor(string searchQuery)
+        {
+            for (int i = 0; i < Items.Count; i++)
             {
-                if (item.FilePath == searchfor)
+                AudioFile item = Items[i];
+                if (item.FilePath == searchQuery)
                 {
                     return i;
                 }
@@ -50,19 +52,21 @@ namespace Engine.Model
 
         internal void AddItem(string File)
         {
-            FileList.Add(new AudioFile(File));
+            Items.Add(new AudioFile(File));
+            RemoveDuplicates();
             FireUpdatedEvent();
         }
 
         internal void AddItem(AudioFile file)
         {
-            FileList.Add(file);
+            Items.Add(file);
+            RemoveDuplicates();
             FireUpdatedEvent();
         }
 
         internal void CreateNewAndAdd(string[] filepathlist)
         {
-            FileList = CreateNew(filepathlist);
+            Items = CreateNew(filepathlist);
             {//_createNew(filepathlist).ForEach(x => Items.Add(x));
                 /*
                  Application.Current.Dispatcher.Invoke((Action)delegate
@@ -89,44 +93,47 @@ namespace Engine.Model
             return list;
         }
 
-        internal async void AddRange(string[] filepathlist)
+        internal async Task AddRangeAsync(string[] filepathlist)
         {
             await Task.Run(() =>
             {
-                Application.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    foreach (string path in filepathlist)
-                    {
-                        FileList.Add(new AudioFile(path));
-                    }
-                });
+                Items.AddRange(filepathlist.Select(path => new AudioFile(path)));
+                //Application.Current.Dispatcher.Invoke((Action)delegate{});
             });
+            RemoveDuplicates();
             FireUpdatedEvent();
         }
 
         internal void Clear()
         {
-            FileList.Clear();
+            Items.Clear();
             FireUpdatedEvent();
         }
 
         internal void ClearSilent()
         {
-            FileList.Clear();
-            FileList = null;
-            FileList = new();
+            Items.Clear();
+            Items = null;
+            Items = new();
+            GC.Collect();
         }
 
         internal void RemoveItem(int index)
         {
-            FileList.RemoveAt(index);
+            Items.RemoveAt(index);
             FireUpdatedEvent();
         }
 
         internal void RemoveItem(AudioFile file)
         {
-            _ = FileList.Remove(file);
+            _ = Items.Remove(file);
             FireUpdatedEvent();
+        }
+
+        internal void RemoveDuplicates()
+        {
+            IEnumerable<AudioFile> temp = Items.GroupBy(x => x.FilePath).Select(y => y.First());
+            _items = new(temp);
         }
 
         private void FireUpdatedEvent()

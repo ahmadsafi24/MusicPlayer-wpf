@@ -17,7 +17,7 @@
         <control:MediaInfoCard DockPanel.Dock="Bottom"/>
         <Grid DockPanel.Dock="Top" Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="170"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <control:Playlist Grid.Column="0"/>

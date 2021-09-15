@@ -18,7 +18,7 @@ namespace MusicApplication.ViewModel
 
         public MenuViewModel()
         {
-            OpenCommand = new DelegateCommand(() => Engine.Commands.MainCommands.OpenFilePicker());
+            OpenCommand = new DelegateCommand(() => Shared.OpenFilePicker());
             TestCommand = new DelegateCommand(() => SavetoDb());
         }
 

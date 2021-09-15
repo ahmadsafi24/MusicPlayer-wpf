@@ -1,17 +1,23 @@
-﻿using Engine.Commands;
+﻿using Engine;
+using Engine.Commands;
 using System.Configuration;
 
 namespace MusicApplication
 {
-    public static class Statics
+    public static class Shared
     {
-        public static void OpenCurrentFileLocation()
+        internal static void OpenCurrentFileLocation()
         {
             Helper.OpenFileLocation.Open(MainCommands.Source);
         }
-        public static void test()
+
+        internal static async void OpenFilePicker()
         {
-            _ = ConfigurationManager.ConnectionStrings.CurrentConfiguration.FilePath;
+            string[] files = await Helper.FileOpenPicker.GetFileAsync();
+            await PlaylistManager.AddRangeAsync(0, files);
+
+            MainCommands.Source = files[0];
+            await MainCommands.OpenAsync();
         }
     }
 

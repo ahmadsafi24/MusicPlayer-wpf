@@ -29,7 +29,7 @@ namespace MusicApplication.Control
 
         public MediaInfoCardViewModel()
         {
-            OpenCurrentFileLocationCommand = new DelegateCommand(() => Statics.OpenCurrentFileLocation());
+            OpenCurrentFileLocationCommand = new DelegateCommand(() => Shared.OpenCurrentFileLocation());
             SelectCurrentFileInPlaylistCommand = new DelegateCommand(() => MainCommands.FindCurrentFile());
             AllEvents.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
             AllEvents.PlaybackStateChanged += async (_) =>

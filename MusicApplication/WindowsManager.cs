@@ -77,6 +77,7 @@ namespace MusicApplication
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 await PlaylistManager.AddRangeAsync(0, dropitems);
                 MainCommands.Source = dropitems[0];
+                await MainCommands.OpenAsync();
             };
         }
     }

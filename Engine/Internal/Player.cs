@@ -65,14 +65,7 @@ namespace Engine.Internal
         #endregion
 
         private static string source;
-        internal static string Source { get => source; set { source = value; OpenFile(value); Debug.WriteLine(value); } }
-
-
-        private static async void OpenFile(string value)
-        {
-            await OpenFileAsync(value);
-        }
-
+        internal static string Source { get => source; set { source = value; Debug.WriteLine(value); } }
 
         internal static double CurrentTimeWatcherInterval
         {
@@ -129,7 +122,7 @@ namespace Engine.Internal
 
         internal static string TotalTimeString => TotalTime.ToString(stringformat);
 
-        private static async Task OpenFileAsync(string File)
+        internal static async Task OpenAsync()
         {
             await Task.Run(() =>
             {
@@ -137,15 +130,11 @@ namespace Engine.Internal
                 {
                     Stop();
 
-                    Reader = new MediaFoundationReader(File);
+                    Reader = new MediaFoundationReader(Source);
                     WaveOutEvent.Init(Equalizer8band);
 
-                    /*{//test for no eq
-                        WaveOutEvent.Init(new AudioFileReader(File));
-                    }*/
-
                     PlaylistManager.FindOpenedFileIndex();
-                    CurrentPlaybackState = PlaybackState.Opened;
+                    PlaybackState = PlaybackState.Opened;
                     Play();
                 }
                 catch (Exception ex)
@@ -157,50 +146,22 @@ namespace Engine.Internal
 
         }
 
-        /*
-        internal static void PlayPause()
-        {
-            if (CurrentPlaybackState == PlaybackState.Playing)
-            {
-                Pause();
-            }
-            else if (CurrentPlaybackState is PlaybackState.Paused
-                    or PlaybackState.Stopped
-                    or PlaybackState.Ended)
-            {
-                Play();
-            }
-            else
-            {
-                OpenFilePicker();
-            }
-        }
-        */
-
-        internal static async void OpenFilePicker()
-        {
-            string[] files = await Helper.FileOpenPicker.GetFileAsync();
-            await PlaylistManager.AddRangeAsync(0, files);
-
-            Source = files[0];
-        }
-
         internal static void Play()
         {
             WaveOutEvent.Play();
-            CurrentPlaybackState = PlaybackState.Playing;
+            PlaybackState = PlaybackState.Playing;
         }
 
         internal static void Pause()
         {
             WaveOutEvent.Pause();
-            CurrentPlaybackState = PlaybackState.Paused;
+            PlaybackState = PlaybackState.Paused;
         }
 
         internal static void Stop()
         {
             WaveOutEvent.Stop();
-            CurrentPlaybackState = PlaybackState.Stopped;
+            PlaybackState = PlaybackState.Stopped;
         }
 
         internal static void Close()
@@ -209,7 +170,7 @@ namespace Engine.Internal
             WaveOutEvent = new();
             Reader?.Dispose();
             Reader = null;
-            CurrentPlaybackState = PlaybackState.Closed;
+            PlaybackState = PlaybackState.Closed;
         }
 
         internal static async Task SeekAsync(double totalseconds)
@@ -235,15 +196,14 @@ namespace Engine.Internal
             Equalizer8band.Update();
         }
 
-
-        private static PlaybackState _currentPlaybackState;
-        internal static PlaybackState CurrentPlaybackState
+        private static PlaybackState _playbackState;
+        internal static PlaybackState PlaybackState
         {
-            get => _currentPlaybackState;
+            get => _playbackState;
             set
             {
                 Debug.WriteLine(value.ToString());
-                _currentPlaybackState = value;
+                _playbackState = value;
                 Events.AllEvents.InvokePlaybackStateChanged(value);
                 if (value is PlaybackState.Playing)
                 {
@@ -266,7 +226,7 @@ namespace Engine.Internal
 
             if ((int)CurrentTime.TotalSeconds >= (int)TotalTime.TotalSeconds)
             {
-                CurrentPlaybackState = PlaybackState.Ended;
+                PlaybackState = PlaybackState.Ended;
             }
             GC.Collect();
         }
@@ -284,12 +244,12 @@ namespace Engine.Internal
         {
             if (string.IsNullOrEmpty(e.Exception?.Message))
             {
-                CurrentPlaybackState = PlaybackState.Stopped;
+                PlaybackState = PlaybackState.Stopped;
             }
             else
             {
                 _ = MessageBox.Show(e.Exception.Message);
-                CurrentPlaybackState = PlaybackState.Failed;
+                PlaybackState = PlaybackState.Failed;
             }
         }
         private const string stringformat = "mm\\:ss";

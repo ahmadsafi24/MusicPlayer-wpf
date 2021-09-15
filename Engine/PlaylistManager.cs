@@ -16,7 +16,7 @@ namespace Engine
         public static event EventHandlerNull PlaylistCurrentFileChanged;
         public static int OpenedFileIndex { get; set; }
 
-        private static void FindFileInPlaylist(string file)
+        /*private static void FindFileInPlaylist(string file)
         {
             int i = Playlists[0].FindItemlambda(file);
             if (i != -1)
@@ -24,7 +24,7 @@ namespace Engine
                 OpenedFileIndex = i;
                 PlaylistCurrentFileChanged?.Invoke();
             };
-        }
+        }*/
 
         public static void FindOpenedFileIndex()
         {
@@ -91,19 +91,21 @@ namespace Engine
             return playlist.FindItemlambda(OpenedItem) == playlist.Items.Count - 1;
         }
 
-        public static void PlayNext()
+        public static async void PlayNext()
         {
             if (!IsLast(Playlists[0], Player.Source))
             {
                 MainCommands.Source = Playlists[0].Items[OpenedFileIndex + 1].FilePath;
+                await MainCommands.OpenAsync();
             }
         }
 
-        public static void PlayPrevious()
+        public static async void PlayPrevious()
         {
             if (!IsFirst(Playlists[0], Player.Source))
             {
                 MainCommands.Source = Playlists[0].Items[OpenedFileIndex - 1].FilePath;
+                await MainCommands.OpenAsync();
             }
 
         }

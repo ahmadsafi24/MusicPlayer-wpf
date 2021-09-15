@@ -35,23 +35,17 @@ namespace MusicApplication.Control
             };
         }
 
-        private void PlaylistItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            PlaylistItem playlistItem = (PlaylistItem)sender;
-            MainCommands.Source = playlistItem.FilePath;
-        }
-
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             listView.ScrollIntoView(listView.SelectedItem);
         }
 
-        private void Item_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async void Item_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount >= 2)
             {
-                StackPanel item = (StackPanel)sender;
                 MainCommands.Source = PlaylistManager.PlaylistItems[listView.SelectedIndex].FilePath;
+                await MainCommands.OpenAsync();
             }
         }
 

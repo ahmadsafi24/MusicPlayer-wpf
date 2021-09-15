@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Engine.Commands;
 using System.Threading;
+using Engine.Enums;
 
 namespace MusicApplication.Control
 {
@@ -37,7 +38,7 @@ namespace MusicApplication.Control
                 if (MainCommands.TotalSeconds != val
                     && val <= MainCommands.TotalSeconds)
                 {
-                   await MainCommands.SeekAsync(val);
+                    await MainCommands.SeekAsync(val);
                 }
             }
         }
@@ -119,12 +120,30 @@ namespace MusicApplication.Control
 
         public PlayerControlViewModel()
         {
-            PlayPauseCommand = new DelegateCommand(() => MainCommands.PlayPause());
-            OpenFileCommand = new DelegateCommand(() => MainCommands.OpenFilePicker());
+            PlayPauseCommand = new DelegateCommand(() => PlayPause());
+            OpenFileCommand = new DelegateCommand(() => Shared.OpenFilePicker());
 
             Engine.Events.AllEvents.PlaybackStateChanged += PlaybackStateChanged;
             Engine.Events.AllEvents.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
             Engine.Events.AllEvents.VolumeChanged += AudioPlayer_VolumeChanged;
+        }
+
+        private void PlayPause()
+        {
+            if (IsPlaying)
+            {
+                MainCommands.Pause();
+            }
+            else if (MainCommands.PlaybackState is PlaybackState.Paused
+                    or PlaybackState.Stopped
+                    or PlaybackState.Ended)
+            {
+                MainCommands.Play();
+            }
+            else
+            {
+                Shared.OpenFilePicker();
+            }
         }
 
         private async Task AudioPlayer_VolumeChanged()
@@ -168,7 +187,7 @@ namespace MusicApplication.Control
         public double CurrentTimeTotalSeconds
         {
             get => MainCommands.CurrentSeconds;
-            set => MainCommands.SeekAsync(value);
+            set => Task.Run(async () => { await MainCommands.SeekAsync(value); });
         }
 
         public double TotalTimeTotalSeconds => MainCommands.TotalSeconds;

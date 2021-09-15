@@ -1,4 +1,5 @@
-﻿using Engine.Internal;
+﻿using Engine.Enums;
+using Engine.Internal;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -14,13 +15,14 @@ namespace Engine.Commands
         public static string TotalTimeString { get => Player.TotalTimeString; }
         public static double CurrentSeconds { get => Player.CurrentTime.TotalSeconds; }
         public static double TotalSeconds { get => Player.TotalTime.TotalSeconds; }
+        public static PlaybackState PlaybackState { get => Player.PlaybackState; }
 
         public static void Initialize()
         {
             Player.Initialize();
         }
 
-        public static void PlayPause() => Player.PlayPause();
+        public static async Task OpenAsync() => await Player.OpenAsync();
         public static void Play() => Player.Play();
         public static void Pause() => Player.Pause();
         public static void Close() => Player.Close();
@@ -43,11 +45,6 @@ namespace Engine.Commands
             {
                 _ = MessageBox.Show(ex.Message);
             }
-        }
-
-        public static void OpenFilePicker()
-        {
-            Player.OpenFilePicker();
         }
 
         public static void FindCurrentFile()

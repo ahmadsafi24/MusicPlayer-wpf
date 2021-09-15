@@ -5,8 +5,6 @@ namespace Engine.Model
 {
     public class AudioFile
     {
-        private readonly string _fileName;
-
         public string FilePath;
 
         public AudioFile(string file)
@@ -49,9 +47,6 @@ namespace Engine.Model
                 }
             }
         }
-
-
-        public static AudioFile Empty = new("");
     }
 
     /* public TagFile TagFileEmpty

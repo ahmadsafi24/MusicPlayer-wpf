@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 
-namespace Helper.Utility
+namespace Helper
 {
     public sealed class WindowsManager
     {

@@ -44,11 +44,11 @@ namespace MusicApplication.Control
 
         public TitlebarViewModel()
         {
-            CloseCommand = new DelegateCommand(() => Helper.Utility.WindowsManager.CloseWindow(Window));
-            MaximizeRestoreCommand = new DelegateCommand(() => Helper.Utility.WindowsManager.MaximizeRestore(Window));
-            MinimizeCommand = new DelegateCommand(() => Helper.Utility.WindowsManager.Minimize(Window));
-            DragMoveCommand = new DelegateCommand(() => Helper.Utility.WindowsManager.DragMove(Window));
-            ContextMenuCommand = new DelegateCommand(() => Helper.Utility.WindowsManager.ShowContextMenu(Window));
+            CloseCommand = new DelegateCommand(() => Helper.WindowsManager.CloseWindow(Window));
+            MaximizeRestoreCommand = new DelegateCommand(() => Helper.WindowsManager.MaximizeRestore(Window));
+            MinimizeCommand = new DelegateCommand(() => Helper.WindowsManager.Minimize(Window));
+            DragMoveCommand = new DelegateCommand(() => Helper.WindowsManager.DragMove(Window));
+            ContextMenuCommand = new DelegateCommand(() => Helper.WindowsManager.ShowContextMenu(Window));
         }
     }
 }

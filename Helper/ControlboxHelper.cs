@@ -3,11 +3,10 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace Helper.Utility
+namespace Helper
 {
     public static class ControlboxHelper
     {
-        #region Enable Dark + No icon No controlbox
         private const int GWL_STYLE = -16;
         private const int WS_SYSMENU = 0x80000;
         [DllImport("user32.dll", SetLastError = true)]
@@ -20,7 +19,5 @@ namespace Helper.Utility
             IntPtr hwnd = new WindowInteropHelper(window).Handle;
             _ = SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
         }
-        #endregion
-
     }
 }

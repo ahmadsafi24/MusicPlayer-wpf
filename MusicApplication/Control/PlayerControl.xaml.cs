@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Engine.Commands;
+using System.Threading;
 
 namespace MusicApplication.Control
 {
@@ -26,7 +27,7 @@ namespace MusicApplication.Control
             VolumeProgressbar_ValueChanged(VolumeProgressbar, null);
         }
 
-        private void TimeProgressBar_MouseMove(object sender, MouseEventArgs e)
+        private async void TimeProgressBar_MouseMove(object sender, MouseEventArgs e)
         {
             e.Handled = true;
             ProgressBar progressBar = (ProgressBar)sender;
@@ -36,7 +37,7 @@ namespace MusicApplication.Control
                 if (MainCommands.TotalSeconds != val
                     && val <= MainCommands.TotalSeconds)
                 {
-                    MainCommands.Seek(val);
+                   await MainCommands.SeekAsync(val);
                 }
             }
         }
@@ -167,7 +168,7 @@ namespace MusicApplication.Control
         public double CurrentTimeTotalSeconds
         {
             get => MainCommands.CurrentSeconds;
-            set => MainCommands.Seek(value);
+            set => MainCommands.SeekAsync(value);
         }
 
         public double TotalTimeTotalSeconds => MainCommands.TotalSeconds;

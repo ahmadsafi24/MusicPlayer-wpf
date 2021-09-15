@@ -11,7 +11,7 @@ using System.Windows.Media.Animation;
 
 using Microsoft.Win32;
 
-namespace Helper.Utility
+namespace Helper
 {
     public sealed class FileOpenPicker
     {

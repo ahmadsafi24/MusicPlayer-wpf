@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -11,49 +10,75 @@ using PlaybackState = Engine.Enums.PlaybackState;
 
 namespace Engine.Internal
 {
+    //ToDo: EngineMode  like with eq or with mono or pitch changable
     //ToDo Reader.WaveFormat.BitsPerSample
     internal sealed class Player
     {
-        #region Root
-
+        #region NAudio Engine
         private static MediaFoundationReader Reader;
         private static ISampleProvider SampleProvider => Reader.ToSampleProvider();
         private static Equalizer Equalizer8band => new(SampleProvider, EqualizerBand);
         private static WaveOutEvent WaveOutEvent = new();
-
-        private static readonly DispatcherTimer CurrentTimeWatcher = new();
         private static readonly EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
-        internal static EqualizerBand[] EqualizerBand { get; set; }
+        private static EqualizerBand[] EqualizerBand { get; set; }
+        #endregion
+
+        #region Initial
+        internal static void Initialize()
+        {
+            InitalEqualizer();
+            InitializeTimers();
+
+            WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
+            Debug.WriteLine("PlayerInitialized");
+        }
+
+        private static void InitializeTimers()
+        {
+            CurrentTimeWatcher.Interval = TimeSpan.FromMilliseconds(100);
+            CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
+        }
+
+        private static void InitalEqualizer()
+        {
+            switch (equalizerMode)
+            {
+                case EqualizerMode.NormalEqualizer8band:
+                    EqualizerBand = new EqualizerBand[]
+                    {
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 10 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 200, Gain = 10 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 400, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 800, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 1200, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 2400, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 4800, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 9600, Gain = 0 },
+                    };
+                    break;
+                case EqualizerMode.SuperEqualizer16band:
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
 
         private static string source;
         internal static string Source { get => source; set { source = value; OpenFile(value); Debug.WriteLine(value); } }
+
 
         private static async void OpenFile(string value)
         {
             await OpenFileAsync(value);
         }
 
-        internal static string stringformat = "mm\\:ss";
-        internal static void Initialize()//todo: EngineMode  like with eq or with mono or pitch changable
+
+        internal static double CurrentTimeWatcherInterval
         {
-            InitalEqualizer();
-            CurrentTimeWatcher.Interval = TimeSpan.FromMilliseconds(100);
-            CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
-            WaveOutEvent = new WaveOutEvent();
-            WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
-
-            Debug.WriteLine("PlayerInitialized");
+            get => CurrentTimeWatcher.Interval.TotalSeconds;
+            set => CurrentTimeWatcher.Interval = TimeSpan.FromSeconds(value);
         }
-
-        #endregion
-
-        #region ControlPlayer
-        internal static TimeSpan CurrentTimeWatcherInterval
-        {
-            get => CurrentTimeWatcher.Interval;
-            set => CurrentTimeWatcher.Interval = value;
-        }
-
 
         internal static double Volume
         {
@@ -88,7 +113,7 @@ namespace Engine.Internal
         {
             get => Reader is null ? TimeSpan.FromSeconds(0) : Reader.CurrentTime;
 
-            set
+            private set
             {
                 if (Reader is not null)
                 {
@@ -103,9 +128,6 @@ namespace Engine.Internal
         internal static string CurrentTimeString => CurrentTime.ToString(stringformat);
 
         internal static string TotalTimeString => TotalTime.ToString(stringformat);
-        #endregion
-
-        #region Tasks
 
         private static async Task OpenFileAsync(string File)
         {
@@ -135,7 +157,7 @@ namespace Engine.Internal
 
         }
 
-
+        /*
         internal static void PlayPause()
         {
             if (CurrentPlaybackState == PlaybackState.Playing)
@@ -153,17 +175,13 @@ namespace Engine.Internal
                 OpenFilePicker();
             }
         }
+        */
 
         internal static async void OpenFilePicker()
         {
-            string[] files = await Helper.Utility.FileOpenPicker.GetFileAsync();
-            foreach (var file in files)
-            {
-                if (System.IO.File.Exists(file))
-                {
-                    PlaylistManager.Add(0, file);
-                }
-            }
+            string[] files = await Helper.FileOpenPicker.GetFileAsync();
+            await PlaylistManager.AddRangeAsync(0, files);
+
             Source = files[0];
         }
 
@@ -188,7 +206,7 @@ namespace Engine.Internal
         internal static void Close()
         {
             WaveOutEvent?.Dispose();
-            WaveOutEvent = null;
+            WaveOutEvent = new();
             Reader?.Dispose();
             Reader = null;
             CurrentPlaybackState = PlaybackState.Closed;
@@ -217,20 +235,15 @@ namespace Engine.Internal
             Equalizer8band.Update();
         }
 
-        #endregion
 
-        #region sec1
-
-
-        private static PlaybackState _CurrentPlaybackState;
-
+        private static PlaybackState _currentPlaybackState;
         internal static PlaybackState CurrentPlaybackState
         {
-            get => _CurrentPlaybackState;
+            get => _currentPlaybackState;
             set
             {
                 Debug.WriteLine(value.ToString());
-                _CurrentPlaybackState = value;
+                _currentPlaybackState = value;
                 Events.AllEvents.InvokePlaybackStateChanged(value);
                 if (value is PlaybackState.Playing)
                 {
@@ -258,33 +271,6 @@ namespace Engine.Internal
             GC.Collect();
         }
 
-        #endregion
-
-        #region Internal
-
-        private static void InitalEqualizer()
-        {
-            switch (equalizerMode)
-            {
-                case EqualizerMode.NormalEqualizer8band:
-                    EqualizerBand = new EqualizerBand[]
-                    {
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 10 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 200, Gain = 10 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 400, Gain = 0 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 800, Gain = 0 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 1200, Gain = 0 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 2400, Gain = 0 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 4800, Gain = 0 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 9600, Gain = 0 },
-                    };
-                    break;
-                case EqualizerMode.SuperEqualizer16band:
-                    break;
-                default:
-                    break;
-            }
-        }
         internal static float ToSingle(double value)
         {
             return (float)value;
@@ -293,6 +279,7 @@ namespace Engine.Internal
         {
             return value;
         }
+
         private static void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
         {
             if (string.IsNullOrEmpty(e.Exception?.Message))
@@ -305,12 +292,7 @@ namespace Engine.Internal
                 CurrentPlaybackState = PlaybackState.Failed;
             }
         }
-        #endregion
-
-        internal static void Dispose()
-        {
-            Close();
-        }
-
+        private const string stringformat = "mm\\:ss";
+        private static readonly DispatcherTimer CurrentTimeWatcher = new();
     }
 }

@@ -1,20 +1,24 @@
 ﻿using Engine;
 using Engine.Commands;
+using Helper.DarkUi;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace MusicApplication
 {
     public static class WindowsManager
     {
-        public static readonly darknet.Mode Mode = Helper.Utility.CustomThemeListener.IsDark ? darknet.Mode.Dark : darknet.Mode.Light;
+        public static readonly bool isDark = Helper.CustomThemeListener.IsDark;
+
+        [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true)]
+        internal static extern bool SetPreferredAppMode(AppMode preferredAppMode);
 
         public static void ApplyWindowsTheme()
         {
-            darknet.wpf.DarkNetWpfImpl darkNetWpfImpl = new();
-            darkNetWpfImpl.SetModeForCurrentProcess(Mode);
-            if (Mode == darknet.Mode.Dark)
+            _ = SetPreferredAppMode(AppMode.ForceDark);
+            if (isDark)
             {
                 ResourceDictionary Dark = new()
                 {
@@ -32,8 +36,15 @@ namespace MusicApplication
             PlaylistManager.Initialize();
 
             Windows.MainWindow mainWindow = new();
+            mainWindow.SourceInitialized += (_, _) =>
+            {
+                Helper.IconHelper.RemoveIcon(mainWindow);
+                if (isDark)
+                {
+                    DwmApi.ToggleImmersiveDarkMode(mainWindow, true);
+                }
+            };
             mainWindow.Show();
-            mainWindow.Closed += (_, _) => { Application.Current.Shutdown(); };
         }
 
         public static void WindowInitialized(Window Window)

@@ -16,11 +16,7 @@ namespace MusicApplication.Windows
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
-            Helper.Utility.IconHelper.RemoveIcon(this);
-            if (WindowsManager.Mode == darknet.Mode.Dark)
-            {
-                Helper.Utility.DwmApi.ToggleImmersiveDarkMode(this, true);
-            }
+
         }
 
 

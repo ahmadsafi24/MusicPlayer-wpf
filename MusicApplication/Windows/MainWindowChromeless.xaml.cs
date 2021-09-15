@@ -30,16 +30,6 @@ namespace MusicApplication.Windows
             await SizeChangerAsync(e.NewSize);
         }
 
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-            Helper.Utility.IconHelper.RemoveIcon(this);
-            Helper.Utility.ControlboxHelper.RemoveControls(this);
-            if (WindowsManager.Mode == darknet.Mode.Dark)
-            {
-                Helper.Utility.DwmApi.ToggleImmersiveDarkMode(this, true);
-            }
-        }
 
         //private void MainWindow_Chromeless_SizeChanged(object sender, SizeChangedEventArgs e)
         //{

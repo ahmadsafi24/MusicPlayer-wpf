@@ -74,7 +74,7 @@ namespace MusicApplication.Control
 
         private async void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            string[] files = await Helper.Utility.FileOpenPicker.GetFileAsync();
+            string[] files = await Helper.FileOpenPicker.GetFileAsync();
 
             await PlaylistManager.AddRangeAsync(0, files);
         }

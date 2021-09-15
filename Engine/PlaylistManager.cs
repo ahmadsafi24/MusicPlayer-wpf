@@ -125,7 +125,7 @@ namespace Engine
                             break;
                         case RepeatMode.CurrentFile:
                             MainCommands.Stop();
-                            Player.CurrentTime = TimeSpan.FromSeconds(0);
+                            _ = Player.SeekAsync(0);
                             MainCommands.Play();
                             break;
                         case RepeatMode.NextFile:

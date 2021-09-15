@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Helper.DarkUi;
+using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Helper.Utility
+namespace Helper
 {
     public static class CustomThemeListener
     {

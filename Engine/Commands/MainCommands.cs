@@ -1,6 +1,7 @@
 ﻿using Engine.Internal;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Engine.Commands
@@ -25,7 +26,7 @@ namespace Engine.Commands
         public static void Close() => Player.Close();
         public static void Stop() => Player.Stop();
 
-        public static async void Seek(double value) => await Player.SeekAsync(value);
+        public static async Task SeekAsync(double value) => await Player.SeekAsync(value);
 
         public static void VolumeUp(double value) => ChangeVolume(Player.Volume += value);
         public static void VolumeDown(double value) => ChangeVolume(Player.Volume -= value);

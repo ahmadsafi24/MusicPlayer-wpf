@@ -75,7 +75,7 @@
     <SolidColorBrush x:Key="MediaSlider.Backgound.Active" Color="#FFA0A0A0"/>
     <SolidColorBrush x:Key="MediaSlider.Backgound.Deactive" Color="#FFBBBBBB"/>
     <SolidColorBrush x:Key="MediaInfoCard.BorderBrush" Color="#FF4290FF" Opacity="0.2"/>
-    <SolidColorBrush x:Key="MediaCover.Background" Color="#FF4290FF"/>
+    <SolidColorBrush x:Key="MediaCover.Background" Color="#FF4290FF" Opacity="0.1"/>
     <SolidColorBrush x:Key="Playlist.Background" Color="#FFEAEAEA"/>
     <SolidColorBrush x:Key="TextBlock.Foreground" Color="#FF474747"/>
     <!--#endregion-->
@@ -90,4 +90,6 @@
 
     <SolidColorBrush x:Key="Window.BorderBrush.Activated" Color="#7FFFFFFF"/>
     <SolidColorBrush x:Key="Window.BorderBrush.Deactivated" Color="#7FB8B8B8"/>
+
+    <Color x:Key="AccentColor">#FF2252D1</Color>
 </ResourceDictionary>

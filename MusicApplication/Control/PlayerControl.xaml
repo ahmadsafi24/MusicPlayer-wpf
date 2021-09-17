@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MusicApplication.Control" d:DataContext="{d:DesignInstance Type=local:PlayerControlViewModel}"
-             mc:Ignorable="d" x:Name="UserControl" Background="{StaticResource PlayerControl.Background}"
+             mc:Ignorable="d" x:Name="UserControl" Background="{DynamicResource PlayerControl.Background}"
              d:DesignWidth="800" d:Foreground="White" Height="55" Padding="10,0,20,0">
     <UserControl.Resources>
 
@@ -17,13 +17,13 @@
             </Border>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.MouseOver}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.Pressed}"/>
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Disabled.Background}"/>
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -39,13 +39,13 @@
             </Border>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.MouseOver}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.Pressed}"/>
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Disabled.Background}"/>
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -57,13 +57,13 @@
             </Border>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.MouseOver}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.Pressed}"/>
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Disabled.Background}"/>
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -75,20 +75,20 @@
             </Border>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.MouseOver}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.MouseOver}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="true">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Background.Pressed}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.Pressed}"/>
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Fill" TargetName="contentPresenter" Value="{StaticResource MediaButton.Disabled.Background}"/>
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Disabled.Background}"/>
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
         <Style x:Key="MediaButton" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="{StaticResource MediaButton.Background}"/>
-            <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="Background" Value="{DynamicResource MediaButton.Background}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="1"/>
@@ -96,9 +96,9 @@
 
 
         <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
-            <Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
-            <Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ProgressBar.Progress}"/>
+            <Setter Property="Background" Value="{DynamicResource ProgressBar.Background}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ProgressBar.Border}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -116,7 +116,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="Maximum" Value="0">
                                 <Setter TargetName="PART_Indicator" Property="Visibility" Value="Hidden"/>
-                                <Setter TargetName="PART_Track" Property="Rectangle.Fill" Value="{StaticResource MediaSlider.Backgound.Deactive}"/>
+                                <Setter TargetName="PART_Track" Property="Rectangle.Fill" Value="{DynamicResource MediaSlider.Backgound.Deactive}"/>
                             </Trigger>
                             <!--Trigger Property="IsMouseOver" Value="True">
                                 <Trigger.EnterActions>
@@ -180,18 +180,18 @@
                        Value="{Binding CurrentTimeTotalSeconds,Mode=TwoWay}"
                        Maximum="{Binding TotalTimeTotalSeconds}"/>
 
-            <ProgressBar x:Name="TimeProgressbar"  Grid.Column="3" Style="{StaticResource ProgressBarStyle1}" VerticalAlignment="Center" Height="26" Margin="10,0" ClipToBounds="False" Maximum="{Binding TotalTimeTotalSeconds}"
+            <ProgressBar x:Name="TimeProgressbar"  Grid.Column="3" Style="{DynamicResource ProgressBarStyle1}" VerticalAlignment="Center" Height="26" Margin="10,0" ClipToBounds="False" Maximum="{Binding TotalTimeTotalSeconds}"
                      MouseMove="TimeProgressBar_MouseMove" MouseUp="ProgressBar_MouseUp" MouseDown="ProgressBar_MouseDown" Value="{Binding CurrentTimeTotalSeconds}"
                          ValueChanged="TimeProgressBar_ValueChanged"
-                         Foreground="{StaticResource MediaSlider.Foreground}" Background="{StaticResource MediaSlider.Backgound.Active}"/>
-            <Ellipse x:Name="EllipseThumb" Height="12" Width="12" Fill="{StaticResource SliderThumb.Static.Background}" Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="3" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+                         Foreground="{DynamicResource MediaSlider.Foreground}" Background="{DynamicResource MediaSlider.Backgound.Active}"/>
+            <Ellipse x:Name="EllipseThumb" Height="12" Width="12" Fill="{DynamicResource SliderThumb.Static.Background}" Stroke="{DynamicResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="3" HorizontalAlignment="Left" IsHitTestVisible="False"/>
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TotalTimeString}" Margin="5,0" d:Text="0:00"/>
 
-            <ProgressBar x:Name="VolumeProgressbar" Grid.Column="4" Height="26" Width="100" Style="{StaticResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
-                         Maximum="1" Minimum="0" Value="{Binding Volume,Mode=TwoWay}" Foreground="{StaticResource MediaSlider.Foreground}" Background="{StaticResource MediaSlider.Backgound.Active}"
+            <ProgressBar x:Name="VolumeProgressbar" Grid.Column="4" Height="26" Width="100" Style="{DynamicResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
+                         Maximum="1" Minimum="0" Value="{Binding Volume,Mode=TwoWay}" Foreground="{DynamicResource MediaSlider.Foreground}" Background="{DynamicResource MediaSlider.Backgound.Active}"
                          MouseMove="VolumeProgressbar_MouseMove" MouseDown="ProgressBar_MouseDown" MouseUp="ProgressBar_MouseUp" ValueChanged="VolumeProgressbar_ValueChanged"/>
-            <Ellipse x:Name="EllipseThumbVol" Height="12" Width="12" Fill="{StaticResource SliderThumb.Static.Background}" Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="4" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="29,0,0,0"/>
+            <Ellipse x:Name="EllipseThumbVol" Height="12" Width="12" Fill="{DynamicResource SliderThumb.Static.Background}" Stroke="{DynamicResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="4" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="29,0,0,0"/>
 
             <!--Slider x:Name="VolumeSlider" Grid.Column="4" Width="100" HorizontalAlignment="Right" TickPlacement="None" IsSelectionRangeEnabled="True" SelectionStart="0" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" Foreground="{StaticResource MediaSlider.Foreground}" Background="{StaticResource MediaSlider.Backgound.Active}" VerticalAlignment="Center"
                     Minimum="0" Maximum="1" LargeChange="0.05" IsMoveToPointEnabled="True" Margin="8"
@@ -234,10 +234,6 @@
 
                 </Button>
             </Grid>
-            <Button Content="o" VerticalAlignment="Top" HorizontalAlignment="Left" Background="Black" BorderThickness="0"
-            Command="{Binding OpenFileCommand}" Visibility="Hidden"/>
-
-
         </Grid>
     </Border>
 </UserControl>

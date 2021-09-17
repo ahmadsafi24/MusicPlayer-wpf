@@ -8,16 +8,16 @@
              xmlns:viewmodel="clr-namespace:MusicApplication.ViewModel"
              mc:Ignorable="d"
              x:Name="mainview" d:DesignWidth="673.449" d:DesignHeight="440.302"
-             Background="{StaticResource MainView.Background}"
-             Foreground="{StaticResource MainView.Foreground}"
+             Background="{DynamicResource MainView.Background}"
+             Foreground="{DynamicResource MainView.Foreground}"
              Padding="0">
     <DockPanel LastChildFill="True">
-        <control:Menubar DockPanel.Dock="Top" Background="#19878787"/>
+        <control:Menubar DockPanel.Dock="Top" BorderBrush="#595B5B5B" BorderThickness="0,0,0,1"/>
         <control:PlayerControl DockPanel.Dock="Bottom" BorderBrush="#595B5B5B" BorderThickness="0,1,0,0"/>
         <control:MediaInfoCard DockPanel.Dock="Bottom"/>
-        <Grid DockPanel.Dock="Top" Margin="10">
+        <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="260"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <control:Playlist Grid.Column="0"/>

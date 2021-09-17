@@ -28,8 +28,8 @@ namespace Engine.Utility
 
                     bitmap.StreamSource = ms;
                     bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.DecodePixelWidth = 10;
-                    bitmap.DecodePixelHeight = 10;
+                    bitmap.DecodePixelWidth = 50;
+                    bitmap.DecodePixelHeight = 50;
 
                     bitmap.EndInit();
                     bitmap.Freeze();
@@ -64,6 +64,16 @@ namespace Engine.Utility
 
             return bitmap;
         }
-
     }
+
+    public class Class2
+    {
+        public event EventHandlerImage OnImageCreated;
+        public async void CreateImage(string File)
+        {
+            await Task.Run(() => OnImageCreated?.Invoke(Class1.ExtractCover(File)));
+        }
+    }
+
+    public delegate void EventHandlerImage(BitmapImage image);
 }

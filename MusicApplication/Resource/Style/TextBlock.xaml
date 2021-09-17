@@ -4,8 +4,8 @@
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="TextWrapping" Value="NoWrap"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextBlock.Foreground}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource MainFont}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBlock.Foreground}"/>
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>

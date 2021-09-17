@@ -32,18 +32,24 @@ namespace MusicApplication.Control
             OpenCurrentFileLocationCommand = new DelegateCommand(() => Shared.OpenCurrentFileLocation());
             SelectCurrentFileInPlaylistCommand = new DelegateCommand(() => MainCommands.FindCurrentFile());
             AllEvents.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
-            AllEvents.PlaybackStateChanged += async (_) =>
+            AllEvents.PlaybackStateChanged += async (Engine.Enums.PlaybackState playbackState) =>
             {
-                await Task.Run(() =>
+                if (playbackState == Engine.Enums.PlaybackState.Opened)
                 {
-                    NotifyPropertyChanged(nameof(TagFile));
 
-                    TagFile = PlaylistManager.PlaylistItems[PlaylistManager.OpenedFileIndex];
-                    NotifyPropertyChanged(nameof(Cover));
+                    await Task.Run(() =>
+                    {
+                        TagFile = (AudioFile)(PlaylistManager.PlaylistItems?[PlaylistManager.OpenedFileIndex]);
+                        NotifyPropertyChanged(nameof(TagFile));
 
-                    NotifyPropertyChanged(nameof(TotalTimeString));
-                    NotifyPropertyChanged(nameof(CurrentTimeString));
-                });
+                        NotifyPropertyChanged(nameof(TotalTimeString));
+                        NotifyPropertyChanged(nameof(CurrentTimeString));
+
+                        Engine.Utility.Class2 class2 = new();
+                        class2.OnImageCreated += (BitmapImage ti) => { img = ti; NotifyPropertyChanged(nameof(Cover)); };
+                        class2.CreateImage(MainCommands.Source);
+                    });
+                }
             };
         }
 
@@ -55,9 +61,21 @@ namespace MusicApplication.Control
             });
         }
 
+        BitmapImage img = new();
+        public BitmapImage Cover
+        {
+            get
+            {
+
+
+                return img;
+                //return Engine.Utility.Class1.ExtractCover(MainCommands.Source);
+            }
+        }
+
 #pragma warning disable CA1822 // Mark members as static
         public AudioFile TagFile { get; set; }
-        public BitmapImage Cover => Engine.Utility.Class1.ExtractCover(MainCommands.Source);
+
         public string CurrentTimeString => MainCommands.CurrentTimeString;
         public string TotalTimeString => MainCommands.TotalTimeString;
 #pragma warning restore CA1822 // Mark members as static

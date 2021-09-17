@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MusicApplication.Control" d:DataContext="{d:DesignInstance Type=local:MediaInfoCardViewModel}"
              mc:Ignorable="d" 
              d:DesignWidth="800" d:Foreground="White"
-             Background="{StaticResource MediaInfoCard.Background}" Foreground="{StaticResource MainView.Foreground}" BorderBrush="{StaticResource MediaInfoCard.BorderBrush}"  BorderThickness="0,2,0,0"
+             Background="{DynamicResource MediaInfoCard.Background}" Foreground="{DynamicResource MainView.Foreground}" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}"  BorderThickness="0,2,0,0"
              >
     <UserControl.DataContext>
         <local:MediaInfoCardViewModel/>
@@ -43,10 +43,10 @@
             </Grid.RowDefinitions>
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="0" BorderBrush="{StaticResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5">
                 <Border.Effect>
-                    <DropShadowEffect Color="{Binding Color, Source={StaticResource MediaCover.Background}}" ShadowDepth="0" Opacity="0.495" BlurRadius="20" />
+                    <DropShadowEffect Color="{DynamicResource AccentColor}" ShadowDepth="0" Opacity="1" BlurRadius="32" />
                 </Border.Effect>
                 <Border.Background>
-                    <SolidColorBrush Color="{Binding Color, Source={StaticResource MediaCover.Background}}" Opacity="0.2" />
+                    <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.5"/>
                 </Border.Background>
                 <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" ClipToBounds="True"/>
             </Border>

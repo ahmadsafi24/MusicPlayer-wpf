@@ -14,7 +14,7 @@ namespace Engine
     {
 
         public static event EventHandlerNull PlaylistCurrentFileChanged;
-        public static int OpenedFileIndex { get; set; }
+        public static int OpenedFileIndex { get; set; } = -1;
 
         /*private static void FindFileInPlaylist(string file)
         {
@@ -58,7 +58,7 @@ namespace Engine
 
         public static void Remove(int PlaylistIndex, int index)
         {
-            Playlists[PlaylistIndex].Items.RemoveAt(index);
+            Playlists[PlaylistIndex].RemoveItem(index);
         }
 
         public static void Clear()

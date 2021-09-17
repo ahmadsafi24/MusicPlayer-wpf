@@ -23,16 +23,6 @@ namespace MusicApplication.Control
         public Playlist()
         {
             InitializeComponent();
-            PlaylistManager.PlaylistCurrentFileChanged += async () =>
-            {
-                listView.ScrollIntoView(listView.SelectedItem);
-                await Task.Delay(0);
-            };
-            PlaylistManager.Playlists[0].PlaylistUpdated += async () =>
-            {
-                listView.Focus();
-                await Task.Delay(0);
-            };
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -51,13 +41,11 @@ namespace MusicApplication.Control
 
         private void ButtonRemove_Click(object sender, RoutedEventArgs e)
         {
-            if (listView.SelectedItem != null)
+            if (listView.SelectedIndex is not -1)
             {
-                foreach (object item in listView.SelectedItems)
-                {
-                    int index = listView.Items.IndexOf(item);
-                    PlaylistManager.Remove(0, index);
-                }
+                int index = listView.SelectedIndex;
+                PlaylistManager.Remove(0, index);
+
             }
         }
 
@@ -80,15 +68,8 @@ namespace MusicApplication.Control
         public ObservableCollection<AudioFile> Playlist { get; set; } = new();
         public PlaylistViewModel()
         {
-            PlaylistManager.Playlists[0].PlaylistUpdated += async () =>
-            {
-
-                await Task.Run(() =>
-                {
-                    Playlist = new(PlaylistManager.PlaylistItems);
-                    NotifyPropertyChanged(nameof(Playlist));
-                });
-            };
+            NotifyPropertyChanged(null);
+            PlaylistManager.Playlists[0].PlaylistUpdated += PlaylistViewModel_PlaylistUpdated;
 
             PlaylistManager.PlaylistCurrentFileChanged += async () =>
             {
@@ -100,7 +81,16 @@ namespace MusicApplication.Control
             };
         }
 
-        public int SelectedIndex { get; set; }
+        private async Task PlaylistViewModel_PlaylistUpdated()
+        {
+            await Task.Run(() =>
+            {
+                Playlist = new(PlaylistManager.PlaylistItems);
+                NotifyPropertyChanged(nameof(Playlist));
+            });
+        }
+
+        public int SelectedIndex { get; set; } = -1;
 
 
 

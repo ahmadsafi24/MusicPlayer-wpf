@@ -31,13 +31,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border x:Name="rectangle" Background="{StaticResource ScrollBar.Static.Thumb}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}"/>
+                    <Border x:Name="rectangle" Background="{DynamicResource ScrollBar.Static.Thumb}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}"/>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="{StaticResource ScrollBar.MouseOver.Thumb}"/>
+                            <Setter Property="Background" TargetName="rectangle" Value="{DynamicResource ScrollBar.MouseOver.Thumb}"/>
                         </Trigger>
                         <Trigger Property="IsDragging" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="{StaticResource ScrollBar.Pressed.Thumb}"/>
+                            <Setter Property="Background" TargetName="rectangle" Value="{DynamicResource ScrollBar.Pressed.Thumb}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -51,13 +51,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border x:Name="rectangle" Background="{StaticResource ScrollBar.Static.Thumb}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}"/>
+                    <Border x:Name="rectangle" Background="{DynamicResource ScrollBar.Static.Thumb}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}"/>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="{StaticResource ScrollBar.MouseOver.Thumb}"/>
+                            <Setter Property="Background" TargetName="rectangle" Value="{DynamicResource ScrollBar.MouseOver.Thumb}"/>
                         </Trigger>
                         <Trigger Property="IsDragging" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="{StaticResource ScrollBar.Pressed.Thumb}"/>
+                            <Setter Property="Background" TargetName="rectangle" Value="{DynamicResource ScrollBar.Pressed.Thumb}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -67,7 +67,7 @@
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
-        <Setter Property="Background" Value="{StaticResource ScrollBar.Static.Background}"/>
+        <Setter Property="Background" Value="{DynamicResource ScrollBar.Static.Background}"/>
         <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="12"/>
@@ -90,7 +90,7 @@
                                 <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
                             </Track.IncreaseRepeatButton>
                             <Track.Thumb>
-                                <Thumb Style="{StaticResource ScrollBarThumbVertical}"/>
+                                <Thumb Style="{DynamicResource ScrollBarThumbVertical}"/>
                             </Track.Thumb>
                         </Track>
                     </Grid>
@@ -121,7 +121,7 @@
                                         <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
                                     </Track.IncreaseRepeatButton>
                                     <Track.Thumb>
-                                        <Thumb Style="{StaticResource ScrollBarThumbHorizontal}"/>
+                                        <Thumb Style="{DynamicResource ScrollBarThumbHorizontal}"/>
                                     </Track.Thumb>
                                 </Track>
                             </Grid>

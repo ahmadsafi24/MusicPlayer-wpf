@@ -2,29 +2,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MusicApplication.Control" xmlns:Engine="clr-namespace:Engine;assembly=Engine" x:Class="MusicApplication.Control.Playlist"
+             xmlns:local="clr-namespace:MusicApplication.Control" xmlns:Engine="clr-namespace:Engine;assembly=Engine" x:Name="userControl" x:Class="MusicApplication.Control.Playlist"
              d:DataContext="{d:DesignInstance Type={x:Type local:PlaylistViewModel}}"
              mc:Ignorable="d" 
-             d:DesignHeight="375.158" Background="{StaticResource Playlist.Background}">
+             d:DesignHeight="375.158" Background="{DynamicResource Playlist.Background}" d:Width="205">
     <UserControl.DataContext>
         <local:PlaylistViewModel/>
     </UserControl.DataContext>
-    <DockPanel LastChildFill="True">
+    <DockPanel LastChildFill="True" Width="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}">
         <Grid DockPanel.Dock="Top">
             <TextBlock Text="Playlist" Margin="5"/>
             <!--TextBlock Text="{Binding Playlist.Count,FallbackValue=0}" HorizontalAlignment="Right"/-->
         </Grid>
-        <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,0">
+        <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,0">
             <StackPanel Orientation="Horizontal">
                 <Button Content="Add" Click="ButtonAdd_Click"/>
                 <Button Content="Remove" Click="ButtonRemove_Click"/>
                 <Button Content="Clear" Click="ButtonClear_Click"/>
-            </StackPanel>  
+            </StackPanel>
         </Border>
         <ListView x:Name="listView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ItemsSource="{Binding Playlist}" d:ItemsSource="{d:SampleData ItemCount=10}" Background="{x:Null}" BorderBrush="#FF1D1D1D" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" ScrollViewer.CanContentScroll="True"
                   SelectedIndex="{Binding SelectedIndex}" SelectionChanged="ListView_SelectionChanged" SnapsToDevicePixels="True" SelectionMode="Extended" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
-                  ScrollViewer.IsDeferredScrollingEnabled="False" >
+                  ScrollViewer.IsDeferredScrollingEnabled="False" Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Playlist}}}" >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel IsItemsHost="True"/>
@@ -32,24 +32,24 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel x:Name="grid"  Background="Transparent" MouseLeftButtonDown="Item_MouseLeftButtonDown" Orientation="Horizontal">
-                        <Border d:Visibility="Collapsed"  Height="46" Width="46" HorizontalAlignment="Left" BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}" BorderThickness="1" Margin="2" CornerRadius="2" Grid.RowSpan="3">
+                    <Grid x:Name="grid" Background="Transparent" MouseLeftButtonDown="Item_MouseLeftButtonDown" Margin="0,2">
+                        <!--Border Visibility="Collapsed"  Height="46" Width="46" HorizontalAlignment="Left" BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}" BorderThickness="1" Margin="2" CornerRadius="2" Grid.RowSpan="3">
                             <Border.Background>
                                 <SolidColorBrush Color="{Binding Color, Source={StaticResource MediaCover.Background}}" Opacity="0.5"/>
                             </Border.Background>
                             <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding Cover.Result,IsAsync=True,FallbackValue={x:Null}}" RenderOptions.BitmapScalingMode="Unspecified"/>
 
-                        </Border>
-                        <StackPanel Margin="5,0,0,0" Orientation="Vertical" VerticalAlignment="Stretch">
-                            <TextBlock FontSize="10" Margin="0,2"
+                        </Border-->
+                        <StackPanel Orientation="Vertical" >
+                            <TextBlock FontSize="10" Margin="0,2" 
                                        Text="{Binding Title}" TextTrimming="CharacterEllipsis"/>
                             <TextBlock FontSize="10" Margin="0,2"
                                        Text="{Binding Artist}" TextTrimming="CharacterEllipsis"/>
-                            <TextBlock FontSize="10" Margin="0,2"
+                            <TextBlock FontSize="10" Margin="0,2" d:Text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
                                        Text="{Binding Album}" TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
 
-                    </StackPanel>
+                    </Grid>
 
 
 

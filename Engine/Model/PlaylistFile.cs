@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Linq;
+using System.Diagnostics;
+
 namespace Engine.Model
 {
     //TODO use LINQ To search delete or.... 
@@ -52,7 +54,7 @@ namespace Engine.Model
 
         internal void AddItem(string File)
         {
-            Items.Add(new AudioFile(File));
+            Items.Add(new AudioFile() { FilePath = File });
             RemoveDuplicates();
             FireUpdatedEvent();
         }
@@ -67,17 +69,6 @@ namespace Engine.Model
         internal void CreateNewAndAdd(string[] filepathlist)
         {
             Items = CreateNew(filepathlist);
-            {//_createNew(filepathlist).ForEach(x => Items.Add(x));
-                /*
-                 Application.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    foreach (string path in filepathlist)
-                    {
-                        Items.Add(new AudioFile(path));
-                    }
-                });
-                */
-            }
         }
 
         private static List<AudioFile> CreateNew(string[] pathlist)
@@ -87,7 +78,7 @@ namespace Engine.Model
             {
                 foreach (string path in pathlist)
                 {
-                    list.Add(new AudioFile(path));
+                    list.Add(new AudioFile());
                 }
             });
             return list;
@@ -97,8 +88,7 @@ namespace Engine.Model
         {
             await Task.Run(() =>
             {
-                Items.AddRange(filepathlist.Select(path => new AudioFile(path)));
-                //Application.Current.Dispatcher.Invoke((Action)delegate{});
+                Items.AddRange(filepathlist.Select(path => new AudioFile() { FilePath = path }));
             });
             RemoveDuplicates();
             FireUpdatedEvent();
@@ -120,6 +110,7 @@ namespace Engine.Model
 
         internal void RemoveItem(int index)
         {
+            Debug.WriteLine(index);
             Items.RemoveAt(index);
             FireUpdatedEvent();
         }

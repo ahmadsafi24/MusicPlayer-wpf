@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Engine;
+using Engine.Commands;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -19,6 +21,8 @@ namespace MusicApplication
         {
             Debug.WriteLine($"AppOnStartUp-args:[{ e.Args}]");
             base.OnStartup(e);
+            MainCommands.Initialize();
+            PlaylistManager.Initialize();
             WindowsManager.StartApp(e.Args);
         }
     }

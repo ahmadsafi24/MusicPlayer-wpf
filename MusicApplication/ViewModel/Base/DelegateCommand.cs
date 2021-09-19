@@ -26,10 +26,7 @@ namespace MusicApplication.ViewModel.Base
 
         public bool IsEnabled
         {
-            get
-            {
-                return isEnabled;
-            }
+            get => isEnabled;
             set
             {
                 if (isEnabled != value)
@@ -45,7 +42,10 @@ namespace MusicApplication.ViewModel.Base
         protected virtual void OnCanExecuteChanged()
         {
             EventHandler handler = CanExecuteChanged;
-            if (handler != null) handler(this, EventArgs.Empty);
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
     }
 }

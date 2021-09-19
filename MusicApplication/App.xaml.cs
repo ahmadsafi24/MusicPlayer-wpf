@@ -1,12 +1,6 @@
 ﻿using Engine;
-using Engine.Commands;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace MusicApplication
@@ -17,11 +11,18 @@ namespace MusicApplication
     public partial class App : Application
     {
 
+        [DllImport("Kernel32")]
+        public static extern void AllocConsole();
+
+        [DllImport("Kernel32")]
+        public static extern void FreeConsole();
+
         protected override void OnStartup(StartupEventArgs e)
         {
+            AllocConsole();
             Debug.WriteLine($"AppOnStartUp-args:[{ e.Args}]");
             base.OnStartup(e);
-            MainCommands.Initialize();
+            Player.Initialize();
             PlaylistManager.Initialize();
             WindowsManager.StartApp(e.Args);
         }

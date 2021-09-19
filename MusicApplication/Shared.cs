@@ -1,6 +1,4 @@
 ﻿using Engine;
-using Engine.Commands;
-using System.Configuration;
 using System.Diagnostics;
 
 namespace MusicApplication
@@ -9,9 +7,10 @@ namespace MusicApplication
     {
         internal static void OpenCurrentFileLocation()
         {
-            Helper.OpenFileLocation.Open(MainCommands.Source);
+            Helper.OpenFileLocation.Open(Player.Source);
         }
 
+        internal const string stringformat = "mm\\:ss";
         internal static async void OpenFilePicker()
         {
             Debug.WriteLine("opening OpenFilePicker");
@@ -19,8 +18,8 @@ namespace MusicApplication
             if (files.Length > 0)
             {
                 await PlaylistManager.AddRangeAsync(0, files);
-                MainCommands.Source = files[0];
-                await MainCommands.OpenAsync();
+                Player.Source = files[0];
+                await Player.OpenAsync();
             }
 
         }

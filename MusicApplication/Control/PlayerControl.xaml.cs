@@ -1,13 +1,11 @@
 ﻿using Engine;
+using Engine.Enums;
 using MusicApplication.ViewModel.Base;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Engine.Commands;
-using System.Threading;
-using Engine.Enums;
 
 namespace MusicApplication.Control
 {
@@ -30,16 +28,22 @@ namespace MusicApplication.Control
 
         private async void TimeProgressBar_MouseMove(object sender, MouseEventArgs e)
         {
+
             e.Handled = true;
             ProgressBar progressBar = (ProgressBar)sender;
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
+
                 double val = SetPbValue(e.GetPosition(progressBar).X, progressBar);
-                if (MainCommands.TotalSeconds != val
-                    && val <= MainCommands.TotalSeconds)
+                if (val != Player.CurrentTime.TotalSeconds
+                    && val <= Player.TotalTime.TotalSeconds)
                 {
-                    await MainCommands.SeekAsync(val);
+
+                    //progressBar.Value = val;
+                    //progressBar.GetBindingExpression(ProgressBar.ValueProperty).UpdateSource();
+                    await Player.SeekAsync(val);
                 }
+
             }
         }
 
@@ -64,7 +68,7 @@ namespace MusicApplication.Control
             ProgressBar progressBar = (ProgressBar)sender;
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                MainCommands.ChangeVolume(SetPbValue(e.GetPosition(progressBar).X, progressBar));
+                Player.ChangeVolume(SetPbValue(e.GetPosition(progressBar).X, progressBar));
             }
         }
 
@@ -87,9 +91,7 @@ namespace MusicApplication.Control
         {
             _ = Mouse.Capture(null);
             e.Handled = true;
-
         }
-
 
         private static Thickness SetEllipseMargin(ProgressBar progressBar, double ellipseWidth)
         {
@@ -116,29 +118,34 @@ namespace MusicApplication.Control
     public class PlayerControlViewModel : ViewModelBase
     {
         public ICommand PlayPauseCommand { get; }
-        public ICommand OpenFileCommand { get; }
 
         public PlayerControlViewModel()
         {
             PlayPauseCommand = new DelegateCommand(() => PlayPause());
-            OpenFileCommand = new DelegateCommand(() => Shared.OpenFilePicker());
 
-            Engine.Events.AllEvents.PlaybackStateChanged += PlaybackStateChanged;
-            Engine.Events.AllEvents.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
-            Engine.Events.AllEvents.VolumeChanged += AudioPlayer_VolumeChanged;
+            Player.PlaybackStateChanged += PlaybackStateChanged;
+            Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
+            Player.VolumeChanged += AudioPlayer_VolumeChanged;
+            //PlaylistManager.PlaylistCurrentFileChanged += PlaylistManager_PlaylistCurrentFileChanged;
+        }
+
+        private async void PlaylistManager_PlaylistCurrentFileChanged()
+        {
+            //bool tb = !PlaylistManager.IsFirst(PlaylistManager.Playlists[0], MainCommands.Source);
+            await Task.Run(() => previousAudioFileCommand.IsEnabled = false);
         }
 
         private void PlayPause()
         {
             if (IsPlaying)
             {
-                MainCommands.Pause();
+                Player.Pause();
             }
-            else if (MainCommands.PlaybackState is PlaybackState.Paused
+            else if (Player.PlaybackState is PlaybackState.Paused
                     or PlaybackState.Stopped
                     or PlaybackState.Ended)
             {
-                MainCommands.Play();
+                Player.Play();
             }
             else
             {
@@ -146,56 +153,63 @@ namespace MusicApplication.Control
             }
         }
 
-        private async Task AudioPlayer_VolumeChanged()
+        private async void AudioPlayer_VolumeChanged()
         {
             await Task.Run(() => { NotifyPropertyChanged(nameof(Volume)); });
         }
 
-        private async Task AudioPlayer_CurrentTimeChanged(TimeSpan Time)
+        private async void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
         {
             await Task.Run(() =>
             {
-                NotifyPropertyChanged(nameof(CurrentTimeString));
+                crtts = Time.TotalSeconds;
                 NotifyPropertyChanged(nameof(CurrentTimeTotalSeconds));
+                NotifyPropertyChanged(nameof(CurrentTimeString));
             });
         }
 
-        private async Task PlaybackStateChanged(Engine.Enums.PlaybackState newPlaybackState)
+        private async void PlaybackStateChanged(PlaybackState newPlaybackState)
         {
-            await Task.Delay(0);
-            if (newPlaybackState == Engine.Enums.PlaybackState.Playing)
+            await Task.Run(() =>
             {
-                IsPlaying = true;
-                NotifyPropertyChanged(nameof(IsPlaying));
-            }
-            else
-            {
-                IsPlaying = false;
-                NotifyPropertyChanged(nameof(IsPlaying));
-            }
+                if (newPlaybackState == PlaybackState.Playing)
+                {
+                    IsPlaying = true;
+                    NotifyPropertyChanged(nameof(IsPlaying));
+                }
+                else
+                {
+                    IsPlaying = false;
+                    NotifyPropertyChanged(nameof(IsPlaying));
+                }
 
-            NotifyPropertyChanged(nameof(TotalTimeString));
-            NotifyPropertyChanged(nameof(CurrentTimeString));
-            NotifyPropertyChanged(nameof(TotalTimeTotalSeconds));
-            NotifyPropertyChanged(nameof(CurrentTimeTotalSeconds));
+                NotifyPropertyChanged(nameof(TotalTimeString));
+                NotifyPropertyChanged(nameof(CurrentTimeString));
+                NotifyPropertyChanged(nameof(TotalTimeTotalSeconds));
+                NotifyPropertyChanged(nameof(CurrentTimeTotalSeconds));
+            });
         }
+        public string CurrentTimeString => Player.CurrentTime.ToString(Shared.stringformat);
 
-        public string CurrentTimeString => MainCommands.CurrentTimeString;
+        public string TotalTimeString => Player.TotalTime.ToString(Shared.stringformat);
 
-        public string TotalTimeString => MainCommands.TotalTimeString;
-
+        private double crtts;
         public double CurrentTimeTotalSeconds
         {
-            get => MainCommands.CurrentSeconds;
-            set => Task.Run(async () => { await MainCommands.SeekAsync(value); });
+            get => crtts;//Player.CurrentSeconds;
+            set
+            {
+                crtts = value;
+                //Task.Run(async () => { await Player.SeekAsync(value); });
+            }
         }
 
-        public double TotalTimeTotalSeconds => MainCommands.TotalSeconds;
+        public double TotalTimeTotalSeconds => Player.TotalTime.TotalSeconds;
 
         public double Volume
         {
-            get => MainCommands.Volume;
-            set => MainCommands.Volume = value;
+            get => Player.Volume;
+            set => Player.Volume = value;
         }
 
         public bool IsPlaying { get; set; }

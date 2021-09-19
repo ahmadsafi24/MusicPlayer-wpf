@@ -1,11 +1,7 @@
-﻿using Engine.Commands;
-using Engine.Enums;
-using Engine.Events.Base;
+﻿using Engine.Enums;
 using Engine.Internal;
 using Engine.Model;
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Engine
@@ -13,7 +9,7 @@ namespace Engine
     public static class PlaylistManager
     {
 
-        public static event EventHandlerNull PlaylistCurrentFileChanged;
+        public static event EventHandlerEmpty PlaylistCurrentFileChanged;
         public static int OpenedFileIndex { get; set; } = -1;
 
         /*private static void FindFileInPlaylist(string file)
@@ -28,20 +24,36 @@ namespace Engine
 
         public static void FindOpenedFileIndex()
         {
-            int i = Playlists[0].FindItemlambda(Player.Source);
+            if (Playlists[0].Items == null)
+            {
+                return;
+            }
+
+            int i = Playlists[0].FindItemlambda(NaudioPlayer.Source);
             if (i != -1)
             {
                 OpenedFileIndex = i;
             };
-            _ = (PlaylistCurrentFileChanged?.Invoke());
+            PlaylistCurrentFileChanged?.Invoke();
         }
 
         #region Playlist
         //
         public static void Initialize()
         {
+            Player.PlaybackStateChanged += Player_PlaybackStateChanged;
             Playlists.Add(new PlaylistFile());
+            Log.WriteLine("Playlist Intialized");
         }
+
+        private static void Player_PlaybackStateChanged(PlaybackState newPlaybackState)
+        {
+            if (newPlaybackState == PlaybackState.Ended)
+            {
+                PlaybackEnded();
+            }
+        }
+
         public static List<PlaylistFile> Playlists { get; set; } = new();
 
         public static List<AudioFile> PlaylistItems { get => Playlists[0].Items; }
@@ -63,49 +75,52 @@ namespace Engine
 
         public static void Clear()
         {
-            Playlists[0].Clear();
-            GC.Collect();
+            if (NaudioPlayer.Source is not null or "" or " ")
+            {
+                Playlists[0].ClearSilent();
+                Playlists[0].AddItem(NaudioPlayer.Source);
+            }
+            else
+            {
+                Playlists[0].Clear();
+            }
         }
 
-        internal static void PlaybackEnded()
+        private static async void PlaybackEnded()
         {
-            Task.Run(() =>
-           {
-               Task.Delay(1000).Wait();
-           });
-            Player.Pause();
-            Player.Seek(0);
-            Player.Play();
-            return;
+            NaudioPlayer.Close();
+            await NaudioPlayer.OpenAsync();
+
+            Log.WriteLine("Playlist-Playback Ended");
         }
 
         #endregion
 
-        private static bool IsFirst(PlaylistFile playlist, string OpenedItem)
+        public static bool IsFirst(PlaylistFile playlist, string OpenedItem)
         {
             return playlist.FindItemlambda(OpenedItem) == 0;
         }
 
-        private static bool IsLast(PlaylistFile playlist, string OpenedItem)
+        public static bool IsLast(PlaylistFile playlist, string OpenedItem)
         {
             return playlist.FindItemlambda(OpenedItem) == playlist.Items.Count - 1;
         }
 
         public static async void PlayNext()
         {
-            if (!IsLast(Playlists[0], Player.Source))
+            if (!IsLast(Playlists[0], Internal.NaudioPlayer.Source))
             {
-                MainCommands.Source = Playlists[0].Items[OpenedFileIndex + 1].FilePath;
-                await MainCommands.OpenAsync();
+                Player.Source = Playlists[0].Items[OpenedFileIndex + 1].FilePath;
+                await Player.OpenAsync();
             }
         }
 
         public static async void PlayPrevious()
         {
-            if (!IsFirst(Playlists[0], Player.Source))
+            if (!IsFirst(Playlists[0], Internal.NaudioPlayer.Source))
             {
-                MainCommands.Source = Playlists[0].Items[OpenedFileIndex - 1].FilePath;
-                await MainCommands.OpenAsync();
+                Player.Source = Playlists[0].Items[OpenedFileIndex - 1].FilePath;
+                await Player.OpenAsync();
             }
 
         }
@@ -120,15 +135,15 @@ namespace Engine
                     switch (RepeatMode)
                     {
                         case RepeatMode.Stop:
-                            MainCommands.Stop();
+                            Player.Stop();
                             break;
                         case RepeatMode.Close:
-                            MainCommands.Close();
+                            Player.Close();
                             break;
                         case RepeatMode.CurrentFile:
-                            MainCommands.Stop();
-                            _ = Player.SeekAsync(0);
-                            MainCommands.Play();
+                            Player.Stop();
+                            _ = Internal.NaudioPlayer.SeekAsync(0);
+                            Player.Play();
                             break;
                         case RepeatMode.NextFile:
                             break;

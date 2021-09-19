@@ -189,7 +189,7 @@
             <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TotalTimeString}" Margin="5,0" d:Text="0:00"/>
 
             <ProgressBar x:Name="VolumeProgressbar" Grid.Column="4" Height="26" Width="100" Style="{DynamicResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
-                         Maximum="1" Minimum="0" Value="{Binding Volume,Mode=TwoWay}" Foreground="{DynamicResource MediaSlider.Foreground}" Background="{DynamicResource MediaSlider.Backgound.Active}"
+                         Maximum="100" Minimum="0" Value="{Binding Volume,Mode=TwoWay}" Foreground="{DynamicResource MediaSlider.Foreground}" Background="{DynamicResource MediaSlider.Backgound.Active}"
                          MouseMove="VolumeProgressbar_MouseMove" MouseDown="ProgressBar_MouseDown" MouseUp="ProgressBar_MouseUp" ValueChanged="VolumeProgressbar_ValueChanged"/>
             <Ellipse x:Name="EllipseThumbVol" Height="12" Width="12" Fill="{DynamicResource SliderThumb.Static.Background}" Stroke="{DynamicResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="4" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="29,0,0,0"/>
 

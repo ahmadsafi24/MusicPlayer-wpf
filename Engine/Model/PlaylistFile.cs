@@ -1,10 +1,8 @@
-﻿using Engine.Events.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Linq;
-using System.Diagnostics;
 
 namespace Engine.Model
 {
@@ -110,9 +108,9 @@ namespace Engine.Model
 
         internal void RemoveItem(int index)
         {
-            Debug.WriteLine(index);
             Items.RemoveAt(index);
             FireUpdatedEvent();
+            Log.WriteLine(index + " removed");
         }
 
         internal void RemoveItem(AudioFile file)
@@ -132,6 +130,6 @@ namespace Engine.Model
             PlaylistUpdated?.Invoke();
         }
 
-        public event EventHandlerNull PlaylistUpdated;
+        public event EventHandlerEmpty PlaylistUpdated;
     }
 }

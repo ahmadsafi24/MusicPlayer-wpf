@@ -2,19 +2,20 @@
 using Engine.Model;
 using MusicApplication.ViewModel.Base;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Linq;
+
 namespace MusicApplication.Control
 {
     /// <summary>
     /// Interaction logic for Playlist.xaml
     /// </summary>
-    public partial class Playlist : UserControl
+    public partial class Playlist2 : UserControl
     {
-        public Playlist()
+        public Playlist2()
         {
             InitializeComponent();
         }
@@ -56,35 +57,25 @@ namespace MusicApplication.Control
         }
     }
 
-    public class PlaylistViewModel : ViewModelBase
+    public class PlaylistViewModel2 : ViewModelBase
     {
         //public ObservableCollection<AudioFile> Playlist { get; set; }
         public ObservableCollection<AudioFile> Playlist { get; set; } = new();
-        public PlaylistViewModel()
+        public PlaylistViewModel2()
         {
             NotifyPropertyChanged(null);
             PlaylistManager.Playlists[0].PlaylistUpdated += PlaylistViewModel_PlaylistUpdated;
-
-            PlaylistManager.PlaylistCurrentFileChanged += async () =>
-            {
-                await Task.Run(() =>
-                {
-                    SelectedIndex = PlaylistManager.OpenedFileIndex;
-                    NotifyPropertyChanged(nameof(SelectedIndex));
-                });
-            };
         }
 
         private async void PlaylistViewModel_PlaylistUpdated()
         {
             await Task.Run(() =>
             {
-                Playlist = new(PlaylistManager.PlaylistItems);
+                Playlist = new(PlaylistManager.PlaylistItems.ToArray());
                 NotifyPropertyChanged(nameof(Playlist));
             });
         }
 
-        public int SelectedIndex { get; set; } = -1;
 
 
 

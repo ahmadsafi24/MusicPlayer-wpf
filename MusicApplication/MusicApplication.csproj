@@ -46,9 +46,20 @@
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj" />
     <ProjectReference Include="..\Helper\Helper.csproj" />
+    <ProjectReference Include="..\WpfControlLibrary1\WpfControlLibrary1.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Control\Playlist2.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Control\Playlist2.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Resource\Style\Other.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

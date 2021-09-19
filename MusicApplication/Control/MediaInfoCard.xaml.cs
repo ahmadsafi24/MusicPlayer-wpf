@@ -1,12 +1,10 @@
-﻿using MusicApplication.ViewModel.Base;
+﻿using Engine;
+using Engine.Model;
+using MusicApplication.ViewModel.Base;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Engine;
-using Engine.Model;
-using Engine.Commands;
-using Engine.Events;
 using System.Windows.Media.Imaging;
 
 namespace MusicApplication.Control
@@ -16,10 +14,7 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class MediaInfoCard : UserControl
     {
-        public MediaInfoCard()
-        {
-            InitializeComponent();
-        }
+        public MediaInfoCard() => InitializeComponent();
     }
 
     public class MediaInfoCardViewModel : ViewModelBase
@@ -30,30 +25,31 @@ namespace MusicApplication.Control
         public MediaInfoCardViewModel()
         {
             OpenCurrentFileLocationCommand = new DelegateCommand(() => Shared.OpenCurrentFileLocation());
-            SelectCurrentFileInPlaylistCommand = new DelegateCommand(() => MainCommands.FindCurrentFile());
-            AllEvents.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
-            AllEvents.PlaybackStateChanged += async (Engine.Enums.PlaybackState playbackState) =>
+            SelectCurrentFileInPlaylistCommand = new DelegateCommand(() => Player.FindCurrentFile());
+            Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
+            Player.PlaybackStateChanged += async (Engine.Enums.PlaybackState playbackState) =>
             {
                 if (playbackState == Engine.Enums.PlaybackState.Opened)
                 {
-
                     await Task.Run(() =>
                     {
-                        TagFile = (AudioFile)(PlaylistManager.PlaylistItems?[PlaylistManager.OpenedFileIndex]);
+                        TagFile = new() { FilePath = Player.Source };
                         NotifyPropertyChanged(nameof(TagFile));
 
                         NotifyPropertyChanged(nameof(TotalTimeString));
                         NotifyPropertyChanged(nameof(CurrentTimeString));
 
-                        Engine.Utility.Class2 class2 = new();
-                        class2.OnImageCreated += (BitmapImage ti) => { img = ti; NotifyPropertyChanged(nameof(Cover)); };
-                        class2.CreateImage(MainCommands.Source);
+                        Engine.Utility.CoverImage2 CoverImage2 = new();
+                        CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
+                        CoverImage2.CreateImage(Player.Source);
                     });
                 }
             };
         }
 
-        private async Task AudioPlayer_CurrentTimeChanged(TimeSpan Time)
+        public BitmapImage Cover { get; set; }
+
+        private async void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
         {
             await Task.Run(() =>
             {
@@ -61,23 +57,11 @@ namespace MusicApplication.Control
             });
         }
 
-        BitmapImage img = new();
-        public BitmapImage Cover
-        {
-            get
-            {
-
-
-                return img;
-                //return Engine.Utility.Class1.ExtractCover(MainCommands.Source);
-            }
-        }
-
 #pragma warning disable CA1822 // Mark members as static
         public AudioFile TagFile { get; set; }
 
-        public string CurrentTimeString => MainCommands.CurrentTimeString;
-        public string TotalTimeString => MainCommands.TotalTimeString;
+        public string CurrentTimeString => Player.CurrentTime.ToString(Shared.stringformat);
+        public string TotalTimeString => Player.TotalTime.ToString(Shared.stringformat);
 #pragma warning restore CA1822 // Mark members as static
     }
 

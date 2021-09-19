@@ -42,9 +42,9 @@
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="0" BorderBrush="{StaticResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5">
-                <Border.Effect>
+                <!--Border.Effect>
                     <DropShadowEffect Color="{DynamicResource AccentColor}" ShadowDepth="0" Opacity="1" BlurRadius="32" />
-                </Border.Effect>
+                </Border.Effect-->
                 <Border.Background>
                     <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.5"/>
                 </Border.Background>

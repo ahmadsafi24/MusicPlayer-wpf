@@ -2,9 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--#region Neccessary-->
-    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
-    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
-    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FF838383"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FF838383"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="White"/>
     <!--#endregion-->
 
     <!--#region Titlebar -->
@@ -26,8 +26,8 @@
     <!--#endregion-->
 
     <!--#region New-->
-    
-    <SolidColorBrush x:Key="MediaButton.Disabled.Background" Color="#FFF4F4F4"/>
+
+    <SolidColorBrush x:Key="MediaButton.Disabled.Background" Color="#FF838383"/>
     <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF2252D1"/>
     <SolidColorBrush x:Key="ProgressBar.Background" Color="#FF292929"/>
     <SolidColorBrush x:Key="ProgressBar.Border" Color="#FF292929"/>

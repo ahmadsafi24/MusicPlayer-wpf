@@ -1,54 +1,40 @@
 ﻿using Engine;
-using Engine.Commands;
 using Helper.DarkUi;
-using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace MusicApplication
 {
     internal static class WindowsManager
     {
-        internal static bool isDark { get; set; } = Helper.CustomThemeListener.IsDark;
+
+
 
         [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true)]
         internal static extern bool SetPreferredAppMode(AppMode preferredAppMode);
 
-        internal static void ApplyWindowsTheme()
-        {
-            if (isDark)
-            {
-                _ = SetPreferredAppMode(AppMode.ForceDark);
-                ResourceDictionary Dark = new()
-                {
-                    Source = new Uri("..\\Resource\\Theme\\Dark.Xaml", UriKind.Relative)
-                };
-                Application.Current.Resources.MergedDictionaries[0] = Dark;
-            }
-            Debug.WriteLine("ApplyWindowsThemeCompleted");
-        }
+
         internal static Windows.MainWindow mainWindow = new();
         internal static void StartApp(string[] args)
         {
-            ApplyWindowsTheme();
+            //ApplyWindowsTheme();
             mainWindow.SourceInitialized += (_, _) =>
             {
                 Helper.IconHelper.RemoveIcon(mainWindow);
-                if (isDark)
-                {
-                    DwmApi.ToggleImmersiveDarkMode(mainWindow, true);
-                }
+
             };
             mainWindow.Show();
-
-            if (args?.Length > 0)
+            Dispatcher.CurrentDispatcher.Invoke(() =>
             {
-                Task.Run(async () => await PlaylistManager.AddRangeAsync(0, args));
-                MainCommands.Source = args[0];
-                Task.Run(async () => await MainCommands.OpenAsync());
-            }
+                if (args?.Length > 0)
+                {
+                    _ = Task.Run(async () => await PlaylistManager.AddRangeAsync(0, args));
+                    Player.Source = args[0];
+                    _ = Task.Run(async () => await Player.OpenAsync());
+                }
+            });
         }
 
         internal static void WindowInitialized(Window Window)
@@ -56,17 +42,16 @@ namespace MusicApplication
             _ = Window.Activate();
             Window.BringIntoView();
 
-            MainCommands.Initialize();
 
             Window.MouseWheel += (_, e) =>
             {
                 switch (e.Delta)
                 {
                     case >= 0:
-                        MainCommands.VolumeUp(0.05);
+                        Player.VolumeUp(5);
                         break;
                     default:
-                        MainCommands.VolumeDown(0.05);
+                        Player.VolumeDown(5);
                         break;
                 }
                 e.Handled = true;
@@ -78,8 +63,8 @@ namespace MusicApplication
             {
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 await PlaylistManager.AddRangeAsync(0, dropitems);
-                MainCommands.Source = dropitems[0];
-                await MainCommands.OpenAsync();
+                Player.Source = dropitems[0];
+                await Player.OpenAsync();
             };
         }
     }

@@ -1,18 +1,16 @@
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
 using Engine.Enums;
 using NAudio.Extras;
 using NAudio.Wave;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using PlaybackState = Engine.Enums.PlaybackState;
 
 namespace Engine.Internal
 {
     //ToDo: EngineMode  like with eq or with mono or pitch changable
     //ToDo Reader.WaveFormat.BitsPerSample
-    internal sealed class Player
+    internal sealed class NaudioPlayer
     {
         #region NAudio Engine
         private static MediaFoundationReader Reader;
@@ -30,12 +28,12 @@ namespace Engine.Internal
             InitializeTimers();
 
             WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
-            Debug.WriteLine("PlayerInitialized");
+            Log.WriteLine("PlayerInitialized");
         }
 
         private static void InitializeTimers()
         {
-            CurrentTimeWatcher.Interval = TimeSpan.FromMilliseconds(100);
+            CurrentTimeWatcher.Interval = TimeSpan.FromMilliseconds(200);
             CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
         }
 
@@ -65,7 +63,7 @@ namespace Engine.Internal
         #endregion
 
         private static string source;
-        internal static string Source { get => source; set { source = value; Debug.WriteLine(value); } }
+        internal static string Source { get => source; set { source = value; Log.WriteLine($"Source: {value}"); } }
 
         internal static double CurrentTimeWatcherInterval
         {
@@ -75,17 +73,18 @@ namespace Engine.Internal
 
         internal static double Volume
         {
-            get => ToDouble(WaveOutEvent.Volume);
+            get => ToDouble(WaveOutEvent.Volume) * 100;
             set
             {
                 try
                 {
-                    WaveOutEvent.Volume = value < 0 ? ToSingle(0) : value > 1 ? ToSingle(1) : ToSingle(value);
-                    Events.AllEvents.InvokeVolumeChanged();
+                    WaveOutEvent.Volume = value / 100 < 0 ? ToSingle(0) : value > 100 ? ToSingle(1) : ToSingle(value / 100);
+                    Player.InvokeVolumeChanged();
+                    Log.WriteLine("volume: " + (int)(WaveOutEvent.Volume * 100));
                 }
                 catch (Exception ex)
                 {
-                    _ = MessageBox.Show(ex.Message);
+                    Log.WriteLine(ex.Message);
                 }
             }
         }
@@ -95,10 +94,11 @@ namespace Engine.Internal
             try
             {
                 CurrentTime = TimeSpan.FromSeconds(totalseconds);
+                Log.WriteLine($"Seeking to {TimeSpan.FromSeconds(totalseconds).ToString(stringformat)}");
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message);
+                Log.WriteLine(ex.Message);
             }
         }
 
@@ -110,17 +110,14 @@ namespace Engine.Internal
             {
                 if (Reader is not null)
                 {
-                    Reader.CurrentTime = value.TotalSeconds <= 0 ? TimeSpan.FromSeconds(0) : value;
-                    Events.AllEvents.InvokeCurrentTime();
+                    Reader.CurrentTime = value.TotalSeconds <= 0 ? TimeSpan.FromSeconds(0) : value; 
+                    Player.InvokeCurrentTime(value);
                 }
             }
         }
 
         internal static TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
 
-        internal static string CurrentTimeString => CurrentTime.ToString(stringformat);
-
-        internal static string TotalTimeString => TotalTime.ToString(stringformat);
 
         internal static async Task OpenAsync()
         {
@@ -128,18 +125,24 @@ namespace Engine.Internal
             {
                 try
                 {
-                    Stop();
+                    //Stop();
+
+                    if (PlaybackState is PlaybackState.Playing or PlaybackState.Paused)
+                    {
+                        Stop();
+                        Close();
+                    }
 
                     Reader = new MediaFoundationReader(Source);
                     WaveOutEvent.Init(Equalizer8band);
 
-                    PlaylistManager.FindOpenedFileIndex();
+                    //PlaylistManager.FindOpenedFileIndex();
                     PlaybackState = PlaybackState.Opened;
                     Play();
                 }
                 catch (Exception ex)
                 {
-                    _ = MessageBox.Show(ex.Message);
+                    Log.WriteLine(ex.Message);
                 }
 
             });
@@ -148,8 +151,18 @@ namespace Engine.Internal
 
         internal static void Play()
         {
-            WaveOutEvent.Play();
-            PlaybackState = PlaybackState.Playing;
+            try
+            {
+                if (PlaybackState is PlaybackState.Opened or PlaybackState.Paused or PlaybackState.Stopped)
+                {
+                    WaveOutEvent.Play();
+                    PlaybackState = PlaybackState.Playing;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteLine(ex);
+            }
         }
 
         internal static void Pause()
@@ -161,15 +174,14 @@ namespace Engine.Internal
         internal static void Stop()
         {
             WaveOutEvent.Stop();
+            Seek(0);
             PlaybackState = PlaybackState.Stopped;
         }
 
         internal static void Close()
         {
-            WaveOutEvent?.Dispose();
-            WaveOutEvent = new();
-            Reader?.Dispose();
-            Reader = null;
+            WaveOutEvent.Dispose();
+            Reader.Close();
             PlaybackState = PlaybackState.Closed;
         }
 
@@ -180,11 +192,12 @@ namespace Engine.Internal
                 await Task.Run(() =>
                 {
                     CurrentTime = TimeSpan.FromSeconds(totalseconds);
+                    Log.WriteLine($"Seeking (async) to {TimeSpan.FromSeconds(totalseconds).ToString(stringformat)}");
                 });
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message);
+                Log.WriteLine(ex.Message);
             }
         }
 
@@ -202,16 +215,12 @@ namespace Engine.Internal
             get => _playbackState;
             set
             {
-                Debug.WriteLine(value.ToString());
+                Log.WriteLine(value.ToString());
                 _playbackState = value;
-                Events.AllEvents.InvokePlaybackStateChanged(value);
+                Player.InvokePlaybackStateChanged(value);
                 if (value is PlaybackState.Playing)
                 {
                     CurrentTimeWatcher.Start();
-                }
-                else if (value == PlaybackState.Ended)
-                {
-                    PlaylistManager.PlaybackEnded();
                 }
                 else
                 {
@@ -222,9 +231,8 @@ namespace Engine.Internal
 
         private static void CurrentTimeWatcher_Tick(object sender, EventArgs e)
         {
-            Events.AllEvents.InvokeCurrentTime();
-
-            if ((int)CurrentTime.TotalSeconds >= (int)TotalTime.TotalSeconds)
+            Player.InvokeCurrentTime(Reader.CurrentTime);
+            if ((int)Reader.CurrentTime.TotalSeconds >= (int)Reader.TotalTime.TotalSeconds)
             {
                 PlaybackState = PlaybackState.Ended;
             }
@@ -244,15 +252,15 @@ namespace Engine.Internal
         {
             if (string.IsNullOrEmpty(e.Exception?.Message))
             {
-                PlaybackState = PlaybackState.Stopped;
+                //Stop();
             }
             else
             {
-                _ = MessageBox.Show(e.Exception.Message);
+                Log.WriteLine(e.Exception.Message + "WaveOutEvent_PlaybackStopped");
                 PlaybackState = PlaybackState.Failed;
             }
         }
-        private const string stringformat = "mm\\:ss";
         private static readonly DispatcherTimer CurrentTimeWatcher = new();
+        internal const string stringformat = "mm\\:ss";
     }
 }

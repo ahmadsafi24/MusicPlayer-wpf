@@ -1,14 +1,10 @@
 ﻿using ATL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Engine.Utility
 {
-    public static class Class1
+    public static class CoverImage
     {
         public static BitmapImage ExtractCoverFastRender(string filePath)
         {
@@ -66,12 +62,12 @@ namespace Engine.Utility
         }
     }
 
-    public class Class2
+    public class CoverImage2
     {
         public event EventHandlerImage OnImageCreated;
         public async void CreateImage(string File)
         {
-            await Task.Run(() => OnImageCreated?.Invoke(Class1.ExtractCover(File)));
+            await Task.Run(() => OnImageCreated?.Invoke(CoverImage.ExtractCover(File)));
         }
     }
 

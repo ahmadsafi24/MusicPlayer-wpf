@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="260"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <control:Playlist Grid.Column="0"/>
+            <control:Playlist2 Grid.Column="0" BorderBrush="#595B5B5B" BorderThickness="0,0,1,0"/>
             <GridSplitter Width="5" Margin="0,0,-5,0"/>
         </Grid>
     </DockPanel>

@@ -17,7 +17,7 @@ namespace Engine
         internal static void InvokeVolumeChanged() => VolumeChanged?.Invoke();
 
         public static string Source { get => Internal.NaudioPlayer.Source; set => Internal.NaudioPlayer.Source = value; }
-        public static double Volume { get => Internal.NaudioPlayer.Volume; set => Internal.NaudioPlayer.Volume = value; }
+        public static double Volume { get => Internal.NaudioPlayer.Volume; private set => Internal.NaudioPlayer.Volume = value; }
         public static TimeSpan CurrentTime => Internal.NaudioPlayer.CurrentTime;
         public static TimeSpan TotalTime => Internal.NaudioPlayer.TotalTime;
         public static PlaybackState PlaybackState => Internal.NaudioPlayer.PlaybackState;

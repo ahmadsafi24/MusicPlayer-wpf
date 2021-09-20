@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WpfControlLibrary1
+namespace EngineControlLibrary
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml

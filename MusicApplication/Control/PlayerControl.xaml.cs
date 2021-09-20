@@ -209,7 +209,10 @@ namespace MusicApplication.Control
         public double Volume
         {
             get => Player.Volume;
-            set => Player.Volume = value;
+            set
+            {
+                //Player.Volume = value;
+            }
         }
 
         public bool IsPlaying { get; set; }

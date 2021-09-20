@@ -9,14 +9,11 @@ namespace MusicApplication
 {
     internal static class WindowsManager
     {
-
-
+        internal static Windows.MainWindow mainWindow = new();
 
         [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true)]
         internal static extern bool SetPreferredAppMode(AppMode preferredAppMode);
 
-
-        internal static Windows.MainWindow mainWindow = new();
         internal static void StartApp(string[] args)
         {
             //ApplyWindowsTheme();

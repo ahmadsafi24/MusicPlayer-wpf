@@ -4,10 +4,11 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Engine\Engine.csproj" />
+    <ProjectReference Include="..\..\AudioPlayer\AudioPlayer.csproj" />
   </ItemGroup>
 
 </Project>

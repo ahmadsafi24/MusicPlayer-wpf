@@ -43,8 +43,8 @@ namespace Test
                 case "info":
                     WriteLine("playback state: " + Player.PlaybackState);
                     WriteLine("source: " + Player.Source);
-                    WriteLine($"Time Seconds: {Player.CurrentSeconds} / {Player.TotalSeconds}");
-                    WriteLine($"Time Seconds: {Player.CurrentTimeString} / {Player.TotalTimeString}");
+                    WriteLine($"Time Seconds: {Player.CurrentTime.TotalSeconds} / {Player.TotalTime.TotalSeconds}");
+                    WriteLine($"Time Seconds: {Player.CurrentTime.ToString()} / {Player.TotalTime.ToString()}");
                     WriteLine("volume: " + Player.Volume);
                     break;
                 case "play":
@@ -69,7 +69,7 @@ namespace Test
                     Player.VolumeUp(0.1);
                     break;
                 case "seek end":
-                    await Player.SeekAsync(Player.TotalSeconds - 10);
+                    await Player.SeekAsync(Player.TotalTime.TotalSeconds - 10);
                     break;
                 case "clear":
                     Console.Clear();

@@ -4,12 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicApplication.Windows" xmlns:control="clr-namespace:MusicApplication.Control" xmlns:view="clr-namespace:MusicApplication.View"
-        xmlns:cntrl="clr-namespace:WpfControlLibrary1;assembly=WpfControlLibrary1"
         mc:Ignorable="d"
         Title="MainWindowTest" Height="450" Width="800"
         d:Background="{StaticResource MainWindow.Background}">
     <DockPanel LastChildFill="True">
-        <cntrl:AudioPlayer x:Name="audioPlayer"/>
         <TextBlock Text="{Binding CaptionString, ElementName=audioPlayer}"/>
     </DockPanel>
 </Window>

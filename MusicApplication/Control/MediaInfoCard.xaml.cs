@@ -27,24 +27,29 @@ namespace MusicApplication.Control
             OpenCurrentFileLocationCommand = new DelegateCommand(() => Shared.OpenCurrentFileLocation());
             SelectCurrentFileInPlaylistCommand = new DelegateCommand(() => Player.FindCurrentFile());
             Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
-            Player.PlaybackStateChanged += async (Engine.Enums.PlaybackState playbackState) =>
+            Player.PlaybackStateChanged += Player_PlaybackStateChanged; 
+
+            NotifyPropertyChanged(null);
+        }
+
+        private async void Player_PlaybackStateChanged(Engine.Enums.PlaybackState newPlaybackState)
+        {
+
+            await Task.Run(() =>
             {
-                if (playbackState == Engine.Enums.PlaybackState.Opened)
+                if (newPlaybackState is Engine.Enums.PlaybackState.Opened)
                 {
-                    await Task.Run(() =>
-                    {
-                        TagFile = new() { FilePath = Player.Source };
-                        NotifyPropertyChanged(nameof(TagFile));
+                    TagFile = new() { FilePath = Player.Source };
+                    NotifyPropertyChanged(nameof(TagFile));
 
-                        NotifyPropertyChanged(nameof(TotalTimeString));
-                        NotifyPropertyChanged(nameof(CurrentTimeString));
+                    NotifyPropertyChanged(nameof(TotalTimeString));
+                    NotifyPropertyChanged(nameof(CurrentTimeString));
 
-                        Engine.Utility.CoverImage2 CoverImage2 = new();
-                        CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
-                        CoverImage2.CreateImage(Player.Source);
-                    });
+                    Engine.Utility.CoverImage2 CoverImage2 = new();
+                    CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
+                    CoverImage2.CreateImage(Player.Source);
                 }
-            };
+            });
         }
 
         public BitmapImage Cover { get; set; }

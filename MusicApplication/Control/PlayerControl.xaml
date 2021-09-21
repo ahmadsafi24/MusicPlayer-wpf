@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MusicApplication.Control" d:DataContext="{d:DesignInstance Type=local:PlayerControlViewModel}"
-             mc:Ignorable="d" x:Name="UserControl" Background="{DynamicResource PlayerControl.Background}"
-             d:DesignWidth="800" d:Foreground="White" Height="55" Padding="10,0,20,0">
+             mc:Ignorable="d" x:Name="UserControl" Background="{DynamicResource PlayerControl.Background}" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0"
+             d:DesignWidth="800" d:Foreground="White" Height="55" Padding="10,0,20,0" MouseLeftButtonDown="UserControl_MouseLeftButtonDown">
     <UserControl.Resources>
 
         
@@ -171,7 +171,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" MinWidth="140"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding CurrentTimeString}" Margin="5,0" d:Text="0:00"/>
@@ -188,7 +188,7 @@
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TotalTimeString}" Margin="5,0" d:Text="0:00"/>
 
-            <ProgressBar x:Name="VolumeProgressbar" Grid.Column="4" Height="26" Width="100" Style="{DynamicResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
+            <ProgressBar x:Name="VolumeProgressbar" Grid.Column="4" Height="26" Width="80" Style="{DynamicResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
                          Maximum="100" Minimum="0" Value="{Binding Volume,Mode=TwoWay}" Foreground="{DynamicResource MediaSlider.Foreground}" Background="{DynamicResource MediaSlider.Backgound.Active}"
                          MouseMove="VolumeProgressbar_MouseMove" MouseDown="ProgressBar_MouseDown" MouseUp="ProgressBar_MouseUp" ValueChanged="VolumeProgressbar_ValueChanged"/>
             <Ellipse x:Name="EllipseThumbVol" Height="12" Width="12" Fill="{DynamicResource SliderThumb.Static.Background}" Stroke="{DynamicResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="4" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="29,0,0,0"/>
@@ -197,7 +197,7 @@
                     Minimum="0" Maximum="1" LargeChange="0.05" IsMoveToPointEnabled="True" Margin="8"
                     Value="{Binding Volume,Mode=TwoWay}" BorderBrush="{x:Null}"/-->
 
-            <Grid Grid.Row="1" Grid.Column="0" Height="37" Width="111" HorizontalAlignment="Center">
+            <Grid Grid.Row="0" Grid.Column="0" Height="37" Width="111" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2"/>
                     <ColumnDefinition Width="*"/>

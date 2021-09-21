@@ -12,7 +12,7 @@
                 <ResourceDictionary Source="/Resource/Style/Scrollbar.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/ScrollViewer.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Listview.xaml"/>
-                <ResourceDictionary Source="/Resource/Style/Slider.xaml"/>
+                <!--ResourceDictionary Source="/Resource/Style/Slider.xaml"/-->
                 <ResourceDictionary Source="/Resource/Style/Menu.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Button.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Other.xaml"/>

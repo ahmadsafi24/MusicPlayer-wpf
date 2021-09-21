@@ -68,7 +68,7 @@ namespace MusicApplication.Control
             ProgressBar progressBar = (ProgressBar)sender;
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                Player.ChangeVolume(SetPbValue(e.GetPosition(progressBar).X, progressBar));
+                Player.ChangeVolume((int)SetPbValue(e.GetPosition(progressBar).X, progressBar));
             }
         }
 
@@ -113,6 +113,10 @@ namespace MusicApplication.Control
             return pbvalue;
         }
 
+        private void UserControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 
     public class PlayerControlViewModel : ViewModelBase
@@ -126,6 +130,7 @@ namespace MusicApplication.Control
             Player.PlaybackStateChanged += PlaybackStateChanged;
             Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
+            NotifyPropertyChanged(null);
             //PlaylistManager.PlaylistCurrentFileChanged += PlaylistManager_PlaylistCurrentFileChanged;
         }
 
@@ -141,9 +146,7 @@ namespace MusicApplication.Control
             {
                 Player.Pause();
             }
-            else if (Player.PlaybackState is PlaybackState.Paused
-                    or PlaybackState.Stopped
-                    or PlaybackState.Ended)
+            else if (Player.PlaybackState is not PlaybackState.Closed)
             {
                 Player.Play();
             }
@@ -153,9 +156,9 @@ namespace MusicApplication.Control
             }
         }
 
-        private async void AudioPlayer_VolumeChanged()
+        private async void AudioPlayer_VolumeChanged(int newVolume)
         {
-            await Task.Run(() => { NotifyPropertyChanged(nameof(Volume)); });
+            await Task.Run(() => { Volume = newVolume; NotifyPropertyChanged(nameof(Volume)); });
         }
 
         private async void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
@@ -170,19 +173,11 @@ namespace MusicApplication.Control
 
         private async void PlaybackStateChanged(PlaybackState newPlaybackState)
         {
+            IsPlaying = newPlaybackState == PlaybackState.Playing;
+            NotifyPropertyChanged(nameof(IsPlaying));
+
             await Task.Run(() =>
             {
-                if (newPlaybackState == PlaybackState.Playing)
-                {
-                    IsPlaying = true;
-                    NotifyPropertyChanged(nameof(IsPlaying));
-                }
-                else
-                {
-                    IsPlaying = false;
-                    NotifyPropertyChanged(nameof(IsPlaying));
-                }
-
                 NotifyPropertyChanged(nameof(TotalTimeString));
                 NotifyPropertyChanged(nameof(CurrentTimeString));
                 NotifyPropertyChanged(nameof(TotalTimeTotalSeconds));
@@ -206,16 +201,9 @@ namespace MusicApplication.Control
 
         public double TotalTimeTotalSeconds => Player.TotalTime.TotalSeconds;
 
-        public double Volume
-        {
-            get => Player.Volume;
-            set
-            {
-                //Player.Volume = value;
-            }
-        }
+        public double Volume { get; set; } = Player.Volume;
 
-        public bool IsPlaying { get; set; }
+        public bool IsPlaying { get; set; } = Player.PlaybackState == PlaybackState.Playing;
 
         private DelegateCommand nextAudioCommand;
         public ICommand NextAudioCommand => nextAudioCommand ??= new DelegateCommand(NextAudio);

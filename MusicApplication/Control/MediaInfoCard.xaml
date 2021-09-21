@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MusicApplication.Control" d:DataContext="{d:DesignInstance Type=local:MediaInfoCardViewModel}"
              mc:Ignorable="d" 
              d:DesignWidth="800" d:Foreground="White"
-             Background="{DynamicResource MediaInfoCard.Background}" Foreground="{DynamicResource MainView.Foreground}" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}"  BorderThickness="0,2,0,0"
+             Background="{DynamicResource MediaInfoCard.Background}" Foreground="{DynamicResource MainView.Foreground}" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}"  BorderThickness="0,0.5,0,0"
              >
     <UserControl.DataContext>
         <local:MediaInfoCardViewModel/>

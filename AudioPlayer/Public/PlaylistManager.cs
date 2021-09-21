@@ -91,7 +91,7 @@ namespace Engine
             NaudioPlayer.Close();
             await NaudioPlayer.OpenAsync();
 
-            Log.WriteLine("Playlist-Playback Ended");
+            Log.WriteLine($"Playlist-Playback Ended / {RepeatMode} Done.");
         }
 
         #endregion
@@ -108,7 +108,7 @@ namespace Engine
 
         public static async void PlayNext()
         {
-            if (!IsLast(Playlists[0], Internal.NaudioPlayer.Source))
+            if (!IsLast(Playlists[0], NaudioPlayer.Source))
             {
                 Player.Source = Playlists[0].Items[OpenedFileIndex + 1].FilePath;
                 await Player.OpenAsync();
@@ -117,7 +117,7 @@ namespace Engine
 
         public static async void PlayPrevious()
         {
-            if (!IsFirst(Playlists[0], Internal.NaudioPlayer.Source))
+            if (!IsFirst(Playlists[0], NaudioPlayer.Source))
             {
                 Player.Source = Playlists[0].Items[OpenedFileIndex - 1].FilePath;
                 await Player.OpenAsync();
@@ -142,7 +142,7 @@ namespace Engine
                             break;
                         case RepeatMode.CurrentFile:
                             Player.Stop();
-                            _ = Internal.NaudioPlayer.SeekAsync(0);
+                            _ = NaudioPlayer.SeekAsync(0);
                             Player.Play();
                             break;
                         case RepeatMode.NextFile:

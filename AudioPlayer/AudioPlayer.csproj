@@ -15,4 +15,8 @@
     <PackageReference Include="z440.atl.core" Version="3.24.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Converter\" />
+  </ItemGroup>
+
 </Project>

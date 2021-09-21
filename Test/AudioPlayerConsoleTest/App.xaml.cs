@@ -63,10 +63,10 @@ namespace Test
                     Player.Close();
                     break;
                 case "v down":
-                    Player.VolumeDown(0.1);
+                    Player.VolumeDown(10);
                     break;
                 case "v up":
-                    Player.VolumeUp(0.1);
+                    Player.VolumeUp(10);
                     break;
                 case "seek end":
                     await Player.SeekAsync(Player.TotalTime.TotalSeconds - 10);

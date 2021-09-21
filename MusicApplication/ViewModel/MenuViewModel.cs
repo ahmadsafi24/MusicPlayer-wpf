@@ -32,7 +32,13 @@ namespace MusicApplication.ViewModel
                     Source = new Uri("..\\Resource\\Theme\\Light.Xaml", UriKind.Relative)
                 };
                 Application.Current.Resources.MergedDictionaries[0] = Light;
-                DwmApi.ToggleImmersiveDarkMode(WindowsManager.mainWindow, false);
+                foreach (Window item in WindowsManager.WindowList)
+                {
+                    if (item.IsVisible)
+                    {
+                        DwmApi.ToggleImmersiveDarkMode(item, false);
+                    }
+                }
             }
             else
             {
@@ -41,13 +47,21 @@ namespace MusicApplication.ViewModel
                 {
                     Source = new Uri("..\\Resource\\Theme\\Dark.Xaml", UriKind.Relative)
                 };
-                Application.Current.Resources.MergedDictionaries[0] = Dark;
-                DwmApi.ToggleImmersiveDarkMode(WindowsManager.mainWindow, true);
+                Application.Current.Resources.MergedDictionaries[0] = Dark; 
+                foreach (Window item in WindowsManager.WindowList)
+                {
+                    if (item.IsVisible)
+                    {
+                        DwmApi.ToggleImmersiveDarkMode(item, true);
+                    }
+                }
             }
             IsDark = !IsDark;
 
             WindowsManager.mainWindow.Hide();
             WindowsManager.mainWindow.Show();
+
+
 
             /* Playlist playlist = new Playlist();
              System.Windows.Window window = new();

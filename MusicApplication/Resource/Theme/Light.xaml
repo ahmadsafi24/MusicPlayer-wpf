@@ -21,20 +21,20 @@
     <!--#region MainView-->
     <SolidColorBrush x:Key="MainView.Background" Color="#FFDEDEDE"/>
     <SolidColorBrush x:Key="MainView.Foreground" Color="#FF2E2E2E"/>
-    <SolidColorBrush x:Key="PlayerControl.Background" Color="#FFE0E0E0"/>
-    <SolidColorBrush x:Key="MediaInfoCard.Background" Color="#FFEEEEEE"/>
+    <SolidColorBrush x:Key="PlayerControl.Background" Color="#FFF3F3F3"/>
+    <SolidColorBrush x:Key="MediaInfoCard.Background" Color="#FFEDEDED"/>
     <!--#endregion-->
 
     <!--#region New-->
 
     <SolidColorBrush x:Key="MediaButton.Disabled.Background" Color="#FF838383"/>
-    <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF2252D1"/>
-    <SolidColorBrush x:Key="ProgressBar.Background" Color="#FF292929"/>
-    <SolidColorBrush x:Key="ProgressBar.Border" Color="#FF292929"/>
+    <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF8BB1E8"/>
+    <SolidColorBrush x:Key="ProgressBar.Background" Color="#FF5A5A5A"/>
+    <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFC3C3C3"/>
 
 
     <SolidColorBrush x:Key="SliderThumb.Static.Background" Color="#FFF0F0F0"/>
-    <SolidColorBrush x:Key="SliderThumb.Static.Border" Color="#FF2252D1"/>
+    <SolidColorBrush x:Key="SliderThumb.Static.Border" Color="#FF8BB1E8"/>
     <SolidColorBrush x:Key="SliderThumb.Static.Foreground" Color="#FFF0F0F0"/>
     <SolidColorBrush x:Key="SliderThumb.MouseOver.Background" Color="#FFF1F1F1"/>
     <SolidColorBrush x:Key="SliderThumb.MouseOver.Border" Color="White"/>
@@ -68,16 +68,16 @@
     <SolidColorBrush x:Key="ScrollBar.Disabled.Background" Color="#F0F0F0"/>
     <SolidColorBrush x:Key="ScrollBar.Disabled.Border" Color="#F0F0F0"/>
 
-    <SolidColorBrush x:Key="MediaButton.Background" Color="#FF2252D1"/>
+    <SolidColorBrush x:Key="MediaButton.Background" Color="#FF8BB1E8"/>
     <SolidColorBrush x:Key="MediaButton.Background.MouseOver" Color="#FF4290FF"/>
-    <SolidColorBrush x:Key="MediaButton.Background.Pressed" Color="#FF0D3B7C"/>
-    <SolidColorBrush x:Key="MediaSlider.Foreground" Color="#FF2252D1"/>
-    <SolidColorBrush x:Key="MediaSlider.Backgound.Active" Color="#FFA0A0A0"/>
-    <SolidColorBrush x:Key="MediaSlider.Backgound.Deactive" Color="#FFBBBBBB"/>
-    <SolidColorBrush x:Key="MediaInfoCard.BorderBrush" Color="#FF4290FF" Opacity="0.2"/>
-    <SolidColorBrush x:Key="MediaCover.Background" Color="#FF4290FF" Opacity="0.1"/>
+    <SolidColorBrush x:Key="MediaButton.Background.Pressed" Color="#FF99C3FF"/>
+    <SolidColorBrush x:Key="MediaSlider.Foreground" Color="#FF8BB1E8"/>
+    <SolidColorBrush x:Key="MediaSlider.Backgound.Active" Color="Gainsboro"/>
+    <SolidColorBrush x:Key="MediaSlider.Backgound.Deactive" Color="#FFE4E4E4"/>
+    <SolidColorBrush x:Key="MediaInfoCard.BorderBrush" Color="#FFB8D5FF" Opacity="1"/>
+    <SolidColorBrush x:Key="MediaCover.Background" Color="#FF3AA4DA" Opacity="1"/>
     <SolidColorBrush x:Key="Playlist.Background" Color="#FFEAEAEA"/>
-    <SolidColorBrush x:Key="TextBlock.Foreground" Color="#FF474747"/>
+    <SolidColorBrush x:Key="TextBlock.Foreground" Color="#FF5C5C5C"/>
     <!--#endregion-->
 
 
@@ -91,5 +91,5 @@
     <SolidColorBrush x:Key="Window.BorderBrush.Activated" Color="#7FFFFFFF"/>
     <SolidColorBrush x:Key="Window.BorderBrush.Deactivated" Color="#7FB8B8B8"/>
 
-    <Color x:Key="AccentColor">#FF2252D1</Color>
+    <Color x:Key="AccentColor">#FF8BB1E8</Color>
 </ResourceDictionary>

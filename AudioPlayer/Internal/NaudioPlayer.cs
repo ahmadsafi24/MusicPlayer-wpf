@@ -17,7 +17,8 @@ namespace Engine.Internal
         private static ISampleProvider SampleProvider => Reader.ToSampleProvider();
         private static Equalizer Equalizer8band => new(SampleProvider, EqualizerBand);
         private static WaveOutEvent WaveOutEvent = new();
-        private static readonly EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
+
+        private static EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
         private static EqualizerBand[] EqualizerBand { get; set; }
         #endregion
 
@@ -29,6 +30,7 @@ namespace Engine.Internal
 
             WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
             Log.WriteLine("PlayerInitialized");
+            PlaybackState = PlaybackState.Closed;
         }
 
         private static void InitializeTimers()
@@ -71,16 +73,27 @@ namespace Engine.Internal
             set => CurrentTimeWatcher.Interval = TimeSpan.FromSeconds(value);
         }
 
-        internal static double Volume
+        internal static void ChangeEqualizerBand(int bandIndex, float gain)
         {
-            get => ToDouble(WaveOutEvent.Volume) * 100;
+            EqualizerBand[bandIndex].Gain = gain;
+            Equalizer8band.Update();
+        }
+
+        internal static int Volume
+        {
+            get
+            {
+                return (int)(ToDouble(WaveOutEvent.Volume) * 100);
+            }
             set
             {
                 try
                 {
-                    WaveOutEvent.Volume = value / 100 < 0 ? ToSingle(0) : value > 100 ? ToSingle(1) : ToSingle(value / 100);
-                    Player.InvokeVolumeChanged();
-                    Log.WriteLine("volume: " + (int)(WaveOutEvent.Volume * 100));
+                    int iv = value < 0 ? 0 : value > 100 ? 100 : value;
+                    double V = (double)iv / 100;
+                    //V = V < 0 ? 0 : V > 1 ? 1 : V;
+                    WaveOutEvent.Volume = (float)V;
+                    Player.InvokeVolumeChanged(iv);
                 }
                 catch (Exception ex)
                 {
@@ -110,7 +123,7 @@ namespace Engine.Internal
             {
                 if (Reader is not null)
                 {
-                    Reader.CurrentTime = value.TotalSeconds <= 0 ? TimeSpan.FromSeconds(0) : value; 
+                    Reader.CurrentTime = value.TotalSeconds <= 0 ? TimeSpan.FromSeconds(0) : value;
                     Player.InvokeCurrentTime(value);
                 }
             }
@@ -125,8 +138,6 @@ namespace Engine.Internal
             {
                 try
                 {
-                    //Stop();
-
                     if (PlaybackState is PlaybackState.Playing or PlaybackState.Paused)
                     {
                         Stop();
@@ -153,11 +164,12 @@ namespace Engine.Internal
         {
             try
             {
-                if (PlaybackState is PlaybackState.Opened or PlaybackState.Paused or PlaybackState.Stopped)
+                if (PlaybackState is PlaybackState.Closed)
                 {
-                    WaveOutEvent.Play();
-                    PlaybackState = PlaybackState.Playing;
+                    return;
                 }
+                WaveOutEvent.Play();
+                PlaybackState = PlaybackState.Playing;
             }
             catch (Exception ex)
             {
@@ -201,11 +213,25 @@ namespace Engine.Internal
             }
         }
 
+        internal static double GetEqBandGain(int bandindex)
+        {
+            return EqualizerBand[bandindex].Gain;
+        }
+
         internal static void ChangeEqualizerBand(int bandIndex, float Gain, float Bandwidth, float Frequency)
         {
             if (Gain != 0) { EqualizerBand[bandIndex].Gain = Gain; }
             if (Bandwidth != 0) { EqualizerBand[bandIndex].Bandwidth = Bandwidth; }
             if (Frequency != 0) { EqualizerBand[bandIndex].Frequency = Frequency; }
+            Equalizer8band.Update();
+        }
+
+        internal static void ResetEq()
+        {
+            foreach (var item in EqualizerBand)
+            {
+                item.Gain = 0;
+            }
             Equalizer8band.Update();
         }
 
@@ -215,7 +241,7 @@ namespace Engine.Internal
             get => _playbackState;
             set
             {
-                Log.WriteLine(value.ToString());
+                Log.WriteLine("PlaybackState: " + value.ToString());
                 _playbackState = value;
                 Player.InvokePlaybackStateChanged(value);
                 if (value is PlaybackState.Playing)

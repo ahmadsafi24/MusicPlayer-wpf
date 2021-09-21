@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MusicApplication": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\temp\\music.mp3\""
+    }
+  }
+}

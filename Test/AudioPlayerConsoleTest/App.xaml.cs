@@ -1,5 +1,6 @@
 ﻿using Engine;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -21,24 +22,25 @@ namespace Test
             base.OnStartup(e);
 
             AllocConsole();
-            Console.WriteLine("Started");
+            WriteLine("Started");
             Player.Initialize();
-            PlaylistManager.Initialize();
+            //PlaylistManager.Initialize();
             Player.Source = e.Args[0];
             await Player.OpenAsync();
 
             WAitForCmd();
         }
 
-        private void WriteLine(object obj)
+        private static void WriteLine(object obj)
         {
             Console.WriteLine(obj);
         }
 
-        private async void WAitForCmd()
+        private void WAitForCmd()
         {
             WriteLine(null);
-            switch (Console.ReadLine())
+
+            /*switch (Console.ReadLine())
             {
                 case "info":
                     WriteLine("playback state: " + Player.PlaybackState);
@@ -75,13 +77,66 @@ namespace Test
                     Console.Clear();
                     break;
                 default:
-                    Console.WriteLine("Not Found");
+                    WriteLine("Not Found");
                     break;
+            }*/
+
+            string cmdstr = Console.ReadLine();
+
+
+            int i = Actions.FindIndex(x => x.Method.Name.ToString() == cmdstr);
+            if (i >= 0)
+            {
+                Actions[i].Invoke();
+                WAitForCmd();
+            }
+
+            string trimmedstr = cmdstr.TrimStart('"');
+            trimmedstr = trimmedstr.TrimEnd('"');
+            if (System.IO.File.Exists(trimmedstr))
+            {
+                Player.Source = trimmedstr;
+
+                open();
+            }
+            else
+            {
+                WriteLine($"Command: <{cmdstr}> Not Found");
+                WriteLine("Available Commands: ");
+                help();
             }
             WAitForCmd();
         }
 
-        private static string[] cmdList = { "", "", "" };
+        private static readonly List<Action> Actions = new()
+        {
+            new Action(open),
+            new Action(play),
+            new Action(pause),
+            new Action(help)
+        };
 
+        private static void help()
+        {
+            foreach (var item in Actions)
+            {
+                WriteLine(item.Method.Name);
+            }
+        }
+
+        private static async void open()
+        {
+            await Player.OpenAsync();
+        }
+
+        private static void pause()
+        {
+            Player.Pause();
+        }
+
+        private static void play()
+        {
+            Player.Play();
+        }
     }
 }

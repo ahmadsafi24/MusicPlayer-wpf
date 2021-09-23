@@ -15,8 +15,8 @@ namespace Engine.Internal
         #region NAudio Engine
         private static MediaFoundationReader Reader;
         private static ISampleProvider SampleProvider => Reader.ToSampleProvider();
-        private static Equalizer Equalizer8band => new(SampleProvider, EqualizerBand);
-        private static WaveOutEvent WaveOutEvent = new();
+        private static Equalizer EqualizerCore;
+        private static readonly WaveOutEvent WaveOutEvent = new();
 
         private static EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
         private static EqualizerBand[] EqualizerBand { get; set; }
@@ -46,8 +46,8 @@ namespace Engine.Internal
                 case EqualizerMode.NormalEqualizer8band:
                     EqualizerBand = new EqualizerBand[]
                     {
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 10 },
-                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 200, Gain = 10 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.8f, Frequency = 200, Gain = 0 },
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 400, Gain = 0 },
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 800, Gain = 0 },
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 1200, Gain = 0 },
@@ -73,11 +73,6 @@ namespace Engine.Internal
             set => CurrentTimeWatcher.Interval = TimeSpan.FromSeconds(value);
         }
 
-        internal static void ChangeEqualizerBand(int bandIndex, float gain)
-        {
-            EqualizerBand[bandIndex].Gain = gain;
-            Equalizer8band.Update();
-        }
 
         internal static int Volume
         {
@@ -131,6 +126,39 @@ namespace Engine.Internal
 
         internal static TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
 
+        internal class EngineInfo
+        {
+            public int SampleRate;
+            public int Channels;
+            public int AverageBytesPerSecond;
+            public WaveFormatEncoding Encoding;
+            public int BitsPerSample;
+
+            public EngineInfo(MediaFoundationReader reader)
+            {
+                SampleRate = reader.WaveFormat.SampleRate;
+                Channels = reader.WaveFormat.Channels;
+                AverageBytesPerSecond = reader.WaveFormat.AverageBytesPerSecond;
+                Encoding = reader.WaveFormat.Encoding;
+                BitsPerSample = reader.WaveFormat.BitsPerSample;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return base.Equals(obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+
+            public override string ToString()
+            {
+                base.ToString();
+                return $"Media Info <SampleRate: {SampleRate}> | <Channels: {Channels}> | <avgBPM {AverageBytesPerSecond}> | <Encoding: {Encoding.ToString()}> | <BPM: {BitsPerSample}>";
+            }
+        }
 
         internal static async Task OpenAsync()
         {
@@ -145,11 +173,12 @@ namespace Engine.Internal
                     }
 
                     Reader = new MediaFoundationReader(Source);
-                    WaveOutEvent.Init(Equalizer8band);
+                    EqualizerCore = new(SampleProvider, EqualizerBand);
+                    WaveOutEvent.Init(EqualizerCore);
 
-                    //PlaylistManager.FindOpenedFileIndex();
                     PlaybackState = PlaybackState.Opened;
                     Play();
+                    Log.WriteLine(new EngineInfo(Reader).ToString());
                 }
                 catch (Exception ex)
                 {
@@ -213,6 +242,12 @@ namespace Engine.Internal
             }
         }
 
+        internal static void ChangeEqualizerBand(int bandIndex, float gain)
+        {
+            EqualizerBand[bandIndex].Gain = gain;
+            EqualizerCore?.Update();
+        }
+
         internal static double GetEqBandGain(int bandindex)
         {
             return EqualizerBand[bandindex].Gain;
@@ -223,7 +258,7 @@ namespace Engine.Internal
             if (Gain != 0) { EqualizerBand[bandIndex].Gain = Gain; }
             if (Bandwidth != 0) { EqualizerBand[bandIndex].Bandwidth = Bandwidth; }
             if (Frequency != 0) { EqualizerBand[bandIndex].Frequency = Frequency; }
-            Equalizer8band.Update();
+            EqualizerCore?.Update();
         }
 
         internal static void ResetEq()
@@ -232,7 +267,7 @@ namespace Engine.Internal
             {
                 item.Gain = 0;
             }
-            Equalizer8band.Update();
+            EqualizerCore?.Update();
         }
 
         private static PlaybackState _playbackState;

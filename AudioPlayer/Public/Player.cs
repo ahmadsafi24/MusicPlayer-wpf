@@ -7,7 +7,6 @@ namespace Engine
 {
     public static class Player
     {
-
         public static event EventHandlerPlaybackState PlaybackStateChanged;
         public static event EventHandlerTimeSpan CurrentTimeChanged;
         public static event EventHandlerVolume VolumeChanged;

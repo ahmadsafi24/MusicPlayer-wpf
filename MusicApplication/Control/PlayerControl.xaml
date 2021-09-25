@@ -149,9 +149,6 @@
 
 
     </UserControl.Resources>
-    <UserControl.DataContext>
-        <local:PlayerControlViewModel/>
-    </UserControl.DataContext>
     <UserControl.Style>
         <Style TargetType="{x:Type UserControl}">
             <Setter Property="Template">

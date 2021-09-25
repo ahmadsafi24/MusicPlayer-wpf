@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Enums;
+using MusicApplication.ViewModel;
 using MusicApplication.ViewModel.Base;
 using System;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace MusicApplication.Control
         {
             SizeChanged += PlayerControl_SizeChanged;
             InitializeComponent();
+            DataContext = Locator.PlayerVmInstance;
         }
 
         private void PlayerControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -118,108 +120,4 @@ namespace MusicApplication.Control
 
         }
     }
-
-    public class PlayerControlViewModel : ViewModelBase
-    {
-        public ICommand PlayPauseCommand { get; }
-
-        public PlayerControlViewModel()
-        {
-            PlayPauseCommand = new DelegateCommand(() => PlayPause());
-
-            Player.PlaybackStateChanged += PlaybackStateChanged;
-            Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
-            Player.VolumeChanged += AudioPlayer_VolumeChanged;
-            NotifyPropertyChanged(null);
-            //PlaylistManager.PlaylistCurrentFileChanged += PlaylistManager_PlaylistCurrentFileChanged;
-        }
-
-        private async void PlaylistManager_PlaylistCurrentFileChanged()
-        {
-            //bool tb = !PlaylistManager.IsFirst(PlaylistManager.Playlists[0], MainCommands.Source);
-            await Task.Run(() => previousAudioFileCommand.IsEnabled = false);
-        }
-
-        private void PlayPause()
-        {
-            if (IsPlaying)
-            {
-                Player.Pause();
-            }
-            else if (Player.PlaybackState is not PlaybackState.Closed)
-            {
-                Player.Play();
-            }
-            else
-            {
-                Shared.OpenFilePicker();
-            }
-        }
-
-        private async void AudioPlayer_VolumeChanged(int newVolume)
-        {
-            await Task.Run(() => { Volume = newVolume; NotifyPropertyChanged(nameof(Volume)); });
-        }
-
-        private async void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
-        {
-            await Task.Run(() =>
-            {
-                crtts = Time.TotalSeconds;
-                NotifyPropertyChanged(nameof(CurrentTimeTotalSeconds));
-                NotifyPropertyChanged(nameof(CurrentTimeString));
-            });
-        }
-
-        private async void PlaybackStateChanged(PlaybackState newPlaybackState)
-        {
-            IsPlaying = newPlaybackState == PlaybackState.Playing;
-            NotifyPropertyChanged(nameof(IsPlaying));
-
-            await Task.Run(() =>
-            {
-                NotifyPropertyChanged(nameof(TotalTimeString));
-                NotifyPropertyChanged(nameof(CurrentTimeString));
-                NotifyPropertyChanged(nameof(TotalTimeTotalSeconds));
-                NotifyPropertyChanged(nameof(CurrentTimeTotalSeconds));
-            });
-        }
-        public string CurrentTimeString => Player.CurrentTime.ToString(Shared.stringformat);
-
-        public string TotalTimeString => Player.TotalTime.ToString(Shared.stringformat);
-
-        private double crtts;
-        public double CurrentTimeTotalSeconds
-        {
-            get => crtts;//Player.CurrentSeconds;
-            set
-            {
-                crtts = value;
-                //Task.Run(async () => { await Player.SeekAsync(value); });
-            }
-        }
-
-        public double TotalTimeTotalSeconds => Player.TotalTime.TotalSeconds;
-
-        public double Volume { get; set; } = Player.Volume;
-
-        public bool IsPlaying { get; set; } = Player.PlaybackState == PlaybackState.Playing;
-
-        private DelegateCommand nextAudioCommand;
-        public ICommand NextAudioCommand => nextAudioCommand ??= new DelegateCommand(NextAudio);
-
-        private void NextAudio()
-        {
-            PlaylistManager.PlayNext();
-        }
-
-        private DelegateCommand previousAudioFileCommand;
-        public ICommand PreviousAudioFileCommand => previousAudioFileCommand ??= new DelegateCommand(PreviousAudioFile);
-
-        private void PreviousAudioFile()
-        {
-            PlaylistManager.PlayPrevious();
-        }
-    }
-
 }

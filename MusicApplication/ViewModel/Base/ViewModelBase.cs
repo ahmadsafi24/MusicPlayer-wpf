@@ -13,6 +13,7 @@ namespace MusicApplication.ViewModel.Base
 
         protected void NotifyPropertyChanged(string propertyName)
         {
+            //Console.WriteLine(propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

@@ -14,6 +14,8 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class Playlist : UserControl
     {
+        Player Player = Shared.Player;
+        PlaylistManager PlaylistManager = Shared.Player.PlaylistManager;
         public Playlist()
         {
             InitializeComponent();
@@ -58,6 +60,8 @@ namespace MusicApplication.Control
 
     public class PlaylistViewModel : ViewModelBase
     {
+        Player Player = Shared.Player;
+        PlaylistManager PlaylistManager = Shared.Player.PlaylistManager;
         //public ObservableCollection<AudioFile> Playlist { get; set; }
         public ObservableCollection<AudioFile> Playlist { get; set; } = new();
         public PlaylistViewModel()

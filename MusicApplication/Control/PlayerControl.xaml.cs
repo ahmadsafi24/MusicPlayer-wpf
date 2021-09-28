@@ -37,13 +37,13 @@ namespace MusicApplication.Control
             {
 
                 double val = SetPbValue(e.GetPosition(progressBar).X, progressBar);
-                if (val != Player.CurrentTime.TotalSeconds
-                    && val <= Player.TotalTime.TotalSeconds)
+                if (val != Shared.Player.CurrentTime.TotalSeconds
+                    && val <= Shared.Player.TotalTime.TotalSeconds)
                 {
 
                     //progressBar.Value = val;
                     //progressBar.GetBindingExpression(ProgressBar.ValueProperty).UpdateSource();
-                    await Player.SeekAsync(val);
+                    await Shared.Player.SeekAsync(val);
                 }
 
             }
@@ -70,7 +70,7 @@ namespace MusicApplication.Control
             ProgressBar progressBar = (ProgressBar)sender;
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                Player.ChangeVolume((int)SetPbValue(e.GetPosition(progressBar).X, progressBar));
+                Shared.Player.ChangeVolume((int)SetPbValue(e.GetPosition(progressBar).X, progressBar));
             }
         }
 

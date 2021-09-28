@@ -48,5 +48,28 @@ namespace Helper
              });
         }
 
+        public static string[] GetFiles()
+        {
+            OpenFileDialog openFileDialog = new()
+            {
+                Filter =
+                     "All Supported Audio | *.mp3; *.wma |" +
+                     "MP3 | *.mp3 |" +
+                     "Wav | *.wav |" +
+                     "WMA | *.wma",
+
+                AddExtension = true,
+                //DefaultExt = ".mp3",
+                Multiselect = true,
+                CheckFileExists = true,
+                CustomPlaces = CustomPlacelist,
+                InitialDirectory = "",
+                Title = PickerTitle
+
+            };
+            IsFileOk = (bool)openFileDialog.ShowDialog().HasValue;
+            return IsFileOk ? openFileDialog.FileNames : null;
+        }
+
     }
 }

@@ -17,11 +17,9 @@ namespace MusicApplication
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            AllocConsole();
+            //AllocConsole();
             Debug.WriteLine($"AppOnStartUp-args:[{ e.Args}]");
             base.OnStartup(e);
-            Player.Initialize();
-            PlaylistManager.Initialize();
             WindowsManager.StartApp(e.Args);
         }
     }

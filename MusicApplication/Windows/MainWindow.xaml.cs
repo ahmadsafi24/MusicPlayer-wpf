@@ -12,13 +12,5 @@ namespace MusicApplication.Windows
             Initialized += (_, _) => WindowsManager.WindowInitialized(this);
             InitializeComponent();
         }
-
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-
-        }
-
-
     }
 }

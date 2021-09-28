@@ -3,18 +3,17 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace EngineControlLibrary
+namespace AudioPlayerElement
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
     public partial class AudioPlayer : UserControl
     {
+        Player Player = new();
         public AudioPlayer()
         {
             InitializeComponent();
-            Player.Initialize();
-            PlaylistManager.Initialize();
             Player.Source = @"D:\\temp\\music.mp3";
             Task.Run(async () => await Player.OpenAsync());
             Player.CurrentTimeChanged += Player_CurrentTimeChanged;

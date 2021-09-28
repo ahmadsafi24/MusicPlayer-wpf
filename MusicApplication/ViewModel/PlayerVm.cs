@@ -26,13 +26,11 @@ namespace MusicApplication.ViewModel
         {
             PlayPauseCommand = new DelegateCommand(() => PlayPause());
 
-            Player.VolumeChanged += AudioPlayer_VolumeChanged;
+            Shared.Player.VolumeChanged += AudioPlayer_VolumeChanged;
             NotifyPropertyChanged(null);
-            //PlaylistManager.PlaylistCurrentFileChanged += PlaylistManager_PlaylistCurrentFileChanged;
             OpenCurrentFileLocationCommand = new DelegateCommand(() => Shared.OpenCurrentFileLocation());
-            SelectCurrentFileInPlaylistCommand = new DelegateCommand(() => Player.FindCurrentFile());
-            Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
-            Player.PlaybackStateChanged += Player_PlaybackStateChanged;
+            Shared.Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
+            Shared.Player.PlaybackStateChanged += Player_PlaybackStateChanged;
 
             NotifyPropertyChanged(null);
         }
@@ -54,7 +52,7 @@ namespace MusicApplication.ViewModel
             {
                 if (newPlaybackState is Engine.Enums.PlaybackState.Opened)
                 {
-                    TagFile = new() { FilePath = Player.Source };
+                    TagFile = new() { FilePath = Shared.Player.Source };
                     NotifyPropertyChanged(nameof(TagFile));
 
                     NotifyPropertyChanged(nameof(TotalTimeString));
@@ -62,7 +60,7 @@ namespace MusicApplication.ViewModel
 
                     Engine.Utility.CoverImage2 CoverImage2 = new();
                     CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
-                    CoverImage2.CreateImage(Player.Source);
+                    CoverImage2.CreateImage(Shared.Player.Source);
                 }
             });
         }
@@ -75,11 +73,11 @@ namespace MusicApplication.ViewModel
         {
             if (IsPlaying)
             {
-                Player.Pause();
+                Shared.Player.Pause();
             }
-            else if (Player.PlaybackState is not PlaybackState.Closed)
+            else if (Shared.Player.PlaybackState is not PlaybackState.Closed)
             {
-                Player.Play();
+                Shared.Player.Play();
             }
             else
             {
@@ -106,28 +104,26 @@ namespace MusicApplication.ViewModel
             });
         }
 
-        public string CurrentTimeString => Player.CurrentTime.ToString(Shared.stringformat);
+        public string CurrentTimeString => Shared.Player.CurrentTime.ToString(Shared.stringformat);
 
-        public string TotalTimeString => Player.TotalTime.ToString(Shared.stringformat);
+        public string TotalTimeString => Shared.Player.TotalTime.ToString(Shared.stringformat);
 
         public int CurrentTimeTotalSeconds { get; set; }
 
-        public double TotalTimeTotalSeconds => Player.TotalTime.TotalSeconds;
+        public double TotalTimeTotalSeconds => Shared.Player.TotalTime.TotalSeconds;
 
-        public double Volume { get; set; } = Player.Volume;
+        public double Volume { get; set; } = Shared.Player.Volume;
 
-        public bool IsPlaying { get; set; } = Player.PlaybackState == PlaybackState.Playing;
-
+        public bool IsPlaying { get; set; } = Shared.Player.PlaybackState == PlaybackState.Playing;
 
         private void NextAudio()
         {
-            PlaylistManager.PlayNext();
+            Shared.Player.PlaylistManager.PlayNext();
         }
-
 
         private void PreviousAudioFile()
         {
-            PlaylistManager.PlayPrevious();
+            Shared.Player.PlaylistManager.PlayPrevious();
         }
     }
 }

@@ -10,36 +10,39 @@ namespace Engine.Internal
 {
     //ToDo: EngineMode  like with eq or with mono or pitch changable
     //ToDo Reader.WaveFormat.BitsPerSample
-    internal sealed class NaudioPlayer
+    internal class NAudioCore
     {
         #region NAudio Engine
-        private static MediaFoundationReader Reader;
-        private static ISampleProvider SampleProvider => Reader.ToSampleProvider();
-        private static Equalizer EqualizerCore;
-        private static readonly WaveOutEvent WaveOutEvent = new();
+        private MediaFoundationReader Reader;
+        private ISampleProvider SampleProvider => Reader.ToSampleProvider();
+        private Equalizer EqualizerCore;
+        private readonly WaveOutEvent WaveOutEvent = new();
 
-        private static EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
-        private static EqualizerBand[] EqualizerBand { get; set; }
+        private EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
+        private EqualizerBand[] EqualizerBand { get; set; }
         #endregion
 
+        private readonly Player PublicPlayer;
         #region Initial
-        internal static void Initialize()
+        internal NAudioCore(Player player)
         {
+            PublicPlayer = player;
             InitalEqualizer();
             InitializeTimers();
 
             WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
             Log.WriteLine("PlayerInitialized");
             PlaybackState = PlaybackState.Closed;
+
         }
 
-        private static void InitializeTimers()
+        private void InitializeTimers()
         {
             CurrentTimeWatcher.Interval = TimeSpan.FromMilliseconds(200);
             CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
         }
 
-        private static void InitalEqualizer()
+        private void InitalEqualizer()
         {
             switch (equalizerMode)
             {
@@ -64,17 +67,17 @@ namespace Engine.Internal
         }
         #endregion
 
-        private static string source;
-        internal static string Source { get => source; set { source = value; Log.WriteLine($"Source: {value}"); } }
+        private string source;
+        internal string Source { get => source; set { source = value; Log.WriteLine($"Source: {value}"); } }
 
-        internal static double CurrentTimeWatcherInterval
+        internal double CurrentTimeWatcherInterval
         {
             get => CurrentTimeWatcher.Interval.TotalSeconds;
             set => CurrentTimeWatcher.Interval = TimeSpan.FromSeconds(value);
         }
 
 
-        internal static int Volume
+        internal int Volume
         {
             get
             {
@@ -88,7 +91,8 @@ namespace Engine.Internal
                     double V = (double)iv / 100;
                     //V = V < 0 ? 0 : V > 1 ? 1 : V;
                     WaveOutEvent.Volume = (float)V;
-                    Player.InvokeVolumeChanged(iv);
+                    PublicPlayer.InvokeVolumeChanged(iv);
+                    Log.WriteLine("volume: " + iv);
                 }
                 catch (Exception ex)
                 {
@@ -97,7 +101,7 @@ namespace Engine.Internal
             }
         }
 
-        internal static void Seek(double totalseconds)
+        internal void Seek(double totalseconds)
         {
             try
             {
@@ -110,21 +114,21 @@ namespace Engine.Internal
             }
         }
 
-        internal static TimeSpan CurrentTime
+        internal TimeSpan CurrentTime
         {
             get => Reader is null ? TimeSpan.FromSeconds(0) : Reader.CurrentTime;
 
-            private set
+            set
             {
                 if (Reader is not null)
                 {
                     Reader.CurrentTime = value.TotalSeconds <= 0 ? TimeSpan.FromSeconds(0) : value;
-                    Player.InvokeCurrentTime(value);
+                    PublicPlayer.InvokeCurrentTime(value);
                 }
             }
         }
 
-        internal static TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
+        internal TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
 
         internal class EngineInfo
         {
@@ -160,7 +164,7 @@ namespace Engine.Internal
             }
         }
 
-        internal static async Task OpenAsync()
+        internal async Task OpenAsync()
         {
             await Task.Run(() =>
             {
@@ -189,7 +193,7 @@ namespace Engine.Internal
 
         }
 
-        internal static void Play()
+        internal void Play()
         {
             try
             {
@@ -206,27 +210,27 @@ namespace Engine.Internal
             }
         }
 
-        internal static void Pause()
+        internal void Pause()
         {
             WaveOutEvent.Pause();
             PlaybackState = PlaybackState.Paused;
         }
 
-        internal static void Stop()
+        internal void Stop()
         {
             WaveOutEvent.Stop();
             Seek(0);
             PlaybackState = PlaybackState.Stopped;
         }
 
-        internal static void Close()
+        internal void Close()
         {
             WaveOutEvent.Dispose();
             Reader.Close();
             PlaybackState = PlaybackState.Closed;
         }
 
-        internal static async Task SeekAsync(double totalseconds)
+        internal async Task SeekAsync(double totalseconds)
         {
             try
             {
@@ -242,18 +246,18 @@ namespace Engine.Internal
             }
         }
 
-        internal static void ChangeEqualizerBand(int bandIndex, float gain)
+        internal void ChangeEqualizerBand(int bandIndex, float gain)
         {
             EqualizerBand[bandIndex].Gain = gain;
             EqualizerCore?.Update();
         }
 
-        internal static double GetEqBandGain(int bandindex)
+        internal double GetEqBandGain(int bandindex)
         {
             return EqualizerBand[bandindex].Gain;
         }
 
-        internal static void ChangeEqualizerBand(int bandIndex, float Gain, float Bandwidth, float Frequency)
+        internal void ChangeEqualizerBand(int bandIndex, float Gain, float Bandwidth, float Frequency)
         {
             if (Gain != 0) { EqualizerBand[bandIndex].Gain = Gain; }
             if (Bandwidth != 0) { EqualizerBand[bandIndex].Bandwidth = Bandwidth; }
@@ -261,7 +265,7 @@ namespace Engine.Internal
             EqualizerCore?.Update();
         }
 
-        internal static void ResetEq()
+        internal void ResetEq()
         {
             foreach (var item in EqualizerBand)
             {
@@ -270,15 +274,15 @@ namespace Engine.Internal
             EqualizerCore?.Update();
         }
 
-        private static PlaybackState _playbackState;
-        internal static PlaybackState PlaybackState
+        private PlaybackState _playbackState;
+        internal PlaybackState PlaybackState
         {
             get => _playbackState;
             set
             {
                 Log.WriteLine("PlaybackState: " + value.ToString());
                 _playbackState = value;
-                Player.InvokePlaybackStateChanged(value);
+                PublicPlayer.InvokePlaybackStateChanged(value);
                 if (value is PlaybackState.Playing)
                 {
                     CurrentTimeWatcher.Start();
@@ -290,9 +294,9 @@ namespace Engine.Internal
             }
         }
 
-        private static void CurrentTimeWatcher_Tick(object sender, EventArgs e)
+        private void CurrentTimeWatcher_Tick(object sender, EventArgs e)
         {
-            Player.InvokeCurrentTime(Reader.CurrentTime);
+            PublicPlayer.InvokeCurrentTime(Reader.CurrentTime);
             if ((int)Reader.CurrentTime.TotalSeconds >= (int)Reader.TotalTime.TotalSeconds)
             {
                 PlaybackState = PlaybackState.Ended;
@@ -300,16 +304,16 @@ namespace Engine.Internal
             GC.Collect();
         }
 
-        internal static float ToSingle(double value)
+        internal float ToSingle(double value)
         {
             return (float)value;
         }
-        internal static double ToDouble(float value)
+        internal double ToDouble(float value)
         {
             return value;
         }
 
-        private static void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
+        private void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
         {
             if (string.IsNullOrEmpty(e.Exception?.Message))
             {
@@ -321,7 +325,7 @@ namespace Engine.Internal
                 PlaybackState = PlaybackState.Failed;
             }
         }
-        private static readonly DispatcherTimer CurrentTimeWatcher = new();
+        private readonly DispatcherTimer CurrentTimeWatcher = new();
         internal const string stringformat = "mm\\:ss";
     }
 }

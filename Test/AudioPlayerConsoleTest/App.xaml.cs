@@ -11,6 +11,8 @@ namespace Test
     /// </summary>
     public partial class App : Application
     {
+        private static Player Player = new();
+
         [DllImport("Kernel32")]
         public static extern void AllocConsole();
 
@@ -23,7 +25,6 @@ namespace Test
 
             AllocConsole();
             WriteLine("Started");
-            Player.Initialize();
             //PlaylistManager.Initialize();
             Player.Source = e.Args[0];
             await Player.OpenAsync();

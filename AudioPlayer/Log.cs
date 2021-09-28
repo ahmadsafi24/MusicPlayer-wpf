@@ -6,7 +6,7 @@ namespace Engine
     {
         internal static void WriteLine(object message)
         {
-            Console.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
+           Console.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
         }
     }
 }

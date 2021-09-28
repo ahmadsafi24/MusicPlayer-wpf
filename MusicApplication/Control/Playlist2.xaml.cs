@@ -2,7 +2,6 @@
 using Engine.Model;
 using MusicApplication.ViewModel.Base;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +14,9 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class Playlist2 : UserControl
     {
+        PlaylistManager PlaylistManager = Shared.Player.PlaylistManager;
+        Player Player = Shared.Player;
+
         public Playlist2()
         {
             InitializeComponent();
@@ -64,14 +66,14 @@ namespace MusicApplication.Control
         public PlaylistViewModel2()
         {
             NotifyPropertyChanged(null);
-            PlaylistManager.Playlists[0].PlaylistUpdated += PlaylistViewModel_PlaylistUpdated;
+           // Shared.Player.PlaylistManager.Playlists[0].PlaylistUpdated += PlaylistViewModel_PlaylistUpdated;
         }
 
         private async void PlaylistViewModel_PlaylistUpdated()
         {
             await Task.Run(() =>
             {
-                Playlist = new(PlaylistManager.PlaylistItems.ToArray());
+                Playlist = new(Shared.Player.PlaylistManager.PlaylistItems.ToArray());
                 NotifyPropertyChanged(nameof(Playlist));
             });
         }

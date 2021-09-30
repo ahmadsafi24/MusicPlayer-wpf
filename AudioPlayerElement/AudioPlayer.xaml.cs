@@ -1,5 +1,4 @@
-using Engine;
-using System.Threading.Tasks;
+using AudioPlayer;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,14 +13,21 @@ namespace AudioPlayerElement
         public AudioPlayer()
         {
             InitializeComponent();
-            Player.Source = @"D:\\temp\\music.mp3";
-            Task.Run(async () => await Player.OpenAsync());
+            //Player.Source = @"D:\\temp\\music.mp3";
+            //Task.Run(async () => await Player.OpenAsync());
             Player.CurrentTimeChanged += Player_CurrentTimeChanged;
         }
 
         private void Player_CurrentTimeChanged(System.TimeSpan Time)
         {
-            this.CaptionString = Time.ToString();
+            CaptionString = Time.ToString();
+        }
+
+        public async void play(string file)
+        {
+            Player.Source = file;
+            await Player.OpenAsync();
+            Player.Play();
         }
 
         public string CaptionString

@@ -4,15 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Engine.Model
+namespace AudioPlayer.Model
 {
     //TODO use LINQ To search delete or.... 
     //use database as storage
     public class PlaylistFile
     {
-        public PlaylistFile()
+        public PlaylistFile(List<string> pathlist)
         {
             Items = new();
+            foreach (var item in pathlist)
+            {
+                Items.Add(new() { FilePath = item });
+            }
+            FireUpdatedEvent();
         }
 
         private List<AudioFile> _items;
@@ -128,6 +133,7 @@ namespace Engine.Model
         private void FireUpdatedEvent()
         {
             PlaylistUpdated?.Invoke();
+            Log.WriteLine("Playlist Updated");
         }
 
         public event EventHandlerEmpty PlaylistUpdated;

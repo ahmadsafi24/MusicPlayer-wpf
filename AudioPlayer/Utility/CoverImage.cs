@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace Engine.Utility
+namespace AudioPlayer.Utility
 {
     public static class CoverImage
     {

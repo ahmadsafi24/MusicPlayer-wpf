@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Engine
+namespace AudioPlayer
 {
     public static class Events
     {

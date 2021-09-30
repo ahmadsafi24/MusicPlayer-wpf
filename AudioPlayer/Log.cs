@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Engine
+namespace AudioPlayer
 {
     internal static class Log
     {

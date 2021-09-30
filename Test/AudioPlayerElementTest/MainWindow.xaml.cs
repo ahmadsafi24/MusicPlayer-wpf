@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
-namespace EngineControlLibrary.Test
+namespace AudioPlayerElementTest
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,6 +10,13 @@ namespace EngineControlLibrary.Test
         public MainWindow()
         {
             InitializeComponent();
+            AllowDrop = true;
+            DragEnter += (_, e) => e.Effects = DragDropEffects.All;
+            Drop += (_, e) =>
+            {
+                string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+                APE.play(dropitems[0]);
+            };
         }
     }
 }

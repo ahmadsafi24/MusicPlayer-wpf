@@ -1,12 +1,4 @@
-﻿using Engine;
-using Engine.Model;
-using MusicApplication.ViewModel;
-using MusicApplication.ViewModel.Base;
-using System;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Controls;
 
 namespace MusicApplication.Control
 {
@@ -18,7 +10,6 @@ namespace MusicApplication.Control
         public MediaInfoCard()
         {
             InitializeComponent();
-            DataContext = Locator.PlayerVmInstance;
         }
     }
 

@@ -1,5 +1,5 @@
-﻿using Engine;
-using Engine.Model;
+﻿using AudioPlayer;
+using AudioPlayer.Model;
 using MusicApplication.ViewModel.Base;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -14,8 +14,8 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class Playlist : UserControl
     {
-        Player Player = Shared.Player;
-        PlaylistManager PlaylistManager = Shared.Player.PlaylistManager;
+        Player Player = SharedStatics.Player;
+        private PlaylistV2 Playlistmanager = SharedStatics.Player.Playlist;
         public Playlist()
         {
             InitializeComponent();
@@ -30,7 +30,7 @@ namespace MusicApplication.Control
         {
             if (e.ClickCount >= 2)
             {
-                Player.Source = PlaylistManager.PlaylistItems[listView.SelectedIndex].FilePath;
+                Player.Source = Playlistmanager.pathlist[listView.SelectedIndex];
                 await Player.OpenAsync();
             }
         }
@@ -40,57 +40,21 @@ namespace MusicApplication.Control
             if (listView.SelectedIndex is not -1)
             {
                 int index = listView.SelectedIndex;
-                PlaylistManager.Remove(0, index);
-
+                Playlistmanager.pathlist.RemoveAt(index);
             }
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-            PlaylistManager.Clear();//=>playlist.clearandnotify
+            Playlistmanager.pathlist.Clear();//=>playlist.clearandnotify
         }
 
         private async void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             string[] files = await Helper.FileOpenPicker.GetFileAsync();
 
-            await PlaylistManager.AddRangeAsync(0, files);
+            await Playlistmanager.AddRangeAsync(files);
         }
     }
 
-    public class PlaylistViewModel : ViewModelBase
-    {
-        Player Player = Shared.Player;
-        PlaylistManager PlaylistManager = Shared.Player.PlaylistManager;
-        //public ObservableCollection<AudioFile> Playlist { get; set; }
-        public ObservableCollection<AudioFile> Playlist { get; set; } = new();
-        public PlaylistViewModel()
-        {
-            NotifyPropertyChanged(null);
-            PlaylistManager.Playlists[0].PlaylistUpdated += PlaylistViewModel_PlaylistUpdated;
-
-            PlaylistManager.PlaylistCurrentFileChanged += async () =>
-            {
-                await Task.Run(() =>
-                {
-                    SelectedIndex = PlaylistManager.OpenedFileIndex;
-                    NotifyPropertyChanged(nameof(SelectedIndex));
-                });
-            };
-        }
-
-        private async void PlaylistViewModel_PlaylistUpdated()
-        {
-            await Task.Run(() =>
-            {
-                Playlist = new(PlaylistManager.PlaylistItems);
-                NotifyPropertyChanged(nameof(Playlist));
-            });
-        }
-
-        public int SelectedIndex { get; set; } = -1;
-
-
-
-    }
 }

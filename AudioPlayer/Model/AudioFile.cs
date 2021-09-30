@@ -1,8 +1,6 @@
-﻿using System;
-using System.Windows.Media.Imaging;
-using ATL;
+﻿using ATL;
 
-namespace Engine.Model
+namespace AudioPlayer.Model
 {
     public struct AudioFile
     {

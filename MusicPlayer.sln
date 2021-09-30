@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioPlayerElementTest", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioPlayerElement", "AudioPlayerElement\AudioPlayerElement.csproj", "{10946C0C-9C90-42E4-97BF-B1B487A6D5DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveFormRendererTest", "WaveFormRendererTest\WaveFormRendererTest.csproj", "{9E4D31AC-906E-49EA-8855-3971AB86E39F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,18 @@ Global
 		{10946C0C-9C90-42E4-97BF-B1B487A6D5DE}.Release|x64.Build.0 = Release|x64
 		{10946C0C-9C90-42E4-97BF-B1B487A6D5DE}.Release|x86.ActiveCfg = Release|Any CPU
 		{10946C0C-9C90-42E4-97BF-B1B487A6D5DE}.Release|x86.Build.0 = Release|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Debug|x64.Build.0 = Debug|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Debug|x86.Build.0 = Debug|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Release|x64.ActiveCfg = Release|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Release|x64.Build.0 = Release|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Release|x86.ActiveCfg = Release|Any CPU
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +120,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{07333BE8-6812-46BC-A971-EDAB4C5C8470} = {9A4F8262-FB75-485A-9F3C-F53E3EA45170}
 		{E7D9C93C-836C-459B-8B14-955209275C6D} = {9A4F8262-FB75-485A-9F3C-F53E3EA45170}
+		{9E4D31AC-906E-49EA-8855-3971AB86E39F} = {9A4F8262-FB75-485A-9F3C-F53E3EA45170}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B8F467D-AFC6-46CE-83BE-EADEEDA0A0F6}

@@ -2,13 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MusicApplication.Control" xmlns:Engine="clr-namespace:Engine;assembly=Engine" x:Name="userControl" x:Class="MusicApplication.Control.Playlist"
-             d:DataContext="{d:DesignInstance Type={x:Type local:PlaylistViewModel}}"
+             xmlns:local="clr-namespace:MusicApplication.Control"
+             x:Name="userControl" x:Class="MusicApplication.Control.Playlist"
+             d:DataContext="{StaticResource PlaylistViewModel}"
+             DataContext="{StaticResource PlaylistViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="375.158" Background="{DynamicResource Playlist.Background}" d:Width="205">
-    <UserControl.DataContext>
-        <local:PlaylistViewModel/>
-    </UserControl.DataContext>
     <UserControl.Resources>
         <Style x:Key="ListBoxItemStyle1" TargetType="{x:Type ListBoxItem}">
             <Setter Property="SnapsToDevicePixels" Value="True" />

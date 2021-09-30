@@ -1,12 +1,10 @@
-using Engine.Enums;
 using NAudio.Extras;
 using NAudio.Wave;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using PlaybackState = Engine.Enums.PlaybackState;
 
-namespace Engine.Internal
+namespace AudioPlayer.Core
 {
     //ToDo: EngineMode  like with eq or with mono or pitch changable
     //ToDo Reader.WaveFormat.BitsPerSample
@@ -18,7 +16,7 @@ namespace Engine.Internal
         private Equalizer EqualizerCore;
         private readonly WaveOutEvent WaveOutEvent = new();
 
-        private EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
+        private readonly EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
         private EqualizerBand[] EqualizerBand { get; set; }
         #endregion
 
@@ -160,7 +158,7 @@ namespace Engine.Internal
             public override string ToString()
             {
                 base.ToString();
-                return $"Media Info <SampleRate: {SampleRate}> | <Channels: {Channels}> | <avgBPM {AverageBytesPerSecond}> | <Encoding: {Encoding.ToString()}> | <BPM: {BitsPerSample}>";
+                return $"Media Info <SampleRate: {SampleRate}> | <Channels: {Channels}> | <avgBPM {AverageBytesPerSecond}> | <Encoding: {Encoding}> | <BPM: {BitsPerSample}>";
             }
         }
 

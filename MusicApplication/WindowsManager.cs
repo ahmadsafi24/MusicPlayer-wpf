@@ -9,27 +9,24 @@ namespace MusicApplication
 {
     internal static class WindowsManager
     {
-        internal static Windows.MainWindow mainWindow = new();
-        //internal static Windows.Window1 playercontrolwin = new();
-
-
-        internal static List<Window> WindowList = new();
-
-
-
         [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true)]
         internal static extern bool SetPreferredAppMode(AppMode preferredAppMode);
+
+        internal static Windows.MainWindow mainWindow = new();
+        internal static Windows.Window1 playercontrolwin = new();
+
+        internal static List<Window> WindowList = new();
 
         internal static void StartApp(string[] args)
         {
 
             WindowList.Add(mainWindow);
-            //WindowList.Add(playercontrolwin);
+            WindowList.Add(playercontrolwin);
 
             mainWindow.SourceInitialized += MainWindow_SourceInitialized;
 
             mainWindow.Show();
-            //playercontrolwin.Show();
+            playercontrolwin.Show();
 
             Dispatcher.CurrentDispatcher.Invoke(() =>
             {
@@ -37,10 +34,12 @@ namespace MusicApplication
                 if (args?.Length > 0)
                 {
                     //_ = Task.Run(async () => await PlaylistManager.AddRangeAsync(0, args));
-                    Shared.Player.Source = args[0];
-                    _ = Task.Run(async () => await Shared.Player.OpenAsync());
+                    SharedStatics.Player.Source = args[0];
+                    _ = Task.Run(async () => await SharedStatics.Player.OpenAsync());
                 }
             });
+
+            WindowTheme.DarkThemeToggle();
         }
 
         private static void MainWindow_SourceInitialized(object sender, System.EventArgs e)
@@ -67,9 +66,9 @@ namespace MusicApplication
         {
 
             string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
-            await Shared.Player.PlaylistManager.AddRangeAsync(0, dropitems);
-            Shared.Player.Source = dropitems[0];
-            await Shared.Player.OpenAsync();
+            //await SharedStatics.Player.PlaylistManager.AddRangeAsync(0, dropitems);
+            SharedStatics.Player.Source = dropitems[0];
+            await SharedStatics.Player.OpenAsync();
         }
 
         private static void Window_MouseWheel(System.Windows.Input.MouseWheelEventArgs e)
@@ -77,10 +76,10 @@ namespace MusicApplication
             switch (e.Delta)
             {
                 case > 0:
-                    Shared.Player.VolumeUp(5);
+                    SharedStatics.Player.VolumeUp(5);
                     break;
                 default:
-                    Shared.Player.VolumeDown(5);
+                    SharedStatics.Player.VolumeDown(5);
                     break;
             }
             e.Handled = true;

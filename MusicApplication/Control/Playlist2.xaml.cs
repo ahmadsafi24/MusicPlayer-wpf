@@ -1,5 +1,5 @@
-﻿using Engine;
-using Engine.Model;
+﻿using AudioPlayer;
+using AudioPlayer.Model;
 using MusicApplication.ViewModel.Base;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -14,8 +14,8 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class Playlist2 : UserControl
     {
-        PlaylistManager PlaylistManager = Shared.Player.PlaylistManager;
-        Player Player = Shared.Player;
+        PlaylistV2 PlaylistManager = SharedStatics.Player.Playlist;
+        Player Player = SharedStatics.Player;
 
         public Playlist2()
         {
@@ -31,7 +31,7 @@ namespace MusicApplication.Control
         {
             if (e.ClickCount >= 2)
             {
-                Player.Source = PlaylistManager.PlaylistItems[listView.SelectedIndex].FilePath;
+               // Player.Source = PlaylistManager.PlaylistItems[listView.SelectedIndex].FilePath;
                 await Player.OpenAsync();
             }
         }
@@ -41,21 +41,21 @@ namespace MusicApplication.Control
             if (listView.SelectedIndex is not -1)
             {
                 int index = listView.SelectedIndex;
-                PlaylistManager.Remove(0, index);
+                PlaylistManager.pathlist.RemoveAt(index);
 
             }
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-            PlaylistManager.Clear();//=>playlist.clearandnotify
+            PlaylistManager.pathlist.Clear();//=>playlist.clearandnotify
         }
 
         private async void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             string[] files = await Helper.FileOpenPicker.GetFileAsync();
 
-            await PlaylistManager.AddRangeAsync(0, files);
+            await PlaylistManager.AddRangeAsync(files);
         }
     }
 
@@ -73,7 +73,8 @@ namespace MusicApplication.Control
         {
             await Task.Run(() =>
             {
-                Playlist = new(Shared.Player.PlaylistManager.PlaylistItems.ToArray());
+                PlaylistFile tc = new PlaylistFile(SharedStatics.Player.Playlist.pathlist);
+                Playlist = new(tc.Items);
                 NotifyPropertyChanged(nameof(Playlist));
             });
         }

@@ -1,9 +1,8 @@
-﻿using Engine.Enums;
-using Engine.Model;
+﻿using AudioPlayer.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Engine
+namespace AudioPlayer
 {
     public class PlaylistManager
     {
@@ -11,6 +10,8 @@ namespace Engine
         public PlaylistManager(Player player)
         {
             PublicPlayer = player;
+            PublicPlayer.PlaybackStateChanged += Player_PlaybackStateChanged;
+            Log.WriteLine("Playlist Intialized");
         }
 
         public event EventHandlerEmpty PlaylistCurrentFileChanged;
@@ -42,13 +43,7 @@ namespace Engine
         }
 
         #region Playlist
-        //
-        public void Initialize()
-        {
-            PublicPlayer.PlaybackStateChanged += Player_PlaybackStateChanged;
-            Playlists.Add(new PlaylistFile());
-            Log.WriteLine("Playlist Intialized");
-        }
+
 
         private void Player_PlaybackStateChanged(PlaybackState newPlaybackState)
         {

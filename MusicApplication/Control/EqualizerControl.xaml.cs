@@ -1,4 +1,4 @@
-﻿using Engine;
+﻿using AudioPlayer;
 using MusicApplication.ViewModel.Base;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,7 +19,7 @@ namespace MusicApplication.Control
 
     public class EqualizerViewModel : ViewModelBase
     {
-        Player Player = Shared.Player;
+        Player Player = SharedStatics.Player;
 
         public EqualizerViewModel()
         {

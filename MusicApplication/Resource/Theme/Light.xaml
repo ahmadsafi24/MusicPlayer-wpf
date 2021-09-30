@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!--#region Neccessary-->
+    <!--#region Necessary-->
     <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FF838383"/>
     <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FF838383"/>
     <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="White"/>
@@ -68,12 +68,12 @@
     <SolidColorBrush x:Key="ScrollBar.Disabled.Background" Color="#F0F0F0"/>
     <SolidColorBrush x:Key="ScrollBar.Disabled.Border" Color="#F0F0F0"/>
 
-    <SolidColorBrush x:Key="MediaButton.Background" Color="#FF8BB1E8"/>
-    <SolidColorBrush x:Key="MediaButton.Background.MouseOver" Color="#FF4290FF"/>
+    <SolidColorBrush x:Key="MediaButton.Background" Color="#FF3D96DD"/>
+    <SolidColorBrush x:Key="MediaButton.Background.MouseOver" Color="#FF0E6EBA"/>
     <SolidColorBrush x:Key="MediaButton.Background.Pressed" Color="#FF99C3FF"/>
-    <SolidColorBrush x:Key="MediaSlider.Foreground" Color="#FF8BB1E8"/>
-    <SolidColorBrush x:Key="MediaSlider.Backgound.Active" Color="Gainsboro"/>
-    <SolidColorBrush x:Key="MediaSlider.Backgound.Deactive" Color="#FFE4E4E4"/>
+    <SolidColorBrush x:Key="MediaSlider.Foreground" Color="#FF0078D7"/>
+    <SolidColorBrush x:Key="MediaSlider.Background.Active" Color="Gainsboro"/>
+    <SolidColorBrush x:Key="MediaSlider.Background.Deactive" Color="#FFE4E4E4"/>
     <SolidColorBrush x:Key="MediaInfoCard.BorderBrush" Color="#FFB8D5FF" Opacity="1"/>
     <SolidColorBrush x:Key="MediaCover.Background" Color="#FF3AA4DA" Opacity="1"/>
     <SolidColorBrush x:Key="Playlist.Background" Color="#FFEAEAEA"/>
@@ -91,5 +91,5 @@
     <SolidColorBrush x:Key="Window.BorderBrush.Activated" Color="#7FFFFFFF"/>
     <SolidColorBrush x:Key="Window.BorderBrush.Deactivated" Color="#7FB8B8B8"/>
 
-    <Color x:Key="AccentColor">#FF8BB1E8</Color>
+    <Color x:Key="AccentColor">#FF0078D7</Color>
 </ResourceDictionary>

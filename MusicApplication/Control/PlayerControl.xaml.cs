@@ -1,10 +1,4 @@
-﻿using Engine;
-using Engine.Enums;
-using MusicApplication.ViewModel;
-using MusicApplication.ViewModel.Base;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -19,7 +13,6 @@ namespace MusicApplication.Control
         {
             SizeChanged += PlayerControl_SizeChanged;
             InitializeComponent();
-            DataContext = Locator.PlayerVmInstance;
         }
 
         private void PlayerControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -37,13 +30,13 @@ namespace MusicApplication.Control
             {
 
                 double val = SetPbValue(e.GetPosition(progressBar).X, progressBar);
-                if (val != Shared.Player.CurrentTime.TotalSeconds
-                    && val <= Shared.Player.TotalTime.TotalSeconds)
+                if (val != SharedStatics.Player.TimePosition.TotalSeconds
+                    && val <= SharedStatics.Player.TimeDuration.TotalSeconds)
                 {
 
                     //progressBar.Value = val;
                     //progressBar.GetBindingExpression(ProgressBar.ValueProperty).UpdateSource();
-                    await Shared.Player.SeekAsync(val);
+                    await SharedStatics.Player.SeekAsync(val);
                 }
 
             }
@@ -70,7 +63,7 @@ namespace MusicApplication.Control
             ProgressBar progressBar = (ProgressBar)sender;
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                Shared.Player.ChangeVolume((int)SetPbValue(e.GetPosition(progressBar).X, progressBar));
+                SharedStatics.Player.ChangeVolume((int)SetPbValue(e.GetPosition(progressBar).X, progressBar));
             }
         }
 

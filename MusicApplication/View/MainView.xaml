@@ -11,6 +11,14 @@
              Background="{DynamicResource MainView.Background}"
              Foreground="{DynamicResource MainView.Foreground}"
              Padding="0">
+    <UserControl.ContextMenu>
+        <ContextMenu DataContext="{StaticResource ContextMenuMainViewViewModel}">
+            <MenuItem Header="Open" Command="{Binding Open}"/>
+            <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
+            <MenuItem Header="ControlbarWindow" Command="{Binding SwitchToMainView}"/>
+            <MenuItem Header="Exit" Command="{Binding Exit}"/>
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <DockPanel LastChildFill="True">
         <control:Menubar DockPanel.Dock="Top" BorderBrush="#595B5B5B" BorderThickness="0,0,0,1"/>
         <control:PlayerControl DockPanel.Dock="Bottom"/>

@@ -1,6 +1,5 @@
 ﻿using AudioPlayer;
 using MusicApplication.ViewModel.Base;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -19,7 +18,7 @@ namespace MusicApplication.Control
 
     public class EqualizerViewModel : ViewModelBase
     {
-        Player Player = SharedStatics.Player;
+        private readonly Player Player = App.Player;
 
         public EqualizerViewModel()
         {

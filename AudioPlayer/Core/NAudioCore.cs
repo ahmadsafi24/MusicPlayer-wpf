@@ -85,10 +85,19 @@ namespace AudioPlayer.Core
             {
                 try
                 {
+                    if (IsMuted)
+                    {
+                        ismute = false;
+                    }
                     int iv = value < 0 ? 0 : value > 100 ? 100 : value;
                     double V = (double)iv / 100;
                     //V = V < 0 ? 0 : V > 1 ? 1 : V;
                     WaveOutEvent.Volume = (float)V;
+
+                    if (iv == 0)
+                    {
+                        ismute = true;
+                    }
                     PublicPlayer.InvokeVolumeChanged(iv);
                     Log.WriteLine("volume: " + iv);
                 }
@@ -289,6 +298,26 @@ namespace AudioPlayer.Core
                 {
                     CurrentTimeWatcher.Stop();
                 }
+            }
+        }
+
+        private int volBeforeMute;
+        private bool ismute;
+        internal bool IsMuted
+        {
+            get => ismute;
+            set
+            {
+                if (value)
+                {
+                    volBeforeMute = Volume;
+                    Volume = 0;
+                }
+                else
+                {
+                    Volume = volBeforeMute;
+                }
+                ismute = value;
             }
         }
 

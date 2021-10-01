@@ -49,6 +49,43 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+        <ControlTemplate x:Key="MediaMutedButtonTemplate" TargetType="{x:Type Button}">
+            <Border Background="Transparent">
+                <Path x:Name="contentPresenter" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True" VerticalAlignment="Center" 
+                                  Data="{StaticResource MutedGeometry}"
+                                  Fill="{TemplateBinding Background}" Stretch="Uniform" Height="14" Width="14"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.MouseOver}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.Pressed}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Disabled.Background}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="MediaUnmutedButtonTemplate" TargetType="{x:Type Button}">
+            <Border Background="Transparent">
+                <Path x:Name="contentPresenter" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True" VerticalAlignment="Center" 
+                                  Data="{StaticResource UnmutedGeometry}"
+                                  Fill="{TemplateBinding Background}" Stretch="Uniform" Height="14" Width="14"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.MouseOver}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Background.Pressed}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Fill" TargetName="contentPresenter" Value="{DynamicResource MediaButton.Disabled.Background}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
         <ControlTemplate x:Key="MediaForwardButtonTemplate" TargetType="{x:Type Button}">
             <Border Background="Transparent">
                 <Path x:Name="contentPresenter" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True" VerticalAlignment="Center" 
@@ -170,6 +207,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" MinWidth="140"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding CurrentTimeString}" Margin="5,0" d:Text="0:00"/>
 
@@ -185,15 +223,27 @@
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TotalTimeString}" Margin="5,0" d:Text="0:00"/>
 
-            <ProgressBar x:Name="VolumeProgressbar" Grid.Column="4" Height="26" Width="80" Style="{DynamicResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
+            <ProgressBar x:Name="VolumeProgressbar" Grid.Column="5" Height="26" Width="80" Style="{DynamicResource ProgressBarStyle1}" VerticalAlignment="Center" Margin="10,0" ClipToBounds="False"
                          Maximum="100" Minimum="0" Value="{Binding Volume,Mode=TwoWay}" Foreground="{DynamicResource MediaSlider.Foreground}" Background="{DynamicResource MediaSlider.Background.Active}"
                          MouseMove="VolumeProgressbar_MouseMove" MouseDown="ProgressBar_MouseDown" MouseUp="ProgressBar_MouseUp" ValueChanged="VolumeProgressbar_ValueChanged"/>
-            <Ellipse x:Name="EllipseThumbVol" Height="12" Width="12" Fill="{DynamicResource SliderThumb.Static.Background}" Stroke="{DynamicResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="4" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="29,0,0,0"/>
+            <Ellipse x:Name="EllipseThumbVol" Height="12" Width="12" Fill="{DynamicResource SliderThumb.Static.Background}" Stroke="{DynamicResource SliderThumb.Static.Border}" StrokeThickness="1" Grid.Column="5" HorizontalAlignment="Left" IsHitTestVisible="False" Margin="29,0,0,0"/>
 
             <!--Slider x:Name="VolumeSlider" Grid.Column="4" Width="100" HorizontalAlignment="Right" TickPlacement="None" IsSelectionRangeEnabled="True" SelectionStart="0" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" Foreground="{StaticResource MediaSlider.Foreground}" Background="{StaticResource MediaSlider.Backgound.Active}" VerticalAlignment="Center"
                     Minimum="0" Maximum="1" LargeChange="0.05" IsMoveToPointEnabled="True" Margin="8"
                     Value="{Binding Volume,Mode=TwoWay}" BorderBrush="{x:Null}"/-->
-
+            <Button Grid.Column="4"
+                    Command="{Binding MuteAudioCommand}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediaButton}">
+                        <Setter Property="Template" Value="{StaticResource MediaUnmutedButtonTemplate}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMuted,Mode=OneWay}" Value="True">
+                                <Setter Property="Template" Value="{StaticResource MediaMutedButtonTemplate}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Grid Grid.Row="0" Grid.Column="0" Height="37" Width="111" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2"/>

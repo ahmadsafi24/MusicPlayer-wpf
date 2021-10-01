@@ -5,25 +5,37 @@
         public delegate void EventHandlerThemeChanged(bool isdark);
         public static event EventHandlerThemeChanged ThemeChanged;
 
-        private static bool _isDark;
-        public static bool IsDark
+        public static bool IsDark { get; set; }
+
+        public static void FireThemeChangedForWindows()
         {
-            get => _isDark;
-            set
+            ThemeChanged?.Invoke(IsDark);
+        }
+
+        public static void DarkThemeToggle()
+        {
+            if (IsDark)
             {
-                _isDark = value;
-                if (value)
-                { ResourceManager.LoadThemeResourceDark(); }
-                else
-                { ResourceManager.LoadThemeResourceLight(); }
-                ThemeChanged?.Invoke(value);
+                ForceApplyLight();
+            }
+            else
+            {
+                ForceApplyDark();
             }
         }
 
-        public static void DarkThemeToggle() => IsDark = !IsDark;
+        public static void ForceApplyDark()
+        {
+            ResourceManager.LoadThemeResourceDark();
+            IsDark = true;
+            FireThemeChangedForWindows();
+        }
 
-        public static void ForceApplyDark() => IsDark = true;
-
-        public static void ForceApplyLight() => IsDark = false;
+        public static void ForceApplyLight()
+        {
+            ResourceManager.LoadThemeResourceLight();
+            IsDark = false;
+            FireThemeChangedForWindows();
+        }
     }
 }

@@ -1,12 +1,7 @@
 ﻿using AudioPlayer;
-using AudioPlayer.Model;
-using MusicApplication.ViewModel.Base;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Linq;
 namespace MusicApplication.Control
 {
     /// <summary>
@@ -14,8 +9,8 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class Playlist : UserControl
     {
-        Player Player = SharedStatics.Player;
-        private PlaylistV2 Playlistmanager = SharedStatics.Player.Playlist;
+        private readonly Player Player = App.Player;
+        private readonly PlaylistV2 Playlistmanager = App.Player.Playlist;
         public Playlist()
         {
             InitializeComponent();
@@ -30,7 +25,7 @@ namespace MusicApplication.Control
         {
             if (e.ClickCount >= 2)
             {
-                Player.Source = Playlistmanager.pathlist[listView.SelectedIndex];
+                Player.Source = Playlistmanager.Pathlist[listView.SelectedIndex];
                 await Player.OpenAsync();
             }
         }
@@ -40,13 +35,13 @@ namespace MusicApplication.Control
             if (listView.SelectedIndex is not -1)
             {
                 int index = listView.SelectedIndex;
-                Playlistmanager.pathlist.RemoveAt(index);
+                Playlistmanager.Pathlist.RemoveAt(index);
             }
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-            Playlistmanager.pathlist.Clear();//=>playlist.clearandnotify
+            Playlistmanager.Pathlist.Clear();//=>playlist.clearandnotify
         }
 
         private async void ButtonAdd_Click(object sender, RoutedEventArgs e)

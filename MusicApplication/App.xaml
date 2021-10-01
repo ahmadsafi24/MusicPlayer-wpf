@@ -5,7 +5,6 @@
 
     <Application.Resources>
         <ResourceDictionary>
-
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resource/Theme/Light.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Geometry.xaml"/>
@@ -22,6 +21,8 @@
 
             <ViewModel:PlayerViewModel x:Key="PlayerViewModel"/>
             <ViewModel:PlaylistViewModel x:Key="PlaylistViewModel"/>
+            <ViewModel:ContextMenuMiniViewViewModel x:Key="ContextMenuMiniViewViewModel"/>
+            <ViewModel:ContextMenuMainViewViewModel x:Key="ContextMenuMainViewViewModel"/>
 
         </ResourceDictionary>
     </Application.Resources>

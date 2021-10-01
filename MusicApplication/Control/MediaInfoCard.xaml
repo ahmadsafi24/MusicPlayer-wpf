@@ -22,10 +22,6 @@
             </Setter>
         </Style>
     </UserControl.Style>
-    <UserControl.InputBindings>
-        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenCurrentFileLocationCommand}"/>
-        <MouseBinding MouseAction="LeftClick" Command="{Binding SelectCurrentFileInPlaylistCommand}"/>
-    </UserControl.InputBindings>
     <StackPanel  VerticalAlignment="Top" Background="Transparent">
         <Grid x:Name="grid" Margin="10">
             <Grid.ColumnDefinitions>

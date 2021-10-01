@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace MusicApplication.Windows
 {
@@ -12,7 +10,6 @@ namespace MusicApplication.Windows
     {
         public MainWindowChromeless()
         {
-            Initialized += (_, _) => WindowsManager.WindowInitialized(this);
             InitializeComponent();
             SizeChanged += MainWindowChromeless_SizeChanged;
         }

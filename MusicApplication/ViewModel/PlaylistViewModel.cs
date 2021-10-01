@@ -1,19 +1,14 @@
 ﻿using AudioPlayer;
 using AudioPlayer.Model;
 using MusicApplication.ViewModel.Base;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MusicApplication.ViewModel
 {
     public class PlaylistViewModel : ViewModelBase
     {
-        Player Player = SharedStatics.Player;
-        PlaylistV2 PlaylistV2 = SharedStatics.Player.Playlist;
+        private readonly PlaylistV2 PlaylistV2 = App.Player.Playlist;
         //public ObservableCollection<AudioFile> Playlist { get; set; }
         public ObservableCollection<AudioFile> Playlist { get; set; } = new();
         public PlaylistViewModel()
@@ -35,7 +30,7 @@ namespace MusicApplication.ViewModel
         {
             await Task.Run(() =>
             {
-                var tc = new PlaylistFile(PlaylistV2.pathlist);
+                var tc = new PlaylistFile(PlaylistV2.Pathlist);
                 Playlist = new(tc.Items);
                 NotifyPropertyChanged(nameof(Playlist));
             });

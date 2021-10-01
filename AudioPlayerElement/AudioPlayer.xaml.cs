@@ -15,7 +15,7 @@ namespace AudioPlayerElement
             InitializeComponent();
             //Player.Source = @"D:\\temp\\music.mp3";
             //Task.Run(async () => await Player.OpenAsync());
-            Player.CurrentTimeChanged += Player_CurrentTimeChanged;
+            Player.TimePositionChanged += Player_CurrentTimeChanged;
         }
 
         private void Player_CurrentTimeChanged(System.TimeSpan Time)

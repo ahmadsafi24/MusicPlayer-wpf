@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
-#pragma warning disable CA1822 // Mark members as static
 namespace MusicApplication.ViewModel
 {
     public class PlayerViewModel : ViewModelBase
     {
-        private Player Player = SharedStatics.Player;
+        private readonly Player Player = App.Player;
 
-        public ICommand OpenCurrentFileLocationCommand { get; }
-        public ICommand SelectCurrentFileInPlaylistCommand { get; }
         public ICommand PlayPauseCommand { get; }
+        public ICommand MuteAudioCommand { get; }
 
         private DelegateCommand _nextAudioCommand;
         public ICommand NextAudioCommand => _nextAudioCommand ??= new DelegateCommand(NextAudio);
@@ -26,14 +24,21 @@ namespace MusicApplication.ViewModel
         public PlayerViewModel()
         {
             PlayPauseCommand = new DelegateCommand(() => PlayPause());
+            MuteAudioCommand = new DelegateCommand(() => MuteUnmute());
 
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
             NotifyPropertyChanged(null);
-            OpenCurrentFileLocationCommand = new DelegateCommand(() => SharedStatics.OpenCurrentFileLocation());
-            Player.CurrentTimeChanged += AudioPlayer_CurrentTimeChanged;
+            Player.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
             Player.PlaybackStateChanged += Player_PlaybackStateChanged;
 
             NotifyPropertyChanged(null);
+        }
+
+        public bool IsMuted { get => Player.IsMuted; set => Player.IsMuted = value; }
+
+        private void MuteUnmute()
+        {
+            IsMuted = !IsMuted;
         }
 
         private async void Player_PlaybackStateChanged(PlaybackState newPlaybackState)
@@ -82,13 +87,13 @@ namespace MusicApplication.ViewModel
             }
             else
             {
-                SharedStatics.OpenFilePicker();
+                Commands.FilePicker.OpenFilePicker();
             }
         }
 
         private async void AudioPlayer_VolumeChanged(int newVolume)
         {
-            await Task.Run(() => { Volume = newVolume; NotifyPropertyChanged(nameof(Volume)); });
+            await Task.Run(() => { Volume = newVolume; NotifyPropertyChanged(nameof(Volume)); NotifyPropertyChanged(nameof(IsMuted)); });
         }
 
         private async void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
@@ -105,17 +110,17 @@ namespace MusicApplication.ViewModel
             });
         }
 
-        public string CurrentTimeString => Player.TimePosition.ToString(SharedStatics.stringformat);
+        public string CurrentTimeString => Converter.TimeSpan.ToString(Player.TimePosition);
 
-        public string TotalTimeString => Player.TimeDuration.ToString(SharedStatics.stringformat);
+        public string TotalTimeString => Converter.TimeSpan.ToString(Player.TimeDuration);
 
         public int CurrentTimeTotalSeconds { get; set; }
 
         public double TotalTimeTotalSeconds => Player.TimeDuration.TotalSeconds;
 
-        public double Volume { get; set; } = SharedStatics.Player.Volume;
+        public double Volume { get; set; } = App.Player.Volume;
 
-        public bool IsPlaying { get; set; } = SharedStatics.Player.PlaybackState == PlaybackState.Playing;
+        public bool IsPlaying { get; set; } = App.Player.PlaybackState == PlaybackState.Playing;
 
         private void NextAudio()
         {
@@ -124,9 +129,7 @@ namespace MusicApplication.ViewModel
 
         private void PreviousAudioFile()
         {
-            //Player.PlaylistManager.PlayPrevious();
+            Player.Playlist.PlayPrevious();
         }
     }
 }
-
-#pragma warning restore CA1822 // Mark members as static

@@ -54,8 +54,8 @@ namespace AudioPlayer
         public event EventHandlerPlaybackState PlaybackStateChanged;
         internal void InvokePlaybackStateChanged(PlaybackState value) => PlaybackStateChanged?.Invoke(value);
 
-        public event EventHandlerTimeSpan CurrentTimeChanged;
-        internal async void InvokeCurrentTime(TimeSpan timespan) => await Task.Run(() => CurrentTimeChanged?.Invoke(timespan));
+        public event EventHandlerTimeSpan TimePositionChanged;
+        internal async void InvokeCurrentTime(TimeSpan timespan) => await Task.Run(() => TimePositionChanged?.Invoke(timespan));
 
         #endregion
 
@@ -64,6 +64,8 @@ namespace AudioPlayer
         internal void InvokeVolumeChanged(int newVolume) => VolumeChanged?.Invoke(newVolume);
 
         public int Volume { get => nAudioCore.Volume; private set => nAudioCore.Volume = value; }
+        public bool IsMuted { get => nAudioCore.IsMuted; set => nAudioCore.IsMuted = value; }
+
         public void VolumeUp(int value) => ChangeVolume(nAudioCore.Volume += value);
         public void VolumeDown(int value) => ChangeVolume(nAudioCore.Volume -= value);
         public void ChangeVolume(int newVolume)

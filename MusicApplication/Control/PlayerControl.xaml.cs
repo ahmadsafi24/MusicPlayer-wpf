@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -9,6 +10,7 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class PlayerControl : UserControl
     {
+        private readonly AudioPlayer.Player Player = App.Player;
         public PlayerControl()
         {
             SizeChanged += PlayerControl_SizeChanged;
@@ -30,13 +32,13 @@ namespace MusicApplication.Control
             {
 
                 double val = SetPbValue(e.GetPosition(progressBar).X, progressBar);
-                if (val != SharedStatics.Player.TimePosition.TotalSeconds
-                    && val <= SharedStatics.Player.TimeDuration.TotalSeconds)
+                if (val != Player.TimePosition.TotalSeconds
+                    && val <= Player.TimeDuration.TotalSeconds)
                 {
 
                     //progressBar.Value = val;
                     //progressBar.GetBindingExpression(ProgressBar.ValueProperty).UpdateSource();
-                    await SharedStatics.Player.SeekAsync(val);
+                    await Player.SeekAsync(val);
                 }
 
             }
@@ -44,17 +46,25 @@ namespace MusicApplication.Control
 
         private void TimeProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ProgressBar progressBar = (ProgressBar)sender;
-            switch (progressBar.Maximum)
+            try
             {
-                case 0:
-                    EllipseThumb.Visibility = Visibility.Hidden;
-                    return;
-                default:
-                    EllipseThumb.Visibility = Visibility.Visible;
-                    break;
+                ProgressBar progressBar = (ProgressBar)sender;
+                switch (progressBar.Maximum)
+                {
+                    case 0:
+                        EllipseThumb.Visibility = Visibility.Hidden;
+                        return;
+                    default:
+                        EllipseThumb.Visibility = Visibility.Visible;
+                        break;
+                }
+                EllipseThumb.Margin = SetEllipseMargin(progressBar, EllipseThumb.ActualWidth);
+
             }
-            EllipseThumb.Margin = SetEllipseMargin(progressBar, EllipseThumb.ActualWidth);
+            catch (Exception)
+            {
+
+            }
         }
 
         private void VolumeProgressbar_MouseMove(object sender, MouseEventArgs e)
@@ -63,7 +73,7 @@ namespace MusicApplication.Control
             ProgressBar progressBar = (ProgressBar)sender;
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                SharedStatics.Player.ChangeVolume((int)SetPbValue(e.GetPosition(progressBar).X, progressBar));
+                Player.ChangeVolume((int)SetPbValue(e.GetPosition(progressBar).X, progressBar));
             }
         }
 

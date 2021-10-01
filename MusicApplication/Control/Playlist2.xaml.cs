@@ -14,8 +14,8 @@ namespace MusicApplication.Control
     /// </summary>
     public partial class Playlist2 : UserControl
     {
-        PlaylistV2 PlaylistManager = SharedStatics.Player.Playlist;
-        Player Player = SharedStatics.Player;
+        private readonly PlaylistV2 PlaylistManager = App.Player.Playlist;
+        private readonly Player Player = App.Player;
 
         public Playlist2()
         {
@@ -31,7 +31,7 @@ namespace MusicApplication.Control
         {
             if (e.ClickCount >= 2)
             {
-               // Player.Source = PlaylistManager.PlaylistItems[listView.SelectedIndex].FilePath;
+                // Player.Source = PlaylistManager.PlaylistItems[listView.SelectedIndex].FilePath;
                 await Player.OpenAsync();
             }
         }
@@ -41,14 +41,14 @@ namespace MusicApplication.Control
             if (listView.SelectedIndex is not -1)
             {
                 int index = listView.SelectedIndex;
-                PlaylistManager.pathlist.RemoveAt(index);
+                PlaylistManager.Pathlist.RemoveAt(index);
 
             }
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-            PlaylistManager.pathlist.Clear();//=>playlist.clearandnotify
+            PlaylistManager.Pathlist.Clear();//=>playlist.clearandnotify
         }
 
         private async void ButtonAdd_Click(object sender, RoutedEventArgs e)
@@ -66,14 +66,14 @@ namespace MusicApplication.Control
         public PlaylistViewModel2()
         {
             NotifyPropertyChanged(null);
-           // Shared.Player.PlaylistManager.Playlists[0].PlaylistUpdated += PlaylistViewModel_PlaylistUpdated;
+            App.Player.Playlist.Updated += PlaylistViewModel_PlaylistUpdated;
         }
 
         private async void PlaylistViewModel_PlaylistUpdated()
         {
             await Task.Run(() =>
             {
-                PlaylistFile tc = new PlaylistFile(SharedStatics.Player.Playlist.pathlist);
+                PlaylistFile tc = new(App.Player.Playlist.Pathlist);
                 Playlist = new(tc.Items);
                 NotifyPropertyChanged(nameof(Playlist));
             });

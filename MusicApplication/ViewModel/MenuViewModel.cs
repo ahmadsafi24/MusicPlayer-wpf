@@ -1,4 +1,5 @@
 ﻿using AudioPlayer.Model;
+using MusicApplication.Theme;
 using MusicApplication.ViewModel.Base;
 using System.Collections.Generic;
 using System.Diagnostics;

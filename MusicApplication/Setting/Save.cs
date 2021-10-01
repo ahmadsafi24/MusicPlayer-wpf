@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace MusicApplication.Setting
 {
-    class Save
+    public static class Save
     {
+        public static void SaveIsDark()
+        {
+            Directory.CreateDirectory(@"Setting\");
+            File.WriteAllText(@"Setting\IsDark", Theme.WindowTheme.IsDark.ToString());
+        }
     }
 }

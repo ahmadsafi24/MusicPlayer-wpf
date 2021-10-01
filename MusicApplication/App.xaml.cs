@@ -1,7 +1,6 @@
 ﻿using AudioPlayer;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -22,28 +21,8 @@ namespace MusicApplication
             //AllocConsole();
             Debug.WriteLine($"AppOnStartUp-args:[{ e.Args}]");
             base.OnStartup(e);
-            try
-            {
-                string value = File.ReadAllText(@"Setting\IsDark");
-                bool isdark = bool.Parse(value);
 
-                if (isdark)
-                {
-                    Theme.WindowTheme.IsDark = true;
-                    await Task.Run(() => Theme.ResourceManager.LoadThemeResourceDark());
-                }
-                else
-                {
-                    Theme.WindowTheme.IsDark = false;
-                    await Task.Run(() => Theme.ResourceManager.LoadThemeResourceLight());
-                }
-
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
+            Setting.Load.LoadIsDark();
 
             MainWindow.Show();
             MainWindow.Content = View.AllViews.MainView;
@@ -58,6 +37,12 @@ namespace MusicApplication
                 }
             });
 
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            Setting.Save.SaveIsDark();
         }
     }
 }

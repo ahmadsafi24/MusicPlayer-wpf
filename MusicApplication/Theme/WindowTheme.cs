@@ -5,7 +5,7 @@
         public delegate void EventHandlerThemeChanged(bool isdark);
         public static event EventHandlerThemeChanged ThemeChanged;
 
-        public static bool IsDark { get; set; }
+        public static bool IsDark { get; set; } 
 
         public static void FireThemeChangedForWindows()
         {

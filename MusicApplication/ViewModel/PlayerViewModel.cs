@@ -75,19 +75,23 @@ namespace MusicApplication.ViewModel
 
         public AudioFile TagFile { get; set; }
 
-        private void PlayPause()
+        private async void PlayPause()
         {
-            if (IsPlaying)
+            switch (Player.PlaybackState)
             {
-                Player.Pause();
-            }
-            else if (Player.PlaybackState is not PlaybackState.Closed)
-            {
-                Player.Play();
-            }
-            else
-            {
-                Commands.FilePicker.OpenFilePicker();
+                case PlaybackState.Playing:
+                    Player.Pause();
+                    break;
+                case PlaybackState.Ended:
+                    await Player.SeekAsync(0);
+                    Player.Play();
+                    break;
+                case PlaybackState.Closed:
+                    Commands.FilePicker.OpenFilePicker();
+                    break;
+                default:
+                    Player.Play();
+                    break;
             }
         }
 

@@ -5,6 +5,8 @@ namespace MusicApplication.Commands
 {
     public static class ViewSwitcher
     {
+ 
+
         public static void SwitchToMiniView()
         {
             Windows.ControlbarWindows ControlBarWindows = new();

@@ -10,6 +10,6 @@
         <StackPanel>
             <TextBlock Text="{Binding CaptionString,ElementName=APE}"/>
         </StackPanel>
-        <APE:AudioPlayer x:Name="APE"/>
+        <!--APE:AudioPlayer x:Name="APE"/-->
     </Grid>
 </Window>

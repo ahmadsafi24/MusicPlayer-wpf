@@ -324,10 +324,7 @@ namespace AudioPlayer.Core
         private void CurrentTimeWatcher_Tick(object sender, EventArgs e)
         {
             PublicPlayer.InvokeCurrentTime(Reader.CurrentTime);
-            if ((int)Reader.CurrentTime.TotalSeconds >= (int)Reader.TotalTime.TotalSeconds)
-            {
-                PlaybackState = PlaybackState.Ended;
-            }
+
             GC.Collect();
         }
 
@@ -344,7 +341,10 @@ namespace AudioPlayer.Core
         {
             if (string.IsNullOrEmpty(e.Exception?.Message))
             {
-                //Stop();
+                if ((int)Reader.CurrentTime.TotalSeconds >= (int)Reader.TotalTime.TotalSeconds-1)
+                {
+                    PlaybackState = PlaybackState.Ended;
+                }
             }
             else
             {

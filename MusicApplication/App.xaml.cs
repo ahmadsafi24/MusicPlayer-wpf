@@ -1,6 +1,7 @@
 ﻿using AudioPlayer;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -11,14 +12,14 @@ namespace MusicApplication
     /// </summary>
     public partial class App : Application
     {
-        //[DllImport("Kernel32")]
-        //private static extern void AllocConsole();
+        [DllImport("Kernel32")]
+        private static extern void AllocConsole();
 
         internal static Player Player = new();
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            //AllocConsole();
+            AllocConsole();
             Debug.WriteLine($"AppOnStartUp-args:[{ e.Args}]");
             base.OnStartup(e);
 

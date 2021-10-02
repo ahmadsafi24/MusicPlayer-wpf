@@ -25,7 +25,6 @@ namespace MusicApplication.Control
 
         private async void TimeProgressBar_MouseMove(object sender, MouseEventArgs e)
         {
-
             e.Handled = true;
             ProgressBar progressBar = (ProgressBar)sender;
             if (Mouse.LeftButton == MouseButtonState.Pressed)
@@ -35,12 +34,8 @@ namespace MusicApplication.Control
                 if (val != Player.TimePosition.TotalSeconds
                     && val <= Player.TimeDuration.TotalSeconds)
                 {
-
-                    //progressBar.Value = val;
-                    //progressBar.GetBindingExpression(ProgressBar.ValueProperty).UpdateSource();
                     await Player.SeekAsync(val);
                 }
-
             }
         }
 
@@ -59,11 +54,10 @@ namespace MusicApplication.Control
                         break;
                 }
                 EllipseThumb.Margin = SetEllipseMargin(progressBar, EllipseThumb.ActualWidth);
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -84,7 +78,6 @@ namespace MusicApplication.Control
                 EllipseThumbVol.Margin = SetEllipseMargin(VolumeProgressbar, EllipseThumbVol.ActualWidth);
             }
         }
-
 
         private void ProgressBar_MouseDown(object sender, MouseButtonEventArgs e)
         {

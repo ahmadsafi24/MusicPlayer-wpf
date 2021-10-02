@@ -27,10 +27,13 @@ namespace MusicApplication.Windows
 
         private void WindowTheme_ThemeChanged(bool isdark)
         {
-            DwmApi.ToggleImmersiveDarkMode(this, isdark);
-            UpdateLayout();
-            Hide();
-            Show();
+            if (this.IsLoaded)
+            {
+                DwmApi.ToggleImmersiveDarkMode(this, isdark);
+                UpdateLayout();
+                Hide();
+                Show();
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)

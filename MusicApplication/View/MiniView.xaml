@@ -2,11 +2,17 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MusicApplication.View" xmlns:Control="clr-namespace:MusicApplication.Control"
-             mc:Ignorable="d" >
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Control="clr-namespace:MusicApplication.Control" 
+             xmlns:viewmodel="clr-namespace:MusicApplication.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:MiniView_ViewModel}"
+             mc:Ignorable="d" DataContext="{StaticResource MiniView_ViewModel}"
+             >
+    <UserControl.InputBindings>
+        <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding SwitchToMainView}"/>
+    </UserControl.InputBindings>
     <UserControl.ContextMenu>
-        <ContextMenu DataContext="{StaticResource ContextMenuMiniViewViewModel}">
+        <ContextMenu >
             <MenuItem Header="Open" Command="{Binding Open}"/>
             <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
             <MenuItem Header="MainWindow" Command="{Binding SwitchToMainView}"/>

@@ -74,7 +74,7 @@
             <TextBlock Text="Playlist" Margin="5"/>
             <!--TextBlock Text="{Binding Playlist.Count,FallbackValue=0}" HorizontalAlignment="Right"/-->
         </Grid>
-        <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Margin="0,2,0,0">
+        <Border DockPanel.Dock="Bottom">
             <StackPanel Orientation="Horizontal">
                 <Button Content="Add" Click="ButtonAdd_Click"/>
                 <Button Content="Remove" Click="ButtonRemove_Click"/>
@@ -88,19 +88,21 @@
                   ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel x:Name="grid" Background="Transparent" MouseLeftButtonDown="Item_MouseLeftButtonDown" Margin="0,2">
-                        <!--Border Visibility="Collapsed"  Height="46" Width="46" HorizontalAlignment="Left" BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}" BorderThickness="1" Margin="2" CornerRadius="2" Grid.RowSpan="3">
+                    <StackPanel x:Name="grid" Background="Transparent" MouseLeftButtonDown="Item_MouseLeftButtonDown" Margin="0,2" Orientation="Horizontal" >
+                        <Border  Height="46" Width="46" HorizontalAlignment="Left" BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}" BorderThickness="1" Margin="2,2,2,2" CornerRadius="2" Grid.RowSpan="3">
                             <Border.Background>
-                                <SolidColorBrush Color="{Binding Color, Source={StaticResource MediaCover.Background}}" Opacity="0.5"/>
+                                <SolidColorBrush Color="{DynamicResource Light1}"/>
                             </Border.Background>
-                            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding Cover.Result,IsAsync=True,FallbackValue={x:Null}}" RenderOptions.BitmapScalingMode="Unspecified"/>
-                        </Border-->
+                            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding Cover,FallbackValue={x:Null}}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        </Border>
+                        <StackPanel Margin="5,0,0,0">
                             <TextBlock FontSize="10" Margin="0,2" 
                                        Text="{Binding Title}" TextTrimming="CharacterEllipsis"/>
                             <TextBlock FontSize="10" Margin="0,2"
                                        Text="{Binding Artist}" TextTrimming="CharacterEllipsis"/>
-                            <TextBlock FontSize="10" Margin="0,2" d:Text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+                            <TextBlock FontSize="10" Margin="0,2"
                                        Text="{Binding Album}" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

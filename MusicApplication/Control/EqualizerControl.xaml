@@ -28,43 +28,19 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Slider Grid.Column="0" Orientation="Vertical" Margin="10,0" Value="{Binding Band0}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
-                <Slider Grid.Column="1" Orientation="Vertical" Margin="10,0" Value="{Binding Band1}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
-                <Slider Grid.Column="2" Orientation="Vertical" Margin="10,0" Value="{Binding Band2}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
-                <Slider Grid.Column="3" Orientation="Vertical" Margin="10,0" Value="{Binding Band3}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
-                <Slider Grid.Column="4" Orientation="Vertical" Margin="10,0" Value="{Binding Band4}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
-                <Slider Grid.Column="5" Orientation="Vertical" Margin="10,0" Value="{Binding Band5}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
-                <Slider Grid.Column="6" Orientation="Vertical" Margin="10,0" Value="{Binding Band6}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
-                <Slider Grid.Column="7" Orientation="Vertical" Margin="10,0" Value="{Binding Band7}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft"/>
+                <Slider Grid.Column="0" Orientation="Vertical" Margin="10,0" Value="{Binding Band0}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
+                <Slider Grid.Column="1" Orientation="Vertical" Margin="10,0" Value="{Binding Band1}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
+                <Slider Grid.Column="2" Orientation="Vertical" Margin="10,0" Value="{Binding Band2}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
+                <Slider Grid.Column="3" Orientation="Vertical" Margin="10,0" Value="{Binding Band3}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
+                <Slider Grid.Column="4" Orientation="Vertical" Margin="10,0" Value="{Binding Band4}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
+                <Slider Grid.Column="5" Orientation="Vertical" Margin="10,0" Value="{Binding Band5}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
+                <Slider Grid.Column="6" Orientation="Vertical" Margin="10,0" Value="{Binding Band6}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
+                <Slider Grid.Column="7" Orientation="Vertical" Margin="10,0" Value="{Binding Band7}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
             </Grid>
             <Grid Grid.Row="3" Margin="5">
-                <Button Width="57" Command="{Binding ResetEqCommand}" BorderThickness="0" Content="Reset" HorizontalAlignment="Right"/>
+                <Button Command="{Binding ResetEqCommand}" Content="Reset" HorizontalAlignment="Right"/>
             </Grid>
 
         </Grid>
     </Border>
-   <!-- <UserControl.Style>
-        <Style TargetType="{x:Type UserControl}">
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="Loaded">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0:0.5"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="Unloaded">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0:0.5"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Style>-->
 </UserControl>

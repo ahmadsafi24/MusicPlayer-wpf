@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewmodel="clr-namespace:MusicApplication.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PlayerViewModel}"
              mc:Ignorable="d" 
              d:DesignWidth="800" d:Foreground="White" DataContext="{StaticResource PlayerViewModel}"
-             Background="{DynamicResource MediaInfoCard.Background}" Foreground="{DynamicResource MainView.Foreground}" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}"  BorderThickness="0,0.5,0,0"
+             Background="{DynamicResource MediaInfoCard.Background}" Foreground="{DynamicResource MainView.Foreground}"
              >
 
     <UserControl.Style>
@@ -39,16 +39,16 @@
                     <DropShadowEffect Color="{DynamicResource AccentColor}" ShadowDepth="0" Opacity="1" BlurRadius="32" />
                 </Border.Effect-->
                 <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.5"/>
+                    <SolidColorBrush Color="{DynamicResource Color.Main}" Opacity="0.5"/>
                 </Border.Background>
                 <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" ClipToBounds="True"/>
             </Border>
             <TextBlock Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding TagFile.Artist,FallbackValue=Artist}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="DemiBold"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding TagFile.Title,FallbackValue=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>
             <StackPanel Grid.Row="2" Grid.Column="1" Margin="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock Text="{Binding CurrentTimeString}" d:Text="00:00"/>
+                <TextBlock Text="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}" d:Text="00:00"/>
                 <TextBlock Text=" / " Opacity="0.5"/>
-                <TextBlock Text="{Binding TotalTimeString}" Opacity="0.8" d:Text="00:00"/>
+                <TextBlock Text="{Binding TotalTime,Converter={StaticResource TimeSpanToString}}" Opacity="0.8" d:Text="00:00"/>
             </StackPanel>
         </Grid>
     </StackPanel>

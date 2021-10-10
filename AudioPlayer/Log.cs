@@ -7,7 +7,7 @@ namespace AudioPlayer
     {
         public static void WriteLine(object message)
         {
-            Console.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
+            Debug.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
         }
     }
 }

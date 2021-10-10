@@ -12,6 +12,4 @@ namespace MusicApplication.Control
             InitializeComponent();
         }
     }
-
-
 }

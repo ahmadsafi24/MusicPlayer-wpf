@@ -1,4 +1,5 @@
 ﻿using ATL;
+using System.Windows.Media.Imaging;
 
 namespace AudioPlayer.Model
 {
@@ -20,6 +21,8 @@ namespace AudioPlayer.Model
         public string Artist => Tag.Artist;
         public string Album => Tag.Album;
         public string AlbumArtist => Tag.AlbumArtist;
+
+        public BitmapImage Cover => Utility.CoverImage.ExtractCover(FilePath);
 
         /*private System.Threading.Tasks.Task<BitmapImage> _cover;
         public System.Threading.Tasks.Task<BitmapImage> Cover                          //=> Image.FromStream(new MemoryStream(tagfile.EmbeddedPictures[0]?.PictureData));

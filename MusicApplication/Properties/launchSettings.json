@@ -2,7 +2,7 @@
   "profiles": {
     "MusicApplication": {
       "commandName": "Project",
-      "commandLineArgs": "\"D:\\temp\\music.mp3\""
+      "commandLineArgs": "\"C:\\Users\\ahmad2\\Downloads\\Music\\Epicure - Begu Barikallah [320].mp3\""
     }
   }
 }

@@ -1,7 +1,7 @@
 ﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MusicApplication"
-             xmlns:ViewModel="clr-namespace:MusicApplication.ViewModel" xmlns:Windows="clr-namespace:MusicApplication.Windows" x:Class="MusicApplication.App" >
+             xmlns:ViewModel="clr-namespace:MusicApplication.ViewModel" xmlns:Windows="clr-namespace:MusicApplication.Windows" xmlns:converter="clr-namespace:AudioPlayer.Converter;assembly=AudioPlayer" x:Class="MusicApplication.App" >
 
     <Application.Resources>
         <ResourceDictionary>
@@ -16,14 +16,18 @@
                 <ResourceDictionary Source="/Resource/Style/Slider.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Menu.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Button.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Tooltip.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Other.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <ViewModel:MainView_ViewModel x:Key="MainView_ViewModel"/>
+            <ViewModel:MiniView_ViewModel x:Key="MiniView_ViewModel"/>
             <ViewModel:PlayerViewModel x:Key="PlayerViewModel"/>
             <ViewModel:PlaylistViewModel x:Key="PlaylistViewModel"/>
-            <ViewModel:ContextMenuMiniViewViewModel x:Key="ContextMenuMiniViewViewModel"/>
-            <ViewModel:ContextMenuMainViewViewModel x:Key="ContextMenuMainViewViewModel"/>
 
+            <converter:TimeSpanToDouble x:Key="TimeSpanToDouble"/>
+            <converter:TimeSpanToString x:Key="TimeSpanToString"/>
+            
         </ResourceDictionary>
     </Application.Resources>
 

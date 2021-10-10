@@ -6,13 +6,17 @@
              xmlns:local="clr-namespace:MusicApplication.View"
              xmlns:control="clr-namespace:MusicApplication.Control"
              xmlns:viewmodel="clr-namespace:MusicApplication.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:MainView_ViewModel}"
              mc:Ignorable="d"
              x:Name="mainview" d:DesignWidth="673.449" d:DesignHeight="440.302"
+             DataContext="{StaticResource MainView_ViewModel}"
              Background="{DynamicResource MainView.Background}"
-             Foreground="{DynamicResource MainView.Foreground}"
-             Padding="0">
+             Foreground="{DynamicResource MainView.Foreground}">
+    <UserControl.InputBindings>
+        <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding SwitchToMainView}"/>
+    </UserControl.InputBindings>
     <UserControl.ContextMenu>
-        <ContextMenu DataContext="{StaticResource ContextMenuMainViewViewModel}">
+        <ContextMenu>
             <MenuItem Header="Open" Command="{Binding Open}"/>
             <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
             <MenuItem Header="ControlbarWindow" Command="{Binding SwitchToMainView}"/>
@@ -20,7 +24,7 @@
         </ContextMenu>
     </UserControl.ContextMenu>
     <DockPanel LastChildFill="True">
-        <control:Menubar DockPanel.Dock="Top" BorderBrush="#595B5B5B" BorderThickness="0,0,0,1"/>
+        <control:Menubar DockPanel.Dock="Top"/>
         <control:PlayerControl DockPanel.Dock="Bottom"/>
         <control:MediaInfoCard DockPanel.Dock="Bottom"/>
         <Grid DockPanel.Dock="Top">
@@ -28,9 +32,9 @@
                 <ColumnDefinition Width="260"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <control:Playlist2 Grid.Column="0" BorderBrush="#595B5B5B" BorderThickness="0,0,1,0"/>
-            <GridSplitter Width="5" Margin="0,0,-5,0"/>
-            <control:EqualizerControl Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#198A8A8A" Margin="10"/>
+            <control:Playlist Grid.Column="0"/>
+            <GridSplitter Width="5"/>
+            <control:EqualizerControl Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         </Grid>
     </DockPanel>
 </UserControl>

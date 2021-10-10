@@ -27,11 +27,9 @@ namespace MusicApplication.ViewModel
             MuteAudioCommand = new DelegateCommand(() => MuteUnmute());
 
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
-            NotifyPropertyChanged(null);
             Player.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
             Player.PlaybackStateChanged += Player_PlaybackStateChanged;
 
-            NotifyPropertyChanged(null);
         }
 
         public bool IsMuted { get => Player.IsMuted; set => Player.IsMuted = value; }
@@ -48,10 +46,8 @@ namespace MusicApplication.ViewModel
 
             await Task.Run(() =>
             {
-                NotifyPropertyChanged(nameof(TotalTimeString));
-                NotifyPropertyChanged(nameof(CurrentTimeString));
-                NotifyPropertyChanged(nameof(TotalTimeTotalSeconds));
-                NotifyPropertyChanged(nameof(CurrentTimeTotalSeconds));
+                NotifyPropertyChanged(nameof(TotalTime));
+                NotifyPropertyChanged(nameof(CurrentTime));
             });
 
             await Task.Run(() =>
@@ -61,8 +57,8 @@ namespace MusicApplication.ViewModel
                     TagFile = new() { FilePath = Player.Source };
                     NotifyPropertyChanged(nameof(TagFile));
 
-                    NotifyPropertyChanged(nameof(TotalTimeString));
-                    NotifyPropertyChanged(nameof(CurrentTimeString));
+                    NotifyPropertyChanged(nameof(TotalTime));
+                    NotifyPropertyChanged(nameof(CurrentTime));
 
                     AudioPlayer.Utility.CoverImage2 CoverImage2 = new();
                     CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
@@ -97,32 +93,34 @@ namespace MusicApplication.ViewModel
 
         private async void AudioPlayer_VolumeChanged(int newVolume)
         {
-            await Task.Run(() => { Volume = newVolume; NotifyPropertyChanged(nameof(Volume)); NotifyPropertyChanged(nameof(IsMuted)); });
+            await Task.Run(() => { _volume = newVolume; NotifyPropertyChanged(nameof(Volume)); NotifyPropertyChanged(nameof(IsMuted)); });
         }
 
         private async void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
         {
             await Task.Run(() =>
             {
-                int ts = (int)Time.TotalSeconds;
-                if (CurrentTimeTotalSeconds != ts)
-                {
-                    CurrentTimeTotalSeconds = ts;
-                    NotifyPropertyChanged(nameof(CurrentTimeTotalSeconds));
-                    NotifyPropertyChanged(nameof(CurrentTimeString));
-                }
+                _currentTime = Time;
+                NotifyPropertyChanged(nameof(CurrentTime));
+
             });
         }
 
-        public string CurrentTimeString => Converter.TimeSpan.ToString(Player.TimePosition);
+        public TimeSpan TotalTime => Player.TimeDuration;
 
-        public string TotalTimeString => Converter.TimeSpan.ToString(Player.TimeDuration);
+        private TimeSpan _currentTime;
+        public TimeSpan CurrentTime
+        {
+            get => _currentTime;
+            set => Task.Run(async () => await Player.SeekAsync(value.TotalSeconds));
+        }
 
-        public int CurrentTimeTotalSeconds { get; set; }
-
-        public double TotalTimeTotalSeconds => Player.TimeDuration.TotalSeconds;
-
-        public double Volume { get; set; } = App.Player.Volume;
+        private double _volume = App.Player.Volume;
+        public double Volume
+        {
+            get => _volume;
+            set => Player.ChangeVolume((int)value);
+        }
 
         public bool IsPlaying { get; set; } = App.Player.PlaybackState == PlaybackState.Playing;
 

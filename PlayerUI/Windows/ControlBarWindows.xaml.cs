@@ -1,0 +1,74 @@
+﻿using Helper.DarkUi;
+using System;
+using System.Windows;
+using System.Windows.Forms;
+
+namespace PlayerUI.Windows
+{
+    /// <summary>
+    /// Interaction logic for Window1.xaml
+    /// </summary>
+    public partial class ControlbarWindows : Window
+    {
+        public ControlbarWindows()
+        {
+            InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            SizeChanged += ControlbarWindows_SizeChanged;
+            Theme.WindowTheme.ThemeChanged += WindowTheme_ThemeChanged;
+            MouseLeftButtonDown += (_, _) => Helper.WindowsManager.DragMove(this);
+            Commands.Window.AttachDrop(this);
+            Commands.Window.AttachMouseWheel(this);
+
+            if (MiniViewLeft + MiniViewTop + MiniViewWidth == 0)
+            {
+                var warea = SystemParameters.WorkArea;
+                Left = warea.Width - Width;
+                Top = warea.Height - Height;
+
+            }
+            else
+            {
+
+                Left = MiniViewLeft;
+                Top = MiniViewTop;
+                Width = MiniViewWidth;
+                //Height = MiniViewHeight;
+            }
+
+        }
+
+        private void WindowTheme_ThemeChanged(bool isdark)
+        {
+            if (this.IsLoaded)
+            {
+                DwmApi.ToggleImmersiveDarkMode(this, isdark);
+            }
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            Helper.ControlboxHelper.RemoveControls(this);
+            Helper.IconHelper.RemoveIcon(this);
+            DwmApi.ToggleImmersiveDarkMode(this, Theme.WindowTheme.IsDark);
+        }
+
+        protected override void OnLocationChanged(EventArgs e)
+        {
+            base.OnLocationChanged(e);
+            MiniViewLeft = Left;
+            MiniViewTop = Top;
+        }
+
+        private void ControlbarWindows_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            MiniViewWidth = ActualWidth;
+            //MiniViewHeight = ActualHeight;
+        }
+        public static double MiniViewTop { get; set; }
+        public static double MiniViewLeft { get; set; }
+        //public static double MiniViewHeight { get; set; }
+        public static double MiniViewWidth { get; set; }
+    }
+}

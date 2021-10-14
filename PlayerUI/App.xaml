@@ -1,0 +1,47 @@
+﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PlayerUI"
+             xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel" xmlns:Windows="clr-namespace:PlayerUI.Windows" xmlns:converter="clr-namespace:PlayerLibrary.Converter;assembly=PlayerLibrary" xmlns:control="clr-namespace:PlayerUI.Control" xmlns:view="clr-namespace:PlayerUI.View" x:Class="PlayerUI.App" >
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resource/Theme/Light.xaml"/>
+                <ResourceDictionary Source="/Resource/Brushs.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Geometry.xaml"/>
+                <ResourceDictionary Source="/Resource/Font/OpenSans.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/TextBlock.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Scrollbar.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/ScrollViewer.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Listview.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Slider.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Menu.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Button.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Tooltip.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Other.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ViewModel:MainView_ViewModel x:Key="MainView_ViewModel"/>
+            <ViewModel:MiniView_ViewModel x:Key="MiniView_ViewModel"/>
+            <ViewModel:PlayerViewModel x:Key="PlayerViewModel"/>
+            <ViewModel:PlaylistViewModel x:Key="PlaylistViewModel"/>
+
+            <converter:TimeSpanToDouble x:Key="TimeSpanToDouble"/>
+            <converter:TimeSpanToString x:Key="TimeSpanToString"/>
+            
+            <control:EqualizerControl x:Key="EqualizerControl"/>
+            <control:MediaInfoCard x:Key="MediaInfoCard"/>
+            <control:Menubar x:Key="Menubar"/>
+            <control:PlayerControl x:Key="PlayerControl"/>
+            <control:Playlist x:Key="Playlist"/>
+            <control:Titlebar x:Key="Titlebar"/>
+            <view:MainView x:Key="MainView"/>
+            <view:MiniView x:Key="MiniView"/>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.MainWindow>
+        <Windows:MainWindow/>
+    </Application.MainWindow>
+
+</Application>

@@ -1,0 +1,20 @@
+﻿<Window x:Class="PlayerUI.Windows.ResourceManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PlayerUI.Windows"
+        mc:Ignorable="d"
+        Title="ResourceManager" Height="450" Width="800">
+    <StackPanel>
+        <TextBlock Text="ColorKey:" Margin="5"/>
+        <TextBox x:Name="KeyTextbox" Margin="5" Text="Color.Background.Static"/>
+        <TextBlock Text="Value:" Margin="5"/>
+        <TextBox x:Name="ValueTextbox" Margin="5"/>
+        <Button Content="Apply" Click="Apply_Click" Margin="5"/>
+        <Label x:Name="ColorPreview"/>
+        <Slider Maximum="255" Margin="10"/>
+        <Slider Maximum="255" Margin="10"/>
+        <Slider Maximum="255" Margin="10"/>
+    </StackPanel>
+</Window>

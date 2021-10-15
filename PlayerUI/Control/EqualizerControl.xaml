@@ -7,10 +7,9 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              Background="{DynamicResource MainView.Background}"
-             VerticalAlignment="Center" HorizontalAlignment="Center">
-    <UserControl.DataContext>
-        <local:EqualizerViewModel/>
-    </UserControl.DataContext>
+             VerticalAlignment="Center" HorizontalAlignment="Center"
+             DataContext="{StaticResource EqualizerViewModel}">
+
     <Border MinHeight="260" MinWidth="300">
         <Grid>
             <Grid.RowDefinitions>

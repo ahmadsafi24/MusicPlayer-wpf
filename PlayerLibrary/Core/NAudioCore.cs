@@ -19,7 +19,7 @@ namespace PlayerLibrary.Core
         private readonly WaveOutEvent WaveOutEvent = new();
 
         private readonly EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
-        private EqualizerBand[] EqualizerBand { get; set; }
+        internal EqualizerBand[] EqualizerBand { get; set; }
         #endregion
 
         private readonly Player PublicPlayer;
@@ -140,7 +140,7 @@ namespace PlayerLibrary.Core
         internal TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
 
         internal ReaderInfo ReaderInfo;
-        internal async Task OpenAsync()
+        internal async Task OpenAsync(string filepath)
         {
             await Task.Run(() =>
             {
@@ -151,7 +151,7 @@ namespace PlayerLibrary.Core
                         Stop();
                         Close();
                     }
-
+                    Source = filepath;
                     if (string.IsNullOrEmpty(Source))
                     {
                         MessageBox.Show("Core: Empty Source");
@@ -209,6 +209,8 @@ namespace PlayerLibrary.Core
             WaveOutEvent.Dispose();
             Reader.Close();
             Source = null;
+            Reader.Dispose();
+            Reader = null;
             PlaybackState = PlaybackState.Closed;
         }
 
@@ -254,6 +256,23 @@ namespace PlayerLibrary.Core
                 item.Gain = 0;
             }
             EqualizerCore?.Update();
+        }
+
+        // index: band position
+        // double:gain
+        internal double[] Bands8
+        {
+            get
+            {
+                double[] bands = Array.Empty<double>();
+                int i = 0;
+                foreach (var item in EqualizerBand)
+                {
+                    bands.SetValue(item.Gain, i);
+                    i++;
+                }
+                return bands;
+            }
         }
 
         private PlaybackState _playbackState;

@@ -13,8 +13,8 @@ namespace PlayerUI.Commands
             if (files.Length > 0)
             {
                 await Player.Playlist.AddRangeAsync(files);
-                Player.Source = files[0];
-                await Player.OpenAsync();
+                string Source = files[0];
+                await Player.OpenAsync(Source);
             }
         }
     }

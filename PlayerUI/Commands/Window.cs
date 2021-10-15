@@ -13,8 +13,7 @@ namespace PlayerUI.Commands
             {
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 await Player.Playlist.AddRangeAsync(dropitems);
-                Player.Source = dropitems[0];
-                await Player.OpenAsync();
+                await Player.OpenAsync(dropitems[0]);
             };
         }
 

@@ -105,4 +105,5 @@
     <SolidColorBrush x:Key="Tooltip.Borderbrush" Color="{DynamicResource Light4}"/>
     <SolidColorBrush x:Key="GridSplitter.MouseOver" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Light.Main" Color="{DynamicResource Light1}"/>
+    <SolidColorBrush x:Key="ContextMenuBackground" Color="{DynamicResource Light1}"/>
 </ResourceDictionary>

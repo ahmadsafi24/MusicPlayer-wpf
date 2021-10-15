@@ -13,32 +13,6 @@
              Background="{DynamicResource MainView.Background}"
              Foreground="{DynamicResource MainView.Foreground}">
     <UserControl.Resources>
-        <DropShadowEffect x:Key="ContextMenuDropShadowEffect" BlurRadius="12" ShadowDepth="4" Direction="270" Color="#FF787878" RenderingBias="Performance" Opacity="0.5"/>
-        <SolidColorBrush x:Key="ContextMenuBackground" Color="{DynamicResource Light1}"/>
-        <Style TargetType="{x:Type ContextMenu}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
-            <Setter Property="HasDropShadow" Value="True"/>
-            <Setter Property="Effect" Value="{DynamicResource ContextMenuDropShadowEffect}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ContextMenu}">
-                        <Border Background="#00000000" CornerRadius="3">
-                            <Border x:Name="Border" Background="{DynamicResource ContextMenuBackground}" Margin="10,4,10,14" BorderThickness="0.5" CornerRadius="3" Padding="0,5,0,5">
-                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
-                            </Border>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="HasDropShadow" Value="False">
-                                <Setter TargetName="Border" Property="Padding" Value="0"/>
-                                <Setter TargetName="Border" Property="CornerRadius" Value="4"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
     <UserControl.InputBindings>
         <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding SwitchToMainView}"/>

@@ -29,8 +29,7 @@ namespace PlayerUI
                 if (e.Args?.Length > 0)
                 {
                     _ = Task.Run(async () => await Player.Playlist.AddRangeAsync(e.Args));
-                    Player.Source = e.Args[0];
-                    await Player.OpenAsync();
+                    await Player.OpenAsync(e.Args[0]);
                 }
             });
 

@@ -34,7 +34,7 @@ namespace PlayerLibrary
         #endregion
 
         #region Async
-        public async Task OpenAsync() => await nAudioCore.OpenAsync();
+        public async Task OpenAsync(string filepath) => await nAudioCore.OpenAsync( filepath);
         public async Task SeekAsync(double value) => await nAudioCore.SeekAsync(value);
 
         #endregion
@@ -43,7 +43,7 @@ namespace PlayerLibrary
         public string Source
         {
             get => nAudioCore.Source;
-            set
+            /*set
             {
                 //File Exist Check
                 if (!System.IO.File.Exists(value))
@@ -52,7 +52,7 @@ namespace PlayerLibrary
                     return;
                 }
                 nAudioCore.Source = value;
-            }
+            }*/
         }
         public TimeSpan TimePosition { get => nAudioCore.CurrentTime; set => nAudioCore.CurrentTime = value; }
 
@@ -103,7 +103,7 @@ namespace PlayerLibrary
         public void ResetEq() => nAudioCore.ResetEq();
         public void ChangeEq(int bandIndex, float Gain) => nAudioCore.ChangeEqualizerBand(bandIndex, Gain);
         public double GetEqBandGain(int BandIndex) => nAudioCore.GetEqBandGain(BandIndex);
-
+        public double[] Bands8 { get => nAudioCore.Bands8;}
         #endregion
     }
 }

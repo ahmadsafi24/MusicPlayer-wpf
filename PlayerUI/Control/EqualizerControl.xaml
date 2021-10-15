@@ -9,7 +9,72 @@
              Background="{DynamicResource MainView.Background}"
              VerticalAlignment="Center" HorizontalAlignment="Center"
              DataContext="{StaticResource EqualizerViewModel}">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="EqSliderTemplate" TargetType="Slider">
+            <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition MinWidth="{TemplateBinding MinWidth}" Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TickBar x:Name="TopTick" Grid.Column="0" Fill="{TemplateBinding Foreground}" Margin="0,0,2,0" Placement="Left" Visibility="Collapsed" Width="4"/>
+                    <TickBar x:Name="BottomTick" Grid.Column="2" Fill="{TemplateBinding Foreground}" Margin="2,0,0,0" Placement="Right" Visibility="Collapsed" Width="4"/>
+                    <Border x:Name="TrackBackground" Background="{DynamicResource SliderThumb.Track.Background}" BorderThickness="1" BorderBrush="{DynamicResource SliderThumb.Track.Border}" Grid.Column="1" HorizontalAlignment="center" Margin="0,5" Width="4.0">
+                        <Canvas Margin="-1,-6">
+                            <Rectangle x:Name="PART_SelectionRange" Fill="{DynamicResource MediaSlider.Foreground}" Visibility="Hidden" Width="4.0"/>
+                        </Canvas>
+                    </Border>
+                    <Track x:Name="PART_Track" Grid.Column="1">
+                        <Track.DecreaseRepeatButton>
+                            <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource RepeatButtonTransparent}"/>
+                        </Track.DecreaseRepeatButton>
+                        <Track.IncreaseRepeatButton>
+                            <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource RepeatButtonTransparent}"/>
+                        </Track.IncreaseRepeatButton>
+                        <Track.Thumb>
+                            <Thumb x:Name="Thumb" Focusable="False" Height="11" OverridesDefaultStyle="True" Template="{StaticResource SliderThumbVerticalDefault}" VerticalAlignment="Top" Width="18"/>
+                        </Track.Thumb>
+                    </Track>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="TickPlacement" Value="TopLeft">
+                    <Setter Property="Visibility" TargetName="TopTick" Value="Visible"/>
+                    <Setter Property="Template" TargetName="Thumb" Value="{StaticResource SliderThumbVerticalLeft}"/>
+                    <Setter Property="Margin" TargetName="TrackBackground" Value="2,5,0,5"/>
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="BottomRight">
+                    <Setter Property="Visibility" TargetName="BottomTick" Value="Visible"/>
+                    <Setter Property="Template" TargetName="Thumb" Value="{StaticResource SliderThumbVerticalRight}"/>
+                    <Setter Property="Margin" TargetName="TrackBackground" Value="0,5,2,5"/>
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="Both">
+                    <Setter Property="Visibility" TargetName="TopTick" Value="Visible"/>
+                    <Setter Property="Visibility" TargetName="BottomTick" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsSelectionRangeEnabled" Value="true">
+                    <Setter Property="Visibility" TargetName="PART_SelectionRange" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="true">
+                    <Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="EqSliderStyle" TargetType="Slider">
+            <Setter Property="Orientation" Value="Vertical"/>
+            <Setter Property="Template" Value="{StaticResource EqSliderTemplate}"/>
+            <Setter Property="Margin" Value="10,0"/>
+            <Setter Property="IsMoveToPointEnabled" Value="True"/>
+            <Setter Property="Minimum" Value="-30"/>
+            <Setter Property="Maximum" Value="30"/>
+            <Setter Property="AutoToolTipPlacement" Value="TopLeft"/>
+            <Setter Property="IsSelectionRangeEnabled" Value="True"/>
+            <Setter Property="SelectionStart" Value="-30"/>
+            <Setter Property="SelectionEnd" Value="{Binding Value, RelativeSource={RelativeSource Self}}"/>
+        </Style>
 
+    </UserControl.Resources>
     <Border MinHeight="260" MinWidth="300">
         <Grid>
             <Grid.RowDefinitions>
@@ -17,26 +82,16 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="1" Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Slider Grid.Column="0" Orientation="Vertical" Margin="10,0" Value="{Binding Band0}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-                <Slider Grid.Column="1" Orientation="Vertical" Margin="10,0" Value="{Binding Band1}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-                <Slider Grid.Column="2" Orientation="Vertical" Margin="10,0" Value="{Binding Band2}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-                <Slider Grid.Column="3" Orientation="Vertical" Margin="10,0" Value="{Binding Band3}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-                <Slider Grid.Column="4" Orientation="Vertical" Margin="10,0" Value="{Binding Band4}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-                <Slider Grid.Column="5" Orientation="Vertical" Margin="10,0" Value="{Binding Band5}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-                <Slider Grid.Column="6" Orientation="Vertical" Margin="10,0" Value="{Binding Band6}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-                <Slider Grid.Column="7" Orientation="Vertical" Margin="10,0" Value="{Binding Band7}" Minimum="-30" Maximum="30" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True" SelectionStart="-30" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" AutoToolTipPlacement="TopLeft" HorizontalAlignment="Center"/>
-            </Grid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band0}" />
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band1}" />
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band2}" />
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band3}" />
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band4}" />
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band5}" />
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band6}" />
+                <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band7}" />
+            </StackPanel>
             <Grid Grid.Row="3" Margin="5">
                 <Button Command="{Binding ResetEqCommand}" Content="Reset" HorizontalAlignment="Right"/>
             </Grid>

@@ -23,6 +23,10 @@ namespace PlayerUI.ViewModel
             NotifyPropertyChanged(null);
         }
 
+
+
+        
+
         public double Band0 { get => Player.GetEqBandGain(0); set { Player.ChangeEq(0, (float)value); NotifyPropertyChanged(nameof(Band0)); } }
         public double Band1 { get => Player.GetEqBandGain(1); set { Player.ChangeEq(1, (float)value); NotifyPropertyChanged(nameof(Band1)); } }
         public double Band2 { get => Player.GetEqBandGain(2); set { Player.ChangeEq(2, (float)value); NotifyPropertyChanged(nameof(Band2)); } }

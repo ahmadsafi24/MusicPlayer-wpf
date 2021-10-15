@@ -85,10 +85,11 @@ namespace PlayerLibrary
             }
         }
 
-        private async void PlaybackEnded()
+        private void PlaybackEnded()
         {
+
             PublicPlayer.Close();
-            await PublicPlayer.OpenAsync();
+            //await PublicPlayer.OpenAsync();
 
             Log.WriteLine($"Playlist-Playback Ended / {RepeatMode} Done.");
         }
@@ -109,8 +110,8 @@ namespace PlayerLibrary
         {
             if (!IsLast(Playlists[0], PublicPlayer.Source))
             {
-                PublicPlayer.Source = Playlists[0].Items[OpenedFileIndex + 1].FilePath;
-                await PublicPlayer.OpenAsync();
+                string Source = Playlists[0].Items[OpenedFileIndex + 1].FilePath;
+                await PublicPlayer.OpenAsync(Source);
             }
         }
 
@@ -118,8 +119,8 @@ namespace PlayerLibrary
         {
             if (!IsFirst(Playlists[0], PublicPlayer.Source))
             {
-                PublicPlayer.Source = Playlists[0].Items[OpenedFileIndex - 1].FilePath;
-                await PublicPlayer.OpenAsync();
+                string Source = Playlists[0].Items[OpenedFileIndex - 1].FilePath;
+                await PublicPlayer.OpenAsync(Source);
             }
 
         }

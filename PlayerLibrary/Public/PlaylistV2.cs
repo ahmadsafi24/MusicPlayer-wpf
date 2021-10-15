@@ -33,7 +33,7 @@ namespace PlayerLibrary
         public async void PlayPrevious()
         {
             //TODO if its the First File in playlist then Replay it
-            await player.OpenAsync();
+            await player.OpenAsync(player.Source);
             player.Play();
         }
     }

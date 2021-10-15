@@ -21,6 +21,7 @@ namespace PlayerUI.ViewModel
         private DelegateCommand _previousAudioFileCommand;
         public ICommand PreviousAudioFileCommand => _previousAudioFileCommand ??= new DelegateCommand(PreviousAudioFile);
 
+        PlayerLibrary.Utility.CoverImage2 CoverImage2 = new();
         public PlayerViewModel()
         {
             PlayPauseCommand = new DelegateCommand(() => PlayPause());
@@ -29,7 +30,7 @@ namespace PlayerUI.ViewModel
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
             Player.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
             Player.PlaybackStateChanged += Player_PlaybackStateChanged;
-
+            CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
         }
 
         public bool IsMuted { get => Player.IsMuted; set => Player.IsMuted = value; }
@@ -55,24 +56,29 @@ namespace PlayerUI.ViewModel
                 if (newPlaybackState is PlaybackState.Opened)
                 {
                     TagFile = new() { FilePath = Player.Source };
+                    CoverImage2.CreateImage(Player.Source);
                     NotifyPropertyChanged(nameof(TagFile));
-
                     NotifyPropertyChanged(nameof(TotalTime));
                     NotifyPropertyChanged(nameof(CurrentTime));
-
-                    PlayerLibrary.Utility.CoverImage2 CoverImage2 = new();
-                    CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
-                    CoverImage2.CreateImage(Player.Source);
-
                     NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
                 }
             });
             if (newPlaybackState == PlaybackState.Ended)
             {
-                Player.Play();
+                Player.Close(); 
+            }
+            if (newPlaybackState == PlaybackState.Closed)
+            {
+                TagFile = new() { FilePath = Player.Source };
+                Cover = null;
+                NotifyPropertyChanged(nameof(Cover));
+                NotifyPropertyChanged(nameof(TagFile));
+                NotifyPropertyChanged(nameof(TotalTime));
+                NotifyPropertyChanged(nameof(CurrentTime));
+                NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
+                AudioPlayer_CurrentTimeChanged(TimeSpan.Zero);
             }
         }
-
         public BitmapImage Cover { get; set; }
 
         public AudioFile TagFile { get; set; }

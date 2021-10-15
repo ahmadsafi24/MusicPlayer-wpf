@@ -25,8 +25,8 @@ namespace PlayerUI.Control
         {
             if (e.ClickCount >= 2)
             {
-                Player.Source = Playlistmanager.Pathlist[listView.SelectedIndex];
-                await Player.OpenAsync();
+                string Source = Playlistmanager.Pathlist[listView.SelectedIndex];
+                await Player.OpenAsync(Source);
             }
         }
 

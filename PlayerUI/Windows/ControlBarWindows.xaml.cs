@@ -15,7 +15,7 @@ namespace PlayerUI.Windows
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.Manual;
             SizeChanged += ControlbarWindows_SizeChanged;
-            Theme.WindowTheme.ThemeChanged += WindowTheme_ThemeChanged;
+            Commands.WindowTheme.ThemeChanged += WindowTheme_ThemeChanged;
             MouseLeftButtonDown += (_, _) => Helper.WindowsManager.DragMove(this);
             Commands.Window.AttachDrop(this);
             Commands.Window.AttachMouseWheel(this);
@@ -51,7 +51,7 @@ namespace PlayerUI.Windows
             base.OnSourceInitialized(e);
             Helper.ControlboxHelper.RemoveControls(this);
             Helper.IconHelper.RemoveIcon(this);
-            DwmApi.ToggleImmersiveDarkMode(this, Theme.WindowTheme.IsDark);
+            DwmApi.ToggleImmersiveDarkMode(this, Commands.WindowTheme.IsDark);
         }
 
         protected override void OnLocationChanged(EventArgs e)

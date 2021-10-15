@@ -29,14 +29,8 @@
         <control:Menubar DockPanel.Dock="Top"/>
         <control:PlayerControl DockPanel.Dock="Bottom"/>
         <control:MediaInfoCard DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0"/>
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="260"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <control:Playlist Grid.Column="0" Margin="5"/>
-            <GridSplitter Width="5"/>
-            <control:EqualizerControl Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Grid DockPanel.Dock="Top" >
+            <control:EqualizerControl/>
         </Grid>
     </DockPanel>
 </UserControl>

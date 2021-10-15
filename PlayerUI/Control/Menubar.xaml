@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewmodel="clr-namespace:PlayerUI.ViewModel"
              mc:Ignorable="d" 
-             d:DesignWidth="800" Background="{DynamicResource Light.Main}"
+             d:DesignWidth="800" Background="{DynamicResource Menubar.Background}"
              >
     <UserControl.DataContext>
         <viewmodel:MenuViewModel/>

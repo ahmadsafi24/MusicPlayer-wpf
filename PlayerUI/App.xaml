@@ -24,17 +24,16 @@
             <ViewModel:MainView_ViewModel x:Key="MainView_ViewModel"/>
             <ViewModel:MiniView_ViewModel x:Key="MiniView_ViewModel"/>
             <ViewModel:PlayerViewModel x:Key="PlayerViewModel"/>
-            <ViewModel:PlaylistViewModel x:Key="PlaylistViewModel"/>
             <ViewModel:EqualizerViewModel x:Key="EqualizerViewModel"/>
 
             <converter:TimeSpanToDouble x:Key="TimeSpanToDouble"/>
             <converter:TimeSpanToString x:Key="TimeSpanToString"/>
+            <converter:TotalSecondsToString x:Key="TotalSecondsToString"/>
             
             <control:EqualizerControl x:Key="EqualizerControl"/>
             <control:MediaInfoCard x:Key="MediaInfoCard"/>
             <control:Menubar x:Key="Menubar"/>
             <control:PlayerControl x:Key="PlayerControl"/>
-            <control:Playlist x:Key="Playlist"/>
             <control:Titlebar x:Key="Titlebar"/>
             <view:MainView x:Key="MainView"/>
             <view:MiniView x:Key="MiniView"/>

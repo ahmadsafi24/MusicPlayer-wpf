@@ -12,7 +12,7 @@ namespace PlayerUI.ViewModel
         public MenuViewModel()
         {
             OpenCommand = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker());
-            ToggleDarkModeCommand = new DelegateCommand(() => Theme.WindowTheme.DarkThemeToggle());
+            ToggleDarkModeCommand = new DelegateCommand(() => Commands.WindowTheme.DarkThemeToggle());
             SwitchToMiniViewCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToMiniView());
         }
     }

@@ -12,7 +12,6 @@ namespace PlayerUI.Commands
             string[] files = await Helper.FileOpenPicker.GetFileAsync();
             if (files.Length > 0)
             {
-                await Player.Playlist.AddRangeAsync(files);
                 string Source = files[0];
                 await Player.OpenAsync(Source);
             }

@@ -9,7 +9,7 @@ namespace PlayerUI.Setting
         public static void SaveIsDark()
         {
             Directory.CreateDirectory(@"Setting\");
-            File.WriteAllText(@"Setting\IsDark", Theme.WindowTheme.IsDark.ToString());
+            File.WriteAllText(@"Setting\IsDark", Commands.WindowTheme.IsDark.ToString());
 
             SettingsProperty settingsIsDark = new("isdark");
             settingsIsDark.DefaultValue = "False";

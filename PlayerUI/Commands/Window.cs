@@ -12,7 +12,6 @@ namespace PlayerUI.Commands
             window.Drop += async (_, e) =>
             {
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
-                await Player.Playlist.AddRangeAsync(dropitems);
                 await Player.OpenAsync(dropitems[0]);
             };
         }

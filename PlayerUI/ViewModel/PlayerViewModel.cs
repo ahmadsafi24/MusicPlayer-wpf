@@ -143,7 +143,7 @@ namespace PlayerUI.ViewModel
 
         private void PreviousAudioFile()
         {
-            Player.Playlist.PlayPrevious();
+
         }
 
         public string CoreCurrentFileInfo

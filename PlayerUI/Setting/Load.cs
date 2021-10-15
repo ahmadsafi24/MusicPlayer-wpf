@@ -16,13 +16,13 @@ namespace PlayerUI.Setting
                 { isdark = Helper.CustomThemeListener.IsDark; }
                 if (isdark)
                 {
-                    Theme.WindowTheme.IsDark = true;
-                    Theme.ResourceManager.LoadThemeResourceDark();
+                    Commands.WindowTheme.IsDark = true;
+                    Commands.ResourceManager.LoadThemeResourceDark();
                 }
                 else
                 {
-                    Theme.WindowTheme.IsDark = false;
-                    Theme.ResourceManager.LoadThemeResourceLight();
+                    Commands.WindowTheme.IsDark = false;
+                    Commands.ResourceManager.LoadThemeResourceLight();
                 }
 
             }

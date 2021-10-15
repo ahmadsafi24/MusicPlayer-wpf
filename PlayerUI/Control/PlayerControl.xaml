@@ -134,7 +134,8 @@
                     Maximum="{Binding TotalTime,Converter={StaticResource TimeSpanToDouble}}"
                     Value="{Binding CurrentTime,Converter={StaticResource TimeSpanToDouble},Mode=TwoWay}"
                     Foreground="{DynamicResource MediaSlider.Foreground}"
-                    Background="{DynamicResource MediaSlider.Background.Active}"/>
+                    Background="{DynamicResource MediaSlider.Background.Active}"
+                    AutoToolTipPlacement="TopLeft" ToolTip="{Binding CurrentTime,Converter={StaticResource TotalSecondsToString}}"/>
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TotalTime,Converter={StaticResource TimeSpanToString}}" Margin="5,0" d:Text="0:00"/>
 

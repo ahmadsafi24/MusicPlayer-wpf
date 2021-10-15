@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace PlayerUI.Theme
+namespace PlayerUI.Commands
 {
     public static class ResourceManager
     {

@@ -1,4 +1,4 @@
-﻿namespace PlayerUI.Theme
+﻿namespace PlayerUI.Commands
 {
     public static class WindowTheme
     {
@@ -26,16 +26,16 @@
 
         public static void ForceApplyDark()
         {
-            ResourceManager.LoadThemeResourceDark();
             IsDark = true;
             FireThemeChangedForWindows();
+            ResourceManager.LoadThemeResourceDark();
         }
 
         public static void ForceApplyLight()
         {
-            ResourceManager.LoadThemeResourceLight();
             IsDark = false;
             FireThemeChangedForWindows();
+            ResourceManager.LoadThemeResourceLight();
         }
     }
 }

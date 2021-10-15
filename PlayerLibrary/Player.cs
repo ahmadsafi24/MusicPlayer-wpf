@@ -3,6 +3,7 @@ using PlayerLibrary.Model;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using static PlayerLibrary.Events;
 
 namespace PlayerLibrary
 {
@@ -10,17 +11,10 @@ namespace PlayerLibrary
     {
         #region base
         private readonly NAudioCore nAudioCore;
-        public readonly PlaylistV2 Playlist;
 
         public Player()
         {
             nAudioCore = new(this);
-            Playlist = new(this);
-        }
-        public Player(PlaylistV2 playlistV2)
-        {
-            nAudioCore = new(this);
-            this.Playlist = playlistV2;
         }
         #endregion
 

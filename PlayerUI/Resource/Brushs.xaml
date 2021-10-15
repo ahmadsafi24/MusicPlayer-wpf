@@ -3,7 +3,7 @@
 
 
 
-    <DropShadowEffect x:Key="ContextMenuDropShadowEffect" BlurRadius="12" ShadowDepth="4" Direction="270" Color="#FF787878" RenderingBias="Performance" Opacity="0.5"/>
+    <DropShadowEffect x:Key="ContextMenuDropShadowEffect" BlurRadius="12" ShadowDepth="5" Direction="270" Color="#FF787878" RenderingBias="Performance" Opacity="0.5"/>
     <Style TargetType="{x:Type ContextMenu}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -13,8 +13,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
-                    <Border Background="#00000000" CornerRadius="3">
-                        <Border x:Name="Border" Background="{DynamicResource ContextMenuBackground}" Margin="10,4,10,14" BorderThickness="0.5" CornerRadius="3" Padding="0,5,0,5">
+                    <Border Background="#00000000"  CornerRadius="5">
+                        <Border x:Name="Border" Background="{DynamicResource ContextMenuBackground}" Margin="10,4,10,14"  BorderBrush="{DynamicResource ContextMenuBorderBrush}" BorderThickness="1" CornerRadius="5" Padding="0,5,0,5">
                             <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
                         </Border>
                     </Border>

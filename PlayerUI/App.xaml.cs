@@ -21,14 +21,10 @@ namespace PlayerUI
 
             MainWindow.Show();
 
-            //Window ResourceManager = new Windows.ResourceManager();
-            //ResourceManager.Show();
-
             await Task.Run(async () =>
             {
                 if (e.Args?.Length > 0)
                 {
-                    _ = Task.Run(async () => await Player.Playlist.AddRangeAsync(e.Args));
                     await Player.OpenAsync(e.Args[0]);
                 }
             });

@@ -40,7 +40,20 @@ namespace PlayerLibrary
         #endregion
 
         #region get and set
-        public string Source { get => nAudioCore.Source; set => nAudioCore.Source = value; }
+        public string Source
+        {
+            get => nAudioCore.Source;
+            set
+            {
+                //File Exist Check
+                if (!System.IO.File.Exists(value))
+                {
+                    MessageBox.Show($"File Not Found: {value}");
+                    return;
+                }
+                nAudioCore.Source = value;
+            }
+        }
         public TimeSpan TimePosition { get => nAudioCore.CurrentTime; set => nAudioCore.CurrentTime = value; }
 
         #endregion

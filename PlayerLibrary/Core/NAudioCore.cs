@@ -1,8 +1,9 @@
-using PlayerLibrary.Model;
 using NAudio.Extras;
 using NAudio.Wave;
+using PlayerLibrary.Model;
 using System;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace PlayerLibrary.Core
@@ -151,6 +152,11 @@ namespace PlayerLibrary.Core
                         Close();
                     }
 
+                    if (string.IsNullOrEmpty(Source))
+                    {
+                        MessageBox.Show("Core: Empty Source");
+                        return;
+                    }
                     Reader = new MediaFoundationReader(Source);
                     EqualizerCore = new(SampleProvider, EqualizerBand);
                     WaveOutEvent.Init(EqualizerCore);
@@ -202,6 +208,7 @@ namespace PlayerLibrary.Core
         {
             WaveOutEvent.Dispose();
             Reader.Close();
+            Source = null;
             PlaybackState = PlaybackState.Closed;
         }
 
@@ -296,11 +303,11 @@ namespace PlayerLibrary.Core
             GC.Collect();
         }
 
-        internal float ToSingle(double value)
+        internal static float ToSingle(double value)
         {
             return (float)value;
         }
-        internal double ToDouble(float value)
+        internal static double ToDouble(float value)
         {
             return value;
         }

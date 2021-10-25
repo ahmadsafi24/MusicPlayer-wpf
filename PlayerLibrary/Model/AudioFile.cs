@@ -1,4 +1,5 @@
 ﻿using ATL;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace PlayerLibrary.Model
@@ -37,7 +38,6 @@ namespace PlayerLibrary.Model
 
         public string AlbumArtist => string.IsNullOrEmpty(Tag.AlbumArtist) ? null : Tag.AlbumArtist;
         public BitmapImage Cover => Utility.CoverImage.ExtractCover(FilePath);
-
 
         //public string FileNameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(FilePath);
         //public string FileExtension => System.IO.Path.GetExtension(FilePath);

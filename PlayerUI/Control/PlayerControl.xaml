@@ -61,6 +61,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource MediaButton.Foreground.MouseOver}"/>
                     <Setter Property="BorderBrush" Value="{DynamicResource Button.Static.Border}"/>
                     <Setter Property="Background" Value="{DynamicResource Button.MouseOver.Background}"/>
+                    <Setter Property="Effect" Value="{StaticResource ControlShadow}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="true">
                     <Setter Property="Foreground" Value="{DynamicResource MediaButton.Foreground.Pressed}"/>
@@ -135,9 +136,10 @@
                     Value="{Binding CurrentTime,Converter={StaticResource TimeSpanToDouble},Mode=TwoWay}"
                     Foreground="{DynamicResource MediaSlider.Foreground}"
                     Background="{DynamicResource MediaSlider.Background.Active}"
-                    AutoToolTipPlacement="TopLeft" ToolTip="{Binding CurrentTime,Converter={StaticResource TotalSecondsToString}}"/>
+                    AutoToolTipPlacement="TopLeft"/>
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TotalTime,Converter={StaticResource TimeSpanToString}}" Margin="5,0" d:Text="0:00"/>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0"
+                       Text="{Binding TotalTime,Converter={StaticResource TimeSpanToString}}" d:Text="0:00"/>
 
             <Slider Grid.Column="5" Width="80" VerticalAlignment="Center" Margin="10,0"
                     IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True"
@@ -148,8 +150,7 @@
                     Foreground="{DynamicResource MediaSlider.Foreground}"
                     Background="{DynamicResource MediaSlider.Background.Active}"/>
             
-            <Button Grid.Column="4"
-                    Command="{Binding MuteAudioCommand}">
+            <Button Grid.Column="4" Command="{Binding MuteAudioCommand}">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediaButton}">
                         <Setter Property="Template" Value="{StaticResource MediaUnmutedButtonTemplate}"/>

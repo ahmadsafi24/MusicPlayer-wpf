@@ -1,17 +1,15 @@
-﻿using System.Threading;
-using Helper.DarkUi;
+﻿using Helper.DarkUi;
 using System;
 using System.Windows;
-using System.Windows.Threading;
-using System.Threading.Tasks;
+
 namespace PlayerUI.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow_Chromeless.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindowChromeless : Window
     {
-        public MainWindow()
+        public MainWindowChromeless()
         {
             InitializeComponent();
             MouseLeftButtonDown += (_, _) =>
@@ -38,7 +36,9 @@ namespace PlayerUI.Windows
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
+            Helper.WindowsManager.EnableBlur(this);
             Helper.IconHelper.RemoveIcon(this);
+            Helper.ControlboxHelper.RemoveControls(this);
             DwmApi.ToggleImmersiveDarkMode(this, Commands.WindowTheme.IsDark);
         }
     }

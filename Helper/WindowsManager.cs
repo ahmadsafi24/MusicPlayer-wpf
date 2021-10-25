@@ -56,5 +56,73 @@ namespace Helper
             Point point = new(Mouse.GetPosition(window).X + posleft, Mouse.GetPosition(window).Y + postop);
             SystemCommands.ShowSystemMenu(window, point);
         }
+
+
+
+        public static void EnableBlur(Window window)
+        {
+            var windowHelper = new WindowInteropHelper(window);
+
+            var accent = new Native.AccentPolicy
+            {
+                AccentState = Native.AccentState.ACCENT_ENABLE_BLURBEHIND
+            };
+
+            var accentStructSize = Marshal.SizeOf(accent);
+
+            var accentPtr = Marshal.AllocHGlobal(accentStructSize);
+            Marshal.StructureToPtr(accent, accentPtr, false);
+
+            var data = new Native.WindowCompositionAttributeData
+            {
+                Attribute = Native.WindowCompositionAttribute.WCA_ACCENT_POLICY,
+                SizeOfData = accentStructSize,
+                Data = accentPtr
+            };
+
+            SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+
+            Marshal.FreeHGlobal(accentPtr);
+        }
+
+        [DllImport("user32.dll")]
+        internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref Native.WindowCompositionAttributeData data);
+
+
+    }
+}
+namespace Native
+{
+    internal enum AccentState
+    {
+        ACCENT_DISABLED,
+        ACCENT_ENABLE_GRADIENT,
+        ACCENT_ENABLE_TRANSPARENTGRADIENT,
+        ACCENT_ENABLE_BLURBEHIND,
+        ACCENT_INVALID_STATE,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct AccentPolicy
+    {
+        public AccentState AccentState;
+        public int AccentFlags;
+        public int GradientColor;
+        public int AnimationId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct WindowCompositionAttributeData
+    {
+        public WindowCompositionAttribute Attribute;
+        public IntPtr Data;
+        public int SizeOfData;
+    }
+
+    internal enum WindowCompositionAttribute
+    {
+        // 省略其他未使用的字段
+        WCA_ACCENT_POLICY = 19,
+        // 省略其他未使用的字段
     }
 }

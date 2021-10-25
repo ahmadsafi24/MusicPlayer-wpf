@@ -24,7 +24,7 @@ namespace PlayerUI.Commands
 
         public static void LoadResources()
         {
-            Application.Current.Resources.MergedDictionaries.Clear();
+            //Application.Current.Resources.MergedDictionaries.Clear();
             /*if (WindowTheme.IsDark)
             { Application.Current.Resources.MergedDictionaries.Add(Dark); }
             else
@@ -36,12 +36,21 @@ namespace PlayerUI.Commands
 
         public static void LoadThemeResourceDark()
         {
+            Application.Current.Resources.MergedDictionaries[0]= Dark;
+        }        
+        
+        public static void ReloadThemeResourceDark()
+        {
             Application.Current.Resources.MergedDictionaries.Clear();
             Application.Current.Resources.MergedDictionaries.Add(Dark);
             _dictReload();
         }
 
         public static void LoadThemeResourceLight()
+        {
+            Application.Current.Resources.MergedDictionaries[0]=Light;
+        }
+        public static void ReloadThemeResourceLight()
         {
             Application.Current.Resources.MergedDictionaries.Clear();
             Application.Current.Resources.MergedDictionaries.Add(Light);

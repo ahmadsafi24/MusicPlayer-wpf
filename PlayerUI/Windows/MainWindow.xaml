@@ -4,16 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Width="800" Height="480" Content="{StaticResource MainView}">
+        Title="MainWindow" Width="800" Height="480"
+        Background="{DynamicResource Windows.Background}"
+        Content="{StaticResource MainView}">
     <Window.Style>
         <Style TargetType="Window">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Window">
-                        <Border Background="{DynamicResource Light.Main}">
-                            <ContentPresenter x:Name="ContentPresenter"/>
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="ContentPresenter" />
                         </Border>
-                        <ControlTemplate.Triggers>
+                        <!--ControlTemplate.Triggers>
                             <EventTrigger RoutedEvent="Loaded">
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -21,7 +23,7 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
-                        </ControlTemplate.Triggers>
+                        </ControlTemplate.Triggers-->
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

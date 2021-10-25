@@ -2,62 +2,77 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--#region Note: Use Lights as DynamicResource-->
-    <Color x:Key="Light1" B="255" G="255" R="255" A="255" ></Color>
-    <Color x:Key="Light2" B="245" G="245" R="245" A="170" ></Color>
-    <Color x:Key="Light3" B="235" G="235" R="235" A="170" ></Color>
-    <Color x:Key="Light4" B="220" G="220" R="220" A="170" ></Color>
-    <Color x:Key="Light5" B="210" G="210" R="210" A="170" ></Color>
-    <Color x:Key="Light6" B="200" G="200" R="200" A="170" ></Color>
-    <Color x:Key="Light7" B="185" G="185" R="185" A="170" ></Color>
-    <Color x:Key="Light8" B="170" G="170" R="170" A="50" ></Color>
-    <Color x:Key="Light9" B="150" G="150" R="150" A="170" ></Color>
-    <Color x:Key="Light10" B="50" G="50" R="50" A="255" ></Color>
-    <Color x:Key="Light11" B="220" G="220" R="220" A="255" ></Color>
-    <Color x:Key="Light12" B="250" G="250" R="250" A="255" ></Color>
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    
+    <Color x:Key="Light1">#16FFFFFF</Color>
+    <Color x:Key="Light2">#30FFFFFF</Color>
+    <Color x:Key="Light3">#44FFFFFF</Color>
+    <Color x:Key="Light4">#5BFFFFFF</Color>
+    <Color x:Key="Light5">#72FFFFFF</Color>
+    <Color x:Key="Light6">#8EFFFFFF</Color>
+    <Color x:Key="Light7">#ADFFFFFF</Color>
+    <Color x:Key="Light8">#C4FFFFFF</Color>
+    <Color x:Key="Light9">#F4FFFFFF</Color>
+    <Color x:Key="Light10">#F6F6F6</Color>
 
-    <SolidColorBrush x:Key="MainView.Background" Color="{DynamicResource Light6}"/>
     <!--#endregion-->
-    <Color x:Key="Color.Main">#FF2492AF</Color>
+    
+    <SolidColorBrush x:Key="SolidLight1" Color="{DynamicResource Light1}"/>
+    <SolidColorBrush x:Key="SolidLight2" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="SolidLight3" Color="{DynamicResource Light3}"/>
+    <SolidColorBrush x:Key="SolidLight4" Color="{DynamicResource Light4}"/>
+    <SolidColorBrush x:Key="SolidLight5" Color="{DynamicResource Light5}"/>
+    <SolidColorBrush x:Key="SolidLight6" Color="{DynamicResource Light6}"/>
+    <SolidColorBrush x:Key="SolidLight7" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="SolidLight8" Color="{DynamicResource Light8}"/>
+    <SolidColorBrush x:Key="SolidLight9" Color="{DynamicResource Light9}"/>
+    <SolidColorBrush x:Key="SolidLight10" Color="{DynamicResource Light10}"/>
 
-    <Color x:Key="Color.Background.Static">#FF2492AF</Color>
-    <Color x:Key="Color.Border.Static">#FF2492AF</Color>
-    <Color x:Key="Color.Foreground.Static">#FF2492AF</Color>
+    <Color x:Key="Color.Main">#FF0065BD</Color>
+    <SolidColorBrush x:Key="copy" Color="#FF0065BD"/>
+    <Color x:Key="Color.Background.Static">#FF0088FF</Color>
+    <Color x:Key="Color.Border.Static">#FF0088FF</Color>
+    <Color x:Key="Color.Foreground.Static">#FF0088FF</Color>
 
-    <Color x:Key="Color.Background.MouseOver">#FF15B6DE</Color>
-    <Color x:Key="Color.Border.MouseOver">#FF15B6DE</Color>
-    <Color x:Key="Color.Foreground.MouseOver">#FF15B6DE</Color>
+    <Color x:Key="Color.Background.MouseOver">#FF4FADFF</Color>
+    <Color x:Key="Color.Border.MouseOver">#FF4FADFF</Color>
+    <Color x:Key="Color.Foreground.MouseOver">#FF4FADFF</Color>
 
-    <Color x:Key="Color.Background.Pressed">#FF007490</Color>
-    <Color x:Key="Color.Border.Pressed">#FF007490</Color>
-    <Color x:Key="Color.Foreground.Pressed">#FF007490</Color>
+    <Color x:Key="Color.Background.Pressed">#FF0065BD</Color>
+    <Color x:Key="Color.Border.Pressed">#FF0065BD</Color>
+    <Color x:Key="Color.Foreground.Pressed">#FF0065BD</Color>
+
+    <SolidColorBrush x:Key="Windows.Background" Color="#FF3E4E5D"/>
+    <SolidColorBrush x:Key="MainView.Background" Color="{DynamicResource Light8}"/>
     <SolidColorBrush x:Key="ProgressBar.Progress" Color="{DynamicResource Color.Main}"/>
     <SolidColorBrush x:Key="ProgressBar.Background" Color="{DynamicResource Light5}"/>
     <SolidColorBrush x:Key="ProgressBar.Border" Color="{DynamicResource Light5}"/>
 
-    <SolidColorBrush x:Key="SliderThumb.Static.Background" Color="{DynamicResource Light11}"/>
+    <SolidColorBrush x:Key="SliderThumb.Static.Background" Color="{DynamicResource Light10}"/>
     <SolidColorBrush x:Key="SliderThumb.Static.Border" Color="{DynamicResource Light9}"/>
-    <SolidColorBrush x:Key="SliderThumb.Static.Foreground" Color="{DynamicResource Light10}"/>
-    <SolidColorBrush x:Key="SliderThumb.MouseOver.Background" Color="{DynamicResource Light12}"/>
-    <SolidColorBrush x:Key="SliderThumb.MouseOver.Border" Color="{DynamicResource Light12}"/>
+    <SolidColorBrush x:Key="SliderThumb.Static.Foreground" Color="{DynamicResource Black}"/>
+    <SolidColorBrush x:Key="SliderThumb.MouseOver.Background" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="SliderThumb.MouseOver.Border" Color="{DynamicResource Light10}"/>
     <SolidColorBrush x:Key="SliderThumb.Pressed.Background" Color="{DynamicResource Light10}"/>
-    <SolidColorBrush x:Key="SliderThumb.Pressed.Border" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="SliderThumb.Pressed.Border" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="SliderThumb.Disabled.Background" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="SliderThumb.Disabled.Border" Color="{DynamicResource Light9}"/>
-    <SolidColorBrush x:Key="SliderThumb.Track.Background" Color="{DynamicResource Light7}"/>
-    <SolidColorBrush x:Key="SliderThumb.Track.Border" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="SliderThumb.Track.Background" Color="{DynamicResource Light5}"/>
+    <SolidColorBrush x:Key="SliderThumb.Track.Border" Color="{DynamicResource Light5}"/>
 
     <SolidColorBrush x:Key="ListBox.Static.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="ListBox.Static.Border" Color="{DynamicResource Light7}"/>
     <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FF444444"/>
     <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="#FF444444"/>
 
-    <SolidColorBrush x:Key="Item.Static.Foreground" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="Item.Static.Foreground" Color="{DynamicResource Black}"/>
     <SolidColorBrush x:Key="Item.Static.Background" Color="{DynamicResource Light5}"/>
     <SolidColorBrush x:Key="Item.Static.Border" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Item.MouseOver.Background" Color="{DynamicResource Color.Background.MouseOver}"/>
     <SolidColorBrush x:Key="Item.MouseOver.Border" Color="{DynamicResource Color.Border.MouseOver}"/>
     <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="{DynamicResource Light5}"/>
-    <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="{DynamicResource Light8}" />
     <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="{DynamicResource Light9}"/>
 
@@ -66,47 +81,109 @@
     <SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb" Color="{DynamicResource Light7}"/>
     <SolidColorBrush x:Key="ScrollBar.Pressed.Background" Color="{DynamicResource Light3}"/>
     <SolidColorBrush x:Key="ScrollBar.Pressed.Thumb" Color="{DynamicResource Light5}"/>
-    <SolidColorBrush x:Key="ScrollBar.Disabled.Background" Color="{DynamicResource Light10}"/>
-    <SolidColorBrush x:Key="ScrollBar.Disabled.Border" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="ScrollBar.Disabled.Background" Color="{DynamicResource Light9}"/>
+    <SolidColorBrush x:Key="ScrollBar.Disabled.Border" Color="{DynamicResource Light9}"/>
 
-    <SolidColorBrush x:Key="Button.Static.Background" Color="{DynamicResource Light4}"/>
-    <SolidColorBrush x:Key="Button.Static.Border" Color="{DynamicResource Light6}"/>
-    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="{DynamicResource Light4}"/>
+    <SolidColorBrush x:Key="Button.Static.Background" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="Button.Static.Border" Color="{DynamicResource Light1}"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Button.MouseOver.Border" Color="{DynamicResource Color.Border.MouseOver}"/>
-    <SolidColorBrush x:Key="Button.Pressed.Background" Color="{DynamicResource Light5}"/>
-    <SolidColorBrush x:Key="Button.Pressed.Border" Color="{DynamicResource Light6}"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="{DynamicResource Light4}"/>
+    <SolidColorBrush x:Key="Button.Pressed.Border" Color="{DynamicResource Light1}"/>
 
     <SolidColorBrush x:Key="Button.Disabled.Background" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Button.Disabled.Border" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="{DynamicResource Light9}"/>
 
     <SolidColorBrush x:Key="MediaButton.Disabled.Background" Color="{DynamicResource Light9}"/>
-    <SolidColorBrush x:Key="Window.BorderBrush.Activated" Color="{DynamicResource Light5}"/>
-    <SolidColorBrush x:Key="Window.BorderBrush.Deactivated" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="Window.BorderBrush.Activated" Color="Transparent"/>
+    <SolidColorBrush x:Key="Window.BorderBrush.Deactivated" Color="Transparent"/>
     <SolidColorBrush x:Key="MediaButton.Foreground" Color="{DynamicResource Color.Background.Static}"/>
     <SolidColorBrush x:Key="MediaButton.Foreground.MouseOver" Color="{DynamicResource Color.Background.MouseOver}"/>
     <SolidColorBrush x:Key="MediaButton.Foreground.Pressed" Color="{DynamicResource Color.Background.Pressed}"/>
     <SolidColorBrush x:Key="MediaSlider.Foreground" Color="{DynamicResource Color.Foreground.Static}"/>
-    <SolidColorBrush x:Key="MediaSlider.Background.Active" Color="{DynamicResource Light5}"/>
-    <SolidColorBrush x:Key="MediaSlider.Background.Deactive" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="MediaSlider.Background.Active" Color="{DynamicResource Light9}"/>
+    <SolidColorBrush x:Key="MediaSlider.Background.Deactive" Color="{DynamicResource Light10}"/>
     <SolidColorBrush x:Key="MediaInfoCard.BorderBrush" Color="{DynamicResource Light4}"/>
     <SolidColorBrush x:Key="MediaCover.Background" Color="{DynamicResource Color.Main}"/>
-    <SolidColorBrush x:Key="TextBlock.Foreground" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="TextBlock.Foreground" Color="{DynamicResource Black}"/>
     <SolidColorBrush x:Key="Titlebar.Background.Active" Color="{DynamicResource Light4}"/>
     <SolidColorBrush x:Key="Titlebar.Background.Deactive" Color="{DynamicResource Light2}"/>
-    <SolidColorBrush x:Key="Titlebar.Foreground.Active" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="Titlebar.Foreground.Active" Color="{DynamicResource Black}"/>
     <SolidColorBrush x:Key="Titlebar.Foreground.Deactive" Color="{DynamicResource Light8}"/>
     <SolidColorBrush x:Key="MainWindow.Background" Color="{DynamicResource Light2}"/>
     <SolidColorBrush x:Key="Playlist.Background" Color="{DynamicResource Light3}"/>
-    <SolidColorBrush x:Key="MediaInfoCard.Background" Color="{DynamicResource Light3}"/>
-    <SolidColorBrush x:Key="PlayerControl.Background" Color="{DynamicResource Light3}"/>
-    <SolidColorBrush x:Key="MainView.Foreground" Color="{DynamicResource Light10}"/>
-    <SolidColorBrush x:Key="Tooltip.Background" Color="{DynamicResource Light1}"/>
-    <SolidColorBrush x:Key="Tooltip.Foreground" Color="{DynamicResource Light10}"/>
+    <SolidColorBrush x:Key="MediaInfoCard.Background" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="PlayerControl.Background" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="MainView.Foreground" Color="{DynamicResource Black}"/>
+    <SolidColorBrush x:Key="Tooltip.Background" Color="{DynamicResource White}"/>
+    <SolidColorBrush x:Key="Tooltip.Foreground" Color="{DynamicResource Black}"/>
     <SolidColorBrush x:Key="Tooltip.Borderbrush" Color="{DynamicResource Light4}"/>
     <SolidColorBrush x:Key="GridSplitter.MouseOver" Color="{DynamicResource Light9}"/>
-    <SolidColorBrush x:Key="Light.Main" Color="{DynamicResource Light1}"/>
-    <SolidColorBrush x:Key="ContextMenuBackground" Color="{DynamicResource Light1}"/>
-    <SolidColorBrush x:Key="Menubar.Background" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="Light.Main" Color="{DynamicResource White}"/>
+    <SolidColorBrush x:Key="ContextMenuBackground" Color="{DynamicResource White}"/>
+    <SolidColorBrush x:Key="Menubar.Background" Color="{DynamicResource Light7}"/>
     <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="{DynamicResource Light9}"/>
+    <SolidColorBrush x:Key="MediaSliderThumb.Static.Background" Color="{DynamicResource Color.Background.Static}"/>
+    <SolidColorBrush x:Key="MediaSliderThumb.MouseOver.Background" Color="{DynamicResource Color.Background.MouseOver}"/>
+    <SolidColorBrush x:Key="MediaSliderThumb.Pressed.Background" Color="{DynamicResource Color.Background.Pressed}"/>
+    
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Button.Border" Color="{DynamicResource Color.Main}"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Background" Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Border" Color="#FFD9D9D9"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Glyph" Color="#FFBFBFBF"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Background" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Border" Color="#FFBFBFBF"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Border" Color="Transparent"/>
+
+    <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="{DynamicResource Light1}" Offset="0.0"/>
+        <GradientStop Color="{DynamicResource Light2}" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ComboBox.Static.Border" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="{DynamicResource Black}"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="{DynamicResource Light5}"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Transparent"/>
+    <LinearGradientBrush x:Key="ComboBox.MouseOver.Background" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="{DynamicResource Light1}" Offset="0.0"/>
+        <GradientStop Color="{DynamicResource Light2}" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="{DynamicResource Color.Border.MouseOver}"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="{DynamicResource Black}"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Border" Color="{DynamicResource Color.Border.MouseOver}"/>
+    <LinearGradientBrush x:Key="ComboBox.MouseOver.Editable.Button.Background" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="{DynamicResource Light1}" Offset="0.0"/>
+        <GradientStop Color="{DynamicResource Light2}" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Border" Color="#FF7EB4EA"/>
+    <LinearGradientBrush x:Key="ComboBox.Pressed.Background" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="{DynamicResource Light1}" Offset="0.0"/>
+        <GradientStop Color="{DynamicResource Light2}" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#FF569DE5"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="#FF000000"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Background" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Border" Color="{DynamicResource Color.Main}"/>
+    <LinearGradientBrush x:Key="ComboBox.Pressed.Editable.Button.Background" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="{DynamicResource Light1}" Offset="0.0"/>
+        <GradientStop Color="{DynamicResource Light2}" Offset="1.0"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHover.Background" Color="{DynamicResource Light1}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHover.Border" Color="{DynamicResource Color.Main}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelected.Background" Color="{DynamicResource Light3}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelected.Border" Color="{DynamicResource Color.Main}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedHover.Background" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedHover.Border" Color="{DynamicResource Color.Main}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedNoFocus.Background" Color="{DynamicResource Light4}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedNoFocus.Border" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewFocus.Border" Color="{DynamicResource Color.Main}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Background" Color="{DynamicResource Light3}"/>
+    <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Border" Color="{DynamicResource Color.Main}"/>
+    <SolidColorBrush x:Key="ComboBoxItemContainer.Background" Color="{DynamicResource Light1}"/>
+    <SolidColorBrush x:Key="EqControl.Background" Color="{DynamicResource Light4}"/>
 </ResourceDictionary>

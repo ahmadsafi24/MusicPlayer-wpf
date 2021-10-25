@@ -51,21 +51,20 @@ namespace PlayerUI.ViewModel
                 NotifyPropertyChanged(nameof(CurrentTime));
             });
 
-            await Task.Run(() =>
+
+            if (newPlaybackState is PlaybackState.Opened)
             {
-                if (newPlaybackState is PlaybackState.Opened)
-                {
-                    TagFile = new() { FilePath = Player.Source };
-                    CoverImage2.CreateImage(Player.Source);
-                    NotifyPropertyChanged(nameof(TagFile));
-                    NotifyPropertyChanged(nameof(TotalTime));
-                    NotifyPropertyChanged(nameof(CurrentTime));
-                    NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
-                }
-            });
+                TagFile = new() { FilePath = Player.Source };
+                CoverImage2.CreateImage(Player.Source);
+                NotifyPropertyChanged(nameof(TagFile));
+                NotifyPropertyChanged(nameof(TotalTime));
+                NotifyPropertyChanged(nameof(CurrentTime));
+                NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
+                Player.Play();
+            }
             if (newPlaybackState == PlaybackState.Ended)
             {
-                Player.Close(); 
+                Player.Close();
             }
             if (newPlaybackState == PlaybackState.Closed)
             {
@@ -91,7 +90,7 @@ namespace PlayerUI.ViewModel
                     Player.Pause();
                     break;
                 case PlaybackState.Ended:
-                    await Player.SeekAsync(0);
+                    await Player.SeekAsync(TimeSpan.Zero);
                     Player.Play();
                     break;
                 case PlaybackState.Closed:
@@ -114,8 +113,19 @@ namespace PlayerUI.ViewModel
             {
                 _currentTime = Time;
                 NotifyPropertyChanged(nameof(CurrentTime));
-
+                setprogressvalue(Time,TotalTime);
             });
+        }
+
+        private static int lastValue=0;
+        private static void setprogressvalue(TimeSpan currentTime,TimeSpan maxTime)
+        {
+            int percentValue=(int)maxTime.TotalSeconds/100;
+            int currentValue=(int)currentTime.TotalSeconds/percentValue;
+            if (currentValue!=lastValue)
+            {    
+                Helper.Taskbar.Progress.SetValue(currentValue,100,true);
+            }
         }
 
         public TimeSpan TotalTime => Player.TimeDuration;
@@ -124,7 +134,7 @@ namespace PlayerUI.ViewModel
         public TimeSpan CurrentTime
         {
             get => _currentTime;
-            set => Task.Run(async () => await Player.SeekAsync(value.TotalSeconds));
+            set => Task.Run(async () => await Player.SeekAsync(value));
         }
 
         private double _volume = App.Player.Volume;

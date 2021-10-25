@@ -29,6 +29,7 @@ namespace PlayerLibrary.Utility
 
                     bitmap.EndInit();
                     bitmap.Freeze();
+                    _ = ms.DisposeAsync();
                 }
             }
 

@@ -3,24 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PlayerUI.Windows" xmlns:Control="clr-namespace:PlayerUI.Control" xmlns:view="clr-namespace:PlayerUI.View"
+        xmlns:local="clr-namespace:PlayerUI.Windows" xmlns:Control="clr-namespace:PlayerUI.Control" xmlns:view="clr-namespace:PlayerUI.View" xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Royale"
         mc:Ignorable="d" ResizeMode="NoResize" SizeToContent="Height"
         Title="Window1"
-        MinWidth="440"
+        MinWidth="480"
         Topmost = "True" BorderThickness="0" ShowInTaskbar="True"
         Background="{DynamicResource MainWindow.Background}"
         Content="{StaticResource MiniView}">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5,0" NonClientFrameEdges="None" GlassFrameThickness="0" UseAeroCaptionButtons="False" CornerRadius="10"/>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5,0" NonClientFrameEdges="None" GlassFrameThickness="-1" UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
     <Window.Style>
         <Style TargetType="Window">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Window">
-                        <Border Background="{DynamicResource Light.Main}">
+                        <theme:SystemDropShadowChrome>
+                            <Border Background="{DynamicResource Light.Main}">
                             <ContentPresenter x:Name="ContentPresenter"/>
                         </Border>
+                        </theme:SystemDropShadowChrome>
                         <ControlTemplate.Triggers>
                             <EventTrigger RoutedEvent="Loaded">
                                 <BeginStoryboard>

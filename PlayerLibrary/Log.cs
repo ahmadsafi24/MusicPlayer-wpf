@@ -7,7 +7,7 @@ namespace PlayerLibrary
     {
         public static void WriteLine(object message)
         {
-            Debug.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
+            //Debug.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
         }
     }
 }

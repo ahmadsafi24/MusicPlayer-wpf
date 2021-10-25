@@ -26,11 +26,11 @@
         </ContextMenu>
     </UserControl.ContextMenu>
     <DockPanel LastChildFill="True">
-        <control:Menubar DockPanel.Dock="Top"/>
-        <control:PlayerControl DockPanel.Dock="Bottom"/>
-        <control:MediaInfoCard DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0"/>
+        <control:Menubar DockPanel.Dock="Top" />
+        <control:PlayerControl DockPanel.Dock="Bottom" />
+        <control:MediaInfoCard DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" />
         <Grid DockPanel.Dock="Top" >
-            <control:EqualizerControl/>
+            <control:EqualizerControl HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </DockPanel>
 </UserControl>

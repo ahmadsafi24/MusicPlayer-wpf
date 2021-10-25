@@ -9,7 +9,6 @@ using System.Windows.Threading;
 namespace PlayerLibrary.Core
 {
     //ToDo: EngineMode  like with eq or with mono or pitch changable
-    //ToDo Reader.WaveFormat.BitsPerSample
     internal class NAudioCore
     {
         #region NAudio Engine
@@ -18,7 +17,7 @@ namespace PlayerLibrary.Core
         private Equalizer EqualizerCore;
         private readonly WaveOutEvent WaveOutEvent = new();
 
-        private readonly EqualizerMode equalizerMode = EqualizerMode.NormalEqualizer8band;
+        internal EqualizerMode equalizerMode = EqualizerMode.Super;
         internal EqualizerBand[] EqualizerBand { get; set; }
         #endregion
 
@@ -42,11 +41,11 @@ namespace PlayerLibrary.Core
             CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
         }
 
-        private void InitalEqualizer()
+        internal void InitalEqualizer()
         {
             switch (equalizerMode)
             {
-                case EqualizerMode.NormalEqualizer8band:
+                case EqualizerMode.Normal:
                     EqualizerBand = new EqualizerBand[]
                     {
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 0 },
@@ -59,11 +58,35 @@ namespace PlayerLibrary.Core
                         new EqualizerBand { Bandwidth = 0.8f, Frequency = 9600, Gain = 0 },
                     };
                     break;
-                case EqualizerMode.SuperEqualizer16band:
+                case EqualizerMode.Super:
+                    EqualizerBand = new EqualizerBand[]
+                    {
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 30, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 50, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 90, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 160, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 300, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 500, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 1000, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 1600, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 3000, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 5000, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 9000, Gain = 0 },
+                        new EqualizerBand { Bandwidth = 0.4f, Frequency = 16000, Gain = 0 },
+                    };
+                    break;
+                case EqualizerMode.Disabled:
+                    EqualizerBand = Array.Empty<EqualizerBand>();
                     break;
                 default:
                     break;
             }
+        }
+
+        internal void Open(string filePath, TimeSpan timePosition)
+        {
+            Open(filePath);
+            Seek(timePosition);
         }
         #endregion
 
@@ -75,7 +98,6 @@ namespace PlayerLibrary.Core
             get => CurrentTimeWatcher.Interval.TotalSeconds;
             set => CurrentTimeWatcher.Interval = TimeSpan.FromSeconds(value);
         }
-
 
         internal int Volume
         {
@@ -110,12 +132,12 @@ namespace PlayerLibrary.Core
             }
         }
 
-        internal void Seek(double totalseconds)
+        internal void Seek(TimeSpan timePosition)
         {
             try
             {
-                CurrentTime = TimeSpan.FromSeconds(totalseconds);
-                Log.WriteLine($"Seeking to {TimeSpan.FromSeconds(totalseconds).ToString(stringformat)}");
+                CurrentTime = timePosition;
+                Log.WriteLine($"Seeking to {timePosition.ToString(stringformat)}");
             }
             catch (Exception ex)
             {
@@ -140,38 +162,48 @@ namespace PlayerLibrary.Core
         internal TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
 
         internal ReaderInfo ReaderInfo;
-        internal async Task OpenAsync(string filepath)
+        internal async Task OpenAsync(string filePath)
         {
             await Task.Run(() =>
             {
-                try
-                {
-                    if (PlaybackState is PlaybackState.Playing or PlaybackState.Paused)
-                    {
-                        Stop();
-                        Close();
-                    }
-                    Source = filepath;
-                    if (string.IsNullOrEmpty(Source))
-                    {
-                        MessageBox.Show("Core: Empty Source");
-                        return;
-                    }
-                    Reader = new MediaFoundationReader(Source);
-                    EqualizerCore = new(SampleProvider, EqualizerBand);
-                    WaveOutEvent.Init(EqualizerCore);
-
-                    PlaybackState = PlaybackState.Opened;
-                    Play();
-                    ReaderInfo = new(Reader);
-                }
-                catch (Exception ex)
-                {
-                    Log.WriteLine(ex.Message);
-                }
-
+                Open(filePath);
             });
 
+        }
+
+        internal void Open(string filePath)
+        {
+            try
+            {
+                if (PlaybackState is PlaybackState.Playing or PlaybackState.Paused)
+                {
+                    Stop();
+                    Close();
+                }
+                Source = filePath;
+                if (string.IsNullOrEmpty(Source))
+                {
+                    MessageBox.Show("Core: Empty Source");
+                    return;
+                }
+                Reader = new MediaFoundationReader(Source);
+                if (equalizerMode == EqualizerMode.Disabled)
+                {
+                    WaveOutEvent.Init(Reader);
+                }
+                else
+                {
+                    EqualizerCore = new(SampleProvider, EqualizerBand);
+                    WaveOutEvent.Init(EqualizerCore);
+                }
+
+                PlaybackState = PlaybackState.Opened;
+                ReaderInfo = new(Reader);
+            }
+            catch (Exception ex)
+            {
+                Log.WriteLine(ex.Message);
+            }
         }
 
         internal void Play()
@@ -200,7 +232,7 @@ namespace PlayerLibrary.Core
         internal void Stop()
         {
             WaveOutEvent.Stop();
-            Seek(0);
+            Seek(TimeSpan.Zero);
             PlaybackState = PlaybackState.Stopped;
         }
 
@@ -214,14 +246,14 @@ namespace PlayerLibrary.Core
             PlaybackState = PlaybackState.Closed;
         }
 
-        internal async Task SeekAsync(double totalseconds)
+        internal async Task SeekAsync(TimeSpan time)
         {
             try
             {
                 await Task.Run(() =>
                 {
-                    CurrentTime = TimeSpan.FromSeconds(totalseconds);
-                    Log.WriteLine($"Seeking (async) to {TimeSpan.FromSeconds(totalseconds).ToString(stringformat)}");
+                    CurrentTime = time;
+                    Log.WriteLine($"Seeking (async) to {time.ToString(stringformat)}");
                 });
             }
             catch (Exception ex)
@@ -279,7 +311,7 @@ namespace PlayerLibrary.Core
         internal PlaybackState PlaybackState
         {
             get => _playbackState;
-            set
+            private set
             {
                 Log.WriteLine("PlaybackState: " + value.ToString());
                 _playbackState = value;

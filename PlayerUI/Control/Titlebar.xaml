@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PlayerUI.Control" xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel" d:DataContext="{d:DesignInstance Type=local:TitlebarViewModel}"
              mc:Ignorable="d" 
-             x:Name="usercontrol"
-             Height="30" d:DesignWidth="800" d:Foreground="White">
+             x:Name="usercontrol" 
+             Height="30" d:DesignWidth="800" d:Foreground="White" Background="Transparent">
     <UserControl.Resources>
         <ResourceDictionary>
 
@@ -26,7 +26,7 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="Padding" Value="0"/>
                 <Setter Property="MaxHeight" Value="32"/>
-                <Setter Property="Width" Value="46"/>
+                <Setter Property="Width" Value="51"/>
                 <Setter Property="SnapsToDevicePixels" Value="True"/>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -75,14 +75,14 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="Transparent">
+    <Grid  Background="{Binding Background, ElementName=usercontrol}">
         <Grid.InputBindings>
             <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding MaximizeRestoreCommand}"/>
             <MouseBinding MouseAction="LeftClick" Command="{Binding DragMoveCommand}"/>
             <MouseBinding MouseAction="RightClick" Command="{Binding ContextMenuCommand}"/>
         </Grid.InputBindings>
         <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" Text="{Binding CaptionString, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Titlebar}}}" d:Text="App Title" VerticalAlignment="Center"/>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Background="{Binding Background, ElementName=usercontrol}">
+        <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" >
             <Button x:Name="CloseButton" BorderThickness="0" Command="{Binding CloseCommand}" Focusable="False" ToolTip="Close" Foreground="{Binding Foreground, ElementName=usercontrol}">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TitlebarControl.Button}">

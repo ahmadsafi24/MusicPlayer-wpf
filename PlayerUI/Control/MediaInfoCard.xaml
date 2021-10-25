@@ -23,7 +23,7 @@
         </Style>
     </UserControl.Style>
     <StackPanel  VerticalAlignment="Top" Background="Transparent">
-        <Grid x:Name="grid" Margin="4">
+        <Grid x:Name="grid" Margin="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="62"/>
                 <ColumnDefinition Width="*"/>
@@ -41,17 +41,17 @@
                 <Border.Background>
                     <SolidColorBrush Color="{DynamicResource Color.Main}" Opacity="0.5"/>
                 </Border.Background>
-                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" ClipToBounds="True"/>
+                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality"/>
             </Border>
             <TextBlock Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding TagFile.Title,FallbackValue=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="DemiBold"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding TagFile.Artist,FallbackValue=Artist}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Margin="3" Text="{Binding TagFile.Album,FallbackValue=Album}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>
-            <StackPanel Grid.RowSpan="2" Grid.Column="2" Margin="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <StackPanel Grid.Row="1" Grid.Column="2" Margin="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <TextBlock Text="{Binding CoreCurrentFileInfo}"
                            ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"
                            Opacity="0.5"/>
             </StackPanel>
-            <StackPanel Grid.Row="2" Grid.Column="2" Margin="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <StackPanel Grid.Row="2" Grid.Column="2" Margin="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <TextBlock Text="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}" d:Text="00:00"/>
                 <TextBlock Text=" / " Opacity="0.5"/>
                 <TextBlock Text="{Binding TotalTime,Converter={StaticResource TimeSpanToString}}" Opacity="0.8" d:Text="00:00"/>

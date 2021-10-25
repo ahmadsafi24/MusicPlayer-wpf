@@ -21,7 +21,8 @@
     }
     public enum EqualizerMode
     {
-        NormalEqualizer8band = 0,
-        SuperEqualizer16band = 1
+        Disabled=0,
+        Normal = 1,
+        Super = 2
     }
 }

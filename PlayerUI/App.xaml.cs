@@ -1,7 +1,8 @@
 ﻿using PlayerLibrary;
-using System.Diagnostics;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PlayerUI
 {
@@ -12,23 +13,23 @@ namespace PlayerUI
     {
         internal static Player Player = new();
 
-        protected override async void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
-            Debug.WriteLine($"AppOnStartUp-args:[{ e.Args}]");
             base.OnStartup(e);
 
-            Setting.Load.LoadIsDark();
-
-            MainWindow.Show();
-
-            await Task.Run(async () =>
+            Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
-                if (e.Args?.Length > 0)
-                {
-                    await Player.OpenAsync(e.Args[0]);
-                }
-            });
+                Setting.Load.LoadIsDark();
 
+                MainWindow.Show();
+                Task.Run(async () =>
+                {
+                    if (e.Args?.Length > 0)
+                    {
+                        await Player.OpenAsync(e.Args[0]);
+                    }
+                });
+            }));
         }
 
         protected override void OnExit(ExitEventArgs e)

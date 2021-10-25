@@ -17,15 +17,15 @@
 
     <ControlTemplate x:Key="SliderThumbHorizontalDefault" TargetType="{x:Type Thumb}">
         <Grid HorizontalAlignment="Center" UseLayoutRounding="True" VerticalAlignment="Center">
-            <Path x:Name="grip" Data="F1 M 10 17.6 C 11.359999 17.6 12.613333 17.266668 13.759999 16.6 C 14.906666 15.933334 15.819999 15.026668 16.5 13.880001 C 17.18 12.733335 17.513332 11.480001 17.5 10.120001 C 17.486666 8.760002 17.146666 7.506668 16.48 6.360002 C 15.813332 5.213335 14.906666 4.300002 13.759999 3.620001 C 12.613333 2.940001 11.359999 2.6 10 2.6 C 8.639999 2.6 7.386666 2.940001 6.24 3.620001 C 5.093333 4.300002 4.18 5.213335 3.5 6.360002 C 2.82 7.506668 2.486667 8.760002 2.5 10.120001 C 2.513333 11.480001 2.853333 12.733335 3.52 13.880001 C 4.186666 15.026668 5.093333 15.933334 6.24 16.6 C 7.386666 17.266668 8.639999 17.6 10 17.6 Z " Fill="{DynamicResource SliderThumb.Static.Background}" SnapsToDevicePixels="True" StrokeThickness="1" Stretch="Uniform" Stroke="{DynamicResource SliderThumb.Static.Border}" UseLayoutRounding="True" VerticalAlignment="Center"/>
+            <Path x:Name="grip" Data="F1 M 10 17.6 C 11.359999 17.6 12.613333 17.266668 13.759999 16.6 C 14.906666 15.933334 15.819999 15.026668 16.5 13.880001 C 17.18 12.733335 17.513332 11.480001 17.5 10.120001 C 17.486666 8.760002 17.146666 7.506668 16.48 6.360002 C 15.813332 5.213335 14.906666 4.300002 13.759999 3.620001 C 12.613333 2.940001 11.359999 2.6 10 2.6 C 8.639999 2.6 7.386666 2.940001 6.24 3.620001 C 5.093333 4.300002 4.18 5.213335 3.5 6.360002 C 2.82 7.506668 2.486667 8.760002 2.5 10.120001 C 2.513333 11.480001 2.853333 12.733335 3.52 13.880001 C 4.186666 15.026668 5.093333 15.933334 6.24 16.6 C 7.386666 17.266668 8.639999 17.6 10 17.6 Z " Fill="{DynamicResource MediaSliderThumb.Static.Background}" SnapsToDevicePixels="True" StrokeThickness="0" Stretch="Uniform" Stroke="{DynamicResource SliderThumb.Static.Border}" UseLayoutRounding="True" VerticalAlignment="Center"/>
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="true">
-                <Setter Property="Fill" TargetName="grip" Value="{DynamicResource SliderThumb.MouseOver.Background}"/>
+                <Setter Property="Fill" TargetName="grip" Value="{DynamicResource MediaSliderThumb.MouseOver.Background}"/>
                 <Setter Property="Stroke" TargetName="grip" Value="{DynamicResource SliderThumb.MouseOver.Border}"/>
             </Trigger>
             <Trigger Property="IsDragging" Value="true">
-                <Setter Property="Fill" TargetName="grip" Value="{DynamicResource SliderThumb.Pressed.Background}"/>
+                <Setter Property="Fill" TargetName="grip" Value="{DynamicResource MediaSliderThumb.Pressed.Background}"/>
                 <Setter Property="Stroke" TargetName="grip" Value="{DynamicResource SliderThumb.Pressed.Border}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
@@ -114,6 +114,9 @@
             </Trigger>
             <Trigger Property="IsKeyboardFocused" Value="true">
                 <Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Thumb" Property="Effect" Value="{StaticResource ControlShadow}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

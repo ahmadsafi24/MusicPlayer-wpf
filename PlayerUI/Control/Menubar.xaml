@@ -6,13 +6,13 @@
              xmlns:viewmodel="clr-namespace:PlayerUI.ViewModel"
              mc:Ignorable="d" 
              d:DesignWidth="800" Background="{DynamicResource Menubar.Background}"
+             DataContext="{StaticResource MenuViewModel}"
              >
-    <UserControl.DataContext>
-        <viewmodel:MenuViewModel/>
-    </UserControl.DataContext>
     <StackPanel Orientation="Horizontal">
         <Button Content="Open" Command="{Binding OpenCommand}" Height="28" />
         <Button Content="ToggleDarkMode" Command="{Binding ToggleDarkModeCommand}" Height="28"/>
         <Button Content="MiniView" Command="{Binding SwitchToMiniViewCommand}" Height="28"/>
-    </StackPanel>
+        <Button Content="BlurWindow" Command="{Binding SwitchToBlurWindowCommand}" Height="28"/>
+        <Button Content="NormalWindow" Command="{Binding SwitchToNormalWindowCommand}" Height="28"/>
+</StackPanel>
 </UserControl>

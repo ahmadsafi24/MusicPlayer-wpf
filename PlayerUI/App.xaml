@@ -26,6 +26,7 @@
             <ViewModel:MiniView_ViewModel x:Key="MiniView_ViewModel"/>
             <ViewModel:PlayerViewModel x:Key="PlayerViewModel"/>
             <ViewModel:EqualizerViewModel x:Key="EqualizerViewModel"/>
+            <ViewModel:MenuViewModel x:Key="MenuViewModel"/>
 
             <converter:TimeSpanToDouble x:Key="TimeSpanToDouble"/>
             <converter:TimeSpanToString x:Key="TimeSpanToString"/>

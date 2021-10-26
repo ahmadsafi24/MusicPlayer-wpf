@@ -7,16 +7,17 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resource/Theme/Light.xaml"/>
-                <ResourceDictionary Source="/Resource/Brushs.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Geometry.xaml"/>
                 <ResourceDictionary Source="/Resource/Font/OpenSans.xaml"/>
+                <ResourceDictionary Source="/Resource/Theme/Effect.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/TextBlock.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Scrollbar.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/ScrollViewer.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Listview.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Slider.xaml"/>
-                <ResourceDictionary Source="/Resource/Style/Menu.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Button.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/Menu.xaml"/>
+                <ResourceDictionary Source="/Resource/Style/ContextMenu.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Tooltip.xaml"/>
                 <ResourceDictionary Source="/Resource/Style/Other.xaml"/>
             </ResourceDictionary.MergedDictionaries>

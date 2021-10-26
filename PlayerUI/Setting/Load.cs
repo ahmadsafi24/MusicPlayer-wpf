@@ -17,12 +17,12 @@ namespace PlayerUI.Setting
                 if (isdark)
                 {
                     Commands.WindowTheme.IsDark = true;
-                    Commands.ResourceManager.LoadThemeResourceDark();
+                    Commands.WindowTheme.Refresh();
                 }
                 else
                 {
                     Commands.WindowTheme.IsDark = false;
-                    Commands.ResourceManager.LoadThemeResourceLight();
+                    Commands.WindowTheme.Refresh();
                 }
 
             }

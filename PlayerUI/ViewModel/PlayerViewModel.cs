@@ -51,6 +51,14 @@ namespace PlayerUI.ViewModel
                 NotifyPropertyChanged(nameof(CurrentTime));
             });
 
+            if (newPlaybackState== PlaybackState.Paused)
+            {
+                Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Paused,true);
+            }
+            else
+            {
+                Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Normal,true);
+            }
 
             if (newPlaybackState is PlaybackState.Opened)
             {
@@ -113,19 +121,31 @@ namespace PlayerUI.ViewModel
             {
                 _currentTime = Time;
                 NotifyPropertyChanged(nameof(CurrentTime));
-                setprogressvalue(Time,TotalTime);
+                setprogressvalue(Time, TotalTime);
             });
         }
 
-        private static int lastValue=0;
-        private static void setprogressvalue(TimeSpan currentTime,TimeSpan maxTime)
+        private static int lastValue = 0;
+
+        private static void settaskvalue(int val)
         {
-            int percentValue=(int)maxTime.TotalSeconds/100;
-            int currentValue=(int)currentTime.TotalSeconds/percentValue;
-            if (currentValue!=lastValue)
-            {    
-                Helper.Taskbar.Progress.SetValue(currentValue,100,true);
+            if (val != lastValue)
+            {
+                Helper.Taskbar.Progress.SetValue(val, 100, true);
             }
+
+            lastValue = val;
+        }
+        private static void setprogressvalue(TimeSpan currentTime, TimeSpan maxTime)
+        {
+            if (maxTime <= TimeSpan.FromSeconds(10))
+            {
+                settaskvalue(0);
+                return;
+            }
+            int percentValue = (int)maxTime.TotalSeconds / 100;
+            int currentValue = (int)currentTime.TotalSeconds / percentValue;
+            settaskvalue(currentValue);
         }
 
         public TimeSpan TotalTime => Player.TimeDuration;

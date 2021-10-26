@@ -7,9 +7,10 @@
         mc:Ignorable="d" ResizeMode="NoResize" SizeToContent="Height"
         Title="Window1"
         MinWidth="480"
-        Topmost = "True" BorderThickness="0" ShowInTaskbar="True"
-        Background="{DynamicResource MainWindow.Background}"
-        Content="{StaticResource MiniView}">
+        Topmost = "True" BorderThickness="0" ShowInTaskbar="True">
+    <Border Background="{DynamicResource MainView.Background}">
+        <ContentPresenter Content="{StaticResource MiniView}"/>
+    </Border>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5,0" NonClientFrameEdges="None" GlassFrameThickness="-1" UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
@@ -18,11 +19,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Window">
-                        <theme:SystemDropShadowChrome>
-                            <Border Background="{DynamicResource Light.Main}">
+                        <Border Background="{DynamicResource MainWindow.Background}">
                             <ContentPresenter x:Name="ContentPresenter"/>
                         </Border>
-                        </theme:SystemDropShadowChrome>
                         <ControlTemplate.Triggers>
                             <EventTrigger RoutedEvent="Loaded">
                                 <BeginStoryboard>

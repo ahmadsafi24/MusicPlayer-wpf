@@ -16,23 +16,8 @@
     <Color x:Key="Light9">#F42F2F2F</Color>
     <Color x:Key="Light10">#F42F2F2F</Color>
 
-
-
-    <!--#endregion-->
-    
-    <SolidColorBrush x:Key="SolidLight1" Color="{DynamicResource Light1}"/>
-    <SolidColorBrush x:Key="SolidLight2" Color="{DynamicResource Light2}"/>
-    <SolidColorBrush x:Key="SolidLight3" Color="{DynamicResource Light3}"/>
-    <SolidColorBrush x:Key="SolidLight4" Color="{DynamicResource Light4}"/>
-    <SolidColorBrush x:Key="SolidLight5" Color="{DynamicResource Light5}"/>
-    <SolidColorBrush x:Key="SolidLight6" Color="{DynamicResource Light6}"/>
-    <SolidColorBrush x:Key="SolidLight7" Color="{DynamicResource Light7}"/>
-    <SolidColorBrush x:Key="SolidLight8" Color="{DynamicResource Light8}"/>
-    <SolidColorBrush x:Key="SolidLight9" Color="{DynamicResource Light9}"/>
-    <SolidColorBrush x:Key="SolidLight10" Color="{DynamicResource Light10}"/>
-
-    <Color x:Key="Color.Main">#E69B00</Color>
     <SolidColorBrush x:Key="copy" Color="#E69B00"/>
+    <Color x:Key="Color.Main">#E69B00</Color>
     <Color x:Key="Color.Background.Static">#E69B00</Color>
     <Color x:Key="Color.Border.Static">#E69B00</Color>
     <Color x:Key="Color.Foreground.Static">#E69B00</Color>
@@ -46,6 +31,19 @@
     <Color x:Key="Color.Foreground.Pressed">#B08E49</Color>
 
     <SolidColorBrush x:Key="Windows.Background" Color="#FF000000"/>
+    <!--#endregion-->
+    
+    <SolidColorBrush x:Key="SolidLight1" Color="{DynamicResource Light1}"/>
+    <SolidColorBrush x:Key="SolidLight2" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="SolidLight3" Color="{DynamicResource Light3}"/>
+    <SolidColorBrush x:Key="SolidLight4" Color="{DynamicResource Light4}"/>
+    <SolidColorBrush x:Key="SolidLight5" Color="{DynamicResource Light5}"/>
+    <SolidColorBrush x:Key="SolidLight6" Color="{DynamicResource Light6}"/>
+    <SolidColorBrush x:Key="SolidLight7" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="SolidLight8" Color="{DynamicResource Light8}"/>
+    <SolidColorBrush x:Key="SolidLight9" Color="{DynamicResource Light9}"/>
+    <SolidColorBrush x:Key="SolidLight10" Color="{DynamicResource Light10}"/>
+
     <SolidColorBrush x:Key="MainView.Background" Color="{DynamicResource Light5}"/>
     <SolidColorBrush x:Key="ProgressBar.Progress" Color="{DynamicResource Color.Main}"/>
     <SolidColorBrush x:Key="ProgressBar.Background" Color="{DynamicResource Light5}"/>

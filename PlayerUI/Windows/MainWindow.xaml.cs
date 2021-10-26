@@ -32,6 +32,7 @@ namespace PlayerUI.Windows
             if (this.IsLoaded)
             {
                 DwmApi.ToggleImmersiveDarkMode(this, isdark);
+                UpdateLayout();
             }
         }
 

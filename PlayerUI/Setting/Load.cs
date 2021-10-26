@@ -13,7 +13,7 @@ namespace PlayerUI.Setting
                 string setting_isdarkPath = @"Setting\IsDark";
                 if (File.Exists(setting_isdarkPath)) { string value = File.ReadAllText(setting_isdarkPath); isdark = bool.Parse(value); }
                 else
-                { isdark = Helper.CustomThemeListener.IsDark; }
+                { isdark = Helper.ThemeListener.RegistryisDark(); }
                 if (isdark)
                 {
                     Commands.WindowTheme.IsDark = true;

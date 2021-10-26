@@ -30,6 +30,12 @@ namespace PlayerUI
                     }
                 });
             }));
+
+            Microsoft.Win32.SystemEvents.UserPreferenceChanged += (_, _) =>
+            {
+                Commands.WindowTheme.IsDark = Helper.ThemeListener.RegistryisDark();
+                Commands.WindowTheme.Refresh();
+            };
         }
 
         protected override void OnExit(ExitEventArgs e)

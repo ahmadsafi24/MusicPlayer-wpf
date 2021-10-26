@@ -37,5 +37,18 @@
             FireThemeChangedForWindows();
             ResourceManager.LoadThemeResourceLight();
         }
+
+        public static void Refresh()
+        {
+            if (IsDark)
+            {
+                ForceApplyDark();
+            }
+            else
+            {
+                ForceApplyLight();
+            }
+        }
+
     }
 }

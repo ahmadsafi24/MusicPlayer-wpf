@@ -1,6 +1,6 @@
 # MusicPlayer
  MusicPlayer based on naudio
-![preview](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/ScreenShot/Screenshot%202021-10-15%20003512.png?raw=true)
-![preview](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/ScreenShot/Screenshot%202021-10-15%20003425.png?raw=true)
-![preview](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/ScreenShot/Screenshot%202021-10-15%20003623.png?raw=true)
-![preview](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/ScreenShot/Screenshot%202021-10-15%20003651.png?raw=true)
+![preview light](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/Shots/light.png?raw=true)
+![preview light mini](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/Shots/lightmini.png?raw=true)
+![preview dark](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/Shots/dark.png?raw=true)
+![preview dark mini](https://github.com/ahmadsafi24/MusicPlayer-wpf/blob/master/Shots/darkmini.png?raw=true)

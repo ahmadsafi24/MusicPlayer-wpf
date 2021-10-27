@@ -40,51 +40,61 @@ namespace PlayerUI.ViewModel
             IsMuted = !IsMuted;
         }
 
-        private async void Player_PlaybackStateChanged(PlaybackState newPlaybackState)
+        private void UpdateTotalTime() => NotifyPropertyChanged(nameof(TotalTime));
+        private void UpdateCurrentTime() => NotifyPropertyChanged(nameof(CurrentTime));
+        private async void Player_PlaybackStateChanged(PlaybackState playbackState)
         {
-            IsPlaying = newPlaybackState == PlaybackState.Playing;
+            IsPlaying = playbackState == PlaybackState.Playing;
             NotifyPropertyChanged(nameof(IsPlaying));
-
             await Task.Run(() =>
             {
-                NotifyPropertyChanged(nameof(TotalTime));
-                NotifyPropertyChanged(nameof(CurrentTime));
+                UpdateTotalTime();
+                UpdateCurrentTime();
             });
+            switch (playbackState)
+            {
+                case PlaybackState.Unknown:
+                    break;
+                case PlaybackState.Failed:
+                    break;
+                case PlaybackState.Opened:
+                    TagFile = new() { FilePath = Player.Source };
+                    CoverImage2.CreateImage(Player.Source);
+                    UpdateAll();
+                    Player.Play();
+                    break;
+                //if
+                case PlaybackState.Paused:
+                    Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Paused, true);
+                    return;
+                case PlaybackState.Playing:
+                    break;
+                case PlaybackState.Stopped:
+                    break;
+                case PlaybackState.Ended:
+                    await Player.OpenAsync(Player.Source);
+                    break;
+                case PlaybackState.Closed:
+                    TagFile = new() { FilePath = Player.Source };
+                    Cover = null;
+                    UpdateAll();
+                    break;
+                default:
+                    break;
+            }
 
-            if (newPlaybackState== PlaybackState.Paused)
-            {
-                Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Paused,true);
-            }
-            else
-            {
-                Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Normal,true);
-            }
+            //else
+            Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Normal, true);
+        }
 
-            if (newPlaybackState is PlaybackState.Opened)
-            {
-                TagFile = new() { FilePath = Player.Source };
-                CoverImage2.CreateImage(Player.Source);
-                NotifyPropertyChanged(nameof(TagFile));
-                NotifyPropertyChanged(nameof(TotalTime));
-                NotifyPropertyChanged(nameof(CurrentTime));
-                NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
-                Player.Play();
-            }
-            if (newPlaybackState == PlaybackState.Ended)
-            {
-                Player.Close();
-            }
-            if (newPlaybackState == PlaybackState.Closed)
-            {
-                TagFile = new() { FilePath = Player.Source };
-                Cover = null;
-                NotifyPropertyChanged(nameof(Cover));
-                NotifyPropertyChanged(nameof(TagFile));
-                NotifyPropertyChanged(nameof(TotalTime));
-                NotifyPropertyChanged(nameof(CurrentTime));
-                NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
-                AudioPlayer_CurrentTimeChanged(TimeSpan.Zero);
-            }
+        private void UpdateAll()
+        {
+            NotifyPropertyChanged(nameof(Cover));
+            NotifyPropertyChanged(nameof(TagFile));
+            UpdateTotalTime();
+            UpdateCurrentTime();
+            NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
+            AudioPlayer_CurrentTimeChanged(TimeSpan.Zero);
         }
         public BitmapImage Cover { get; set; }
 
@@ -120,33 +130,11 @@ namespace PlayerUI.ViewModel
             await Task.Run(() =>
             {
                 _currentTime = Time;
-                NotifyPropertyChanged(nameof(CurrentTime));
-                setprogressvalue(Time, TotalTime);
+                UpdateCurrentTime();
+                Commands.Taskbar.SetTaskbarProgressValue(Time, TotalTime);
             });
         }
 
-        private static int lastValue = 0;
-
-        private static void settaskvalue(int val)
-        {
-            if (val != lastValue)
-            {
-                Helper.Taskbar.Progress.SetValue(val, 100, true);
-            }
-
-            lastValue = val;
-        }
-        private static void setprogressvalue(TimeSpan currentTime, TimeSpan maxTime)
-        {
-            if (maxTime <= TimeSpan.FromSeconds(10))
-            {
-                settaskvalue(0);
-                return;
-            }
-            int percentValue = (int)maxTime.TotalSeconds / 100;
-            int currentValue = (int)currentTime.TotalSeconds / percentValue;
-            settaskvalue(currentValue);
-        }
 
         public TimeSpan TotalTime => Player.TimeDuration;
 

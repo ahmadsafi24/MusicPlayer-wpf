@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Width="800" Height="480"
         Background="{DynamicResource Windows.Background}"
-        Content="{StaticResource MainView}">
+        d:Content="{StaticResource MainView}">
     <Window.Style>
         <Style TargetType="Window">
             <Setter Property="Template">
@@ -15,7 +15,7 @@
                         <Border Background="{TemplateBinding Background}">
                             <ContentPresenter x:Name="ContentPresenter" />
                         </Border>
-                        <!--ControlTemplate.Triggers>
+                        <ControlTemplate.Triggers>
                             <EventTrigger RoutedEvent="Loaded">
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -23,7 +23,7 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
-                        </ControlTemplate.Triggers-->
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

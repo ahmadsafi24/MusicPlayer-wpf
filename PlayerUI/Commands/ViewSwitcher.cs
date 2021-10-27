@@ -26,26 +26,18 @@ namespace PlayerUI.Commands
         {
             var lastwin = Application.Current.MainWindow;
             Windows.MainWindowChromeless Chromeless = new();
-            Chromeless.Width=lastwin.Width;
-            Chromeless.Height=lastwin.Height;
-            Chromeless.Left=lastwin.Left;
-            Chromeless.Top=lastwin.Top;
-            Chromeless.Show();
             Application.Current.MainWindow = Chromeless;
             lastwin.Close();
+            Chromeless.Show();
         }
         
         public static void SwitchToNormalWindow()
         {
             var lastwin = Application.Current.MainWindow;
             Windows.MainWindow win = new();
-            win.Width=lastwin.Width;
-            win.Height=lastwin.Height;
-            win.Left=lastwin.Left;
-            win.Top=lastwin.Top;
-            win.Show();
             Application.Current.MainWindow = win;
             lastwin.Close();
+            win.Show();
         }
     }
 }

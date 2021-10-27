@@ -16,32 +16,49 @@ namespace PlayerUI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            SettingLoader.LoadAppSettings();
+            MainWindow.Show();
+            try
             {
-                Setting.Load.LoadIsDark();
-
-                MainWindow.Show();
-                Task.Run(async () =>
-                {
-                    if (e.Args?.Length > 0)
-                    {
-                        await Player.OpenAsync(e.Args[0]);
-                    }
-                });
-            }));
-
+                _ = Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
+                  {
+                      await Task.Run(async () => await LoadArgAsync(e.Args));
+                  }));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += (_, _) =>
             {
-                Commands.WindowTheme.IsDark = Helper.ThemeListener.RegistryisDark();
+                Statics.IsDark = Helper.ThemeListener.RegistryisDark();
                 Commands.WindowTheme.Refresh();
             };
         }
 
+        private static async Task LoadArgAsync(string[] args)
+        {
+            await Task.Run(async () =>
+             {
+                 if (args?.Length > 0)
+                 {
+                     await Player.OpenAsync(args[0]);
+                 }
+                 else
+                 {
+                     string file = Settings.CurrentConfig.LastFile;
+                     if (!string.IsNullOrEmpty(file))
+                     {
+                         await Player.OpenAsync(file);
+                     };
+                 }
+             });
+        }
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            Setting.Save.SaveIsDark();
+            SettingLoader.SaveAppSettings();
         }
     }
 }

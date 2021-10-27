@@ -11,7 +11,7 @@ namespace PlayerUI.ViewModel
 
         public EqualizerViewModel()
         {
-            ResetEqCommand=new DelegateCommand(ResetEq);
+            ResetEqCommand = new DelegateCommand(ResetEq);
             NotifyPropertyChanged(null);
         }
 
@@ -21,30 +21,23 @@ namespace PlayerUI.ViewModel
             NotifyPropertyChanged(string.Empty);
         }
 
-        public int EqMode
+        public bool IsSuperEq
         {
-            get
-            {
-                var val = Player.EqualizerMode switch
-                {
-                    EqualizerMode.Normal => 1,
-                    EqualizerMode.Super => 2,
-                    EqualizerMode.Disabled => 0,
-                    _ => throw new System.NotImplementedException(),
-                };
-                return val;
-            }
+            get => Player.EqualizerMode == EqualizerMode.Super;
             set
             {
-                Player.EqualizerMode = value switch
+                if (value)
                 {
-                    0 => EqualizerMode.Disabled,
-                    1 => EqualizerMode.Normal,
-                    2 => EqualizerMode.Super,
-                    _ => throw new System.NotImplementedException(),
-                };
+
+                    Player.EqualizerMode = EqualizerMode.Super;
+                }
+                else
+                {
+                    Player.EqualizerMode = EqualizerMode.Normal;
+                }
                 ResetEq();
                 Player.ReIntialEq();
+                NotifyPropertyChanged(nameof(IsSuperEq));
             }
         }
 

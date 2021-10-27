@@ -121,7 +121,14 @@ namespace PlayerLibrary
             nAudioCore.InitalEqualizer();
             if (!string.IsNullOrEmpty(nAudioCore.Source))
             {
-                nAudioCore.Open(Source, TimePosition);
+                if (TimePosition.TotalSeconds > 2)
+                {
+                    nAudioCore.Open(Source, TimePosition - TimeSpan.FromSeconds(1));
+                }
+                else
+                {
+                    nAudioCore.Open(Source, TimePosition);
+                }
                 switch (lastpstate)
                 {
                     case PlaybackState.Paused:

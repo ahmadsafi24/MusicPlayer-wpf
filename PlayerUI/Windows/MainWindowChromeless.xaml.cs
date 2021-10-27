@@ -1,6 +1,7 @@
 ﻿using Helper.DarkUi;
 using System;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PlayerUI.Windows
 {
@@ -11,6 +12,8 @@ namespace PlayerUI.Windows
     {
         public MainWindowChromeless()
         {
+            Loaded += MainWindow_Loaded;
+            Closed += MainWindow_Closed;
             InitializeComponent();
             MouseLeftButtonDown += (_, _) =>
             {
@@ -24,7 +27,25 @@ namespace PlayerUI.Windows
             Commands.Window.AttachDrop(this);
             Commands.Window.AttachMouseWheel(this);
         }
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            Statics.WindowsLeft = Left;
+            Statics.WindowsTop = Top;
+            Statics.WindowsWidth = ActualWidth;
+            Statics.WindowsHeight = ActualHeight;
+        }
 
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Left = Statics.WindowsLeft;
+            Top = Statics.WindowsTop;
+            Width = Statics.WindowsWidth;
+            Height = Statics.WindowsHeight;
+            _ = App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                Content = App.Current.FindResource("MainView");
+            }));
+        }
         private void WindowTheme_ThemeChanged(bool isdark)
         {
             if (this.IsLoaded)
@@ -40,7 +61,7 @@ namespace PlayerUI.Windows
             Helper.WindowsManager.EnableBlur(this);
             Helper.IconHelper.RemoveIcon(this);
             Helper.ControlboxHelper.RemoveControls(this);
-            DwmApi.ToggleImmersiveDarkMode(this, Commands.WindowTheme.IsDark);
+            DwmApi.ToggleImmersiveDarkMode(this, Statics.IsDark);
         }
     }
 }

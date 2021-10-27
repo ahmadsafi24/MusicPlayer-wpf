@@ -57,6 +57,9 @@
                 <Trigger Property="IsKeyboardFocused" Value="true">
                     <Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
                 </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
         <Style x:Key="EqSliderStyle" TargetType="Slider">
@@ -67,6 +70,7 @@
             <Setter Property="Minimum" Value="-16"/>
             <Setter Property="Maximum" Value="16"/>
             <Setter Property="AutoToolTipPlacement" Value="TopLeft"/>
+            <Setter Property="AutoToolTipPrecision" Value="1"/>
             <Setter Property="IsSelectionRangeEnabled" Value="True"/>
             <Setter Property="SelectionStart" Value="-30"/>
             <Setter Property="SelectionEnd" Value="{Binding Value, RelativeSource={RelativeSource Self}}"/>
@@ -109,7 +113,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <SolidColorBrush x:Key="TextBox.Static.Background" Color="#FFFFFFFF"/>
         <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
             <Setter Property="OverridesDefaultStyle" Value="true"/>
             <Setter Property="AllowDrop" Value="true"/>
@@ -220,60 +223,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <ControlTemplate x:Key="ComboBoxEditableTemplate" TargetType="{x:Type ComboBox}">
-            <Border x:Name="templateRoot" SnapsToDevicePixels="true" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                <Grid SnapsToDevicePixels="true">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
-                    </Grid.ColumnDefinitions>
-                    <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
-                        <theme:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                            <Border x:Name="dropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1">
-                                <ScrollViewer x:Name="DropDownScrollViewer">
-                                    <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
-                                        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                            <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
-                                        </Canvas>
-                                        <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                    </Grid>
-                                </ScrollViewer>
-                            </Border>
-                        </theme:SystemDropShadowChrome>
-                    </Popup>
-                    <ToggleButton x:Name="toggleButton" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
-                    <Border x:Name="border" Background="{DynamicResource TextBox.Static.Background}" Margin="{TemplateBinding BorderThickness}">
-                        <TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" Style="{StaticResource ComboBoxEditableTextBox}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                    </Border>
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
-                </Trigger>
-                <Trigger Property="IsKeyboardFocusWithin" Value="true">
-                    <Setter Property="Foreground" Value="Black"/>
-                </Trigger>
-                <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
-                    <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
-                    <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
-                </Trigger>
-                <Trigger Property="HasItems" Value="false">
-                    <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
-                </Trigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsGrouping" Value="true"/>
-                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
-                    </MultiTrigger.Conditions>
-                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
-                </MultiTrigger>
-                <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
-                    <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
-                    <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
         <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
             <Border x:Name="templateRoot" SnapsToDevicePixels="true" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                 <Grid SnapsToDevicePixels="true">
@@ -328,18 +277,11 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="Padding" Value="10,4"/>
             <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
             <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
             <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
-            <Style.Triggers>
-                <Trigger Property="IsEditable" Value="true">
-                    <Setter Property="IsTabStop" Value="false"/>
-                    <Setter Property="Padding" Value="2"/>
-                    <Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
         <Style x:Key="FocusVisual1">
             <Setter Property="Control.Template">
@@ -433,25 +375,19 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal" Background="{DynamicResource SolidLight2}" HorizontalAlignment="Left">
                 <TextBlock Text="Equalizer Mode:" Margin="8" VerticalAlignment="Center"/>
-                <ComboBox ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle1}" SelectedIndex="{Binding EqMode,Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <ComboBoxItem Content="Disable"/>
-                    <ComboBoxItem Content="Normal"/>
-                    <ComboBoxItem Content="Super"/>
-                </ComboBox>
+                <CheckBox Content="11band Equalizer" IsChecked="{Binding IsSuperEq,Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </StackPanel>
 
             <ContentPresenter DataContext="{StaticResource EqualizerViewModel}">
                 <ContentPresenter.Style>
                     <Style TargetType="{x:Type ContentPresenter}">
+                        <Setter Property="Content" Value="{StaticResource NormalEqSliders}"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding EqMode}" Value="2">
+                            <DataTrigger Binding="{Binding IsSuperEq}" Value="true">
                                 <Setter Property="Content" Value="{StaticResource SuperEqSliders}"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding EqMode}" Value="1">
+                            <DataTrigger Binding="{Binding IsSuperEq}" Value="false">
                                 <Setter Property="Content" Value="{StaticResource NormalEqSliders}"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding EqMode}" Value="0">
-                                <Setter Property="IsEnabled" Value="True"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

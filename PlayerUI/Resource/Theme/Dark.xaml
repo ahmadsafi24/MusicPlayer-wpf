@@ -107,10 +107,10 @@
     <SolidColorBrush x:Key="MediaInfoCard.BorderBrush" Color="{DynamicResource Light4}"/>
     <SolidColorBrush x:Key="MediaCover.Background" Color="{DynamicResource Color.Main}"/>
     <SolidColorBrush x:Key="TextBlock.Foreground" Color="{DynamicResource Black}"/>
-    <SolidColorBrush x:Key="Titlebar.Background.Active" Color="{DynamicResource Light4}"/>
-    <SolidColorBrush x:Key="Titlebar.Background.Deactive" Color="{DynamicResource Light2}"/>
+    <SolidColorBrush x:Key="Titlebar.Background.Active" Color="{DynamicResource Light5}"/>
+    <SolidColorBrush x:Key="Titlebar.Background.Deactive" Color="{DynamicResource Light8}"/>
     <SolidColorBrush x:Key="Titlebar.Foreground.Active" Color="{DynamicResource Black}"/>
-    <SolidColorBrush x:Key="Titlebar.Foreground.Deactive" Color="{DynamicResource Light8}"/>
+    <SolidColorBrush x:Key="Titlebar.Foreground.Deactive" Color="{DynamicResource Black}" Opacity="0.35"/>
     <SolidColorBrush x:Key="MainWindow.Background" Color="{DynamicResource Light2}"/>
     <SolidColorBrush x:Key="Playlist.Background" Color="{DynamicResource Light3}"/>
     <SolidColorBrush x:Key="MediaInfoCard.Background" Color="{DynamicResource Light2}"/>
@@ -137,6 +137,7 @@
     <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Border" Color="Transparent"/>
 
+    <SolidColorBrush x:Key="TextBox.Static.Background" Color="{DynamicResource Light5}"/>
     <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="{DynamicResource Light1}" Offset="0.0"/>
         <GradientStop Color="{DynamicResource Light2}" Offset="1.0"/>

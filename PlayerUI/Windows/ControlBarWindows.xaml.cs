@@ -1,7 +1,6 @@
 ﻿using Helper.DarkUi;
 using System;
 using System.Windows;
-using System.Windows.Forms;
 
 namespace PlayerUI.Windows
 {
@@ -25,17 +24,13 @@ namespace PlayerUI.Windows
                 var warea = SystemParameters.WorkArea;
                 Left = warea.Width - Width;
                 Top = warea.Height - Height;
-
             }
             else
             {
-
                 Left = MiniViewLeft;
                 Top = MiniViewTop;
                 Width = MiniViewWidth;
-                //Height = MiniViewHeight;
             }
-
         }
 
         private void WindowTheme_ThemeChanged(bool isdark)
@@ -52,7 +47,7 @@ namespace PlayerUI.Windows
             base.OnSourceInitialized(e);
             Helper.ControlboxHelper.RemoveControls(this);
             Helper.IconHelper.RemoveIcon(this);
-            DwmApi.ToggleImmersiveDarkMode(this, Commands.WindowTheme.IsDark);
+            DwmApi.ToggleImmersiveDarkMode(this, Statics.IsDark);
         }
 
         protected override void OnLocationChanged(EventArgs e)
@@ -65,11 +60,9 @@ namespace PlayerUI.Windows
         private void ControlbarWindows_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             MiniViewWidth = ActualWidth;
-            //MiniViewHeight = ActualHeight;
         }
         public static double MiniViewTop { get; set; }
         public static double MiniViewLeft { get; set; }
-        //public static double MiniViewHeight { get; set; }
         public static double MiniViewWidth { get; set; }
     }
 }

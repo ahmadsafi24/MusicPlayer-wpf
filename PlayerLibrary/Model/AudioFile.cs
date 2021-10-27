@@ -1,5 +1,4 @@
 ﻿using ATL;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace PlayerLibrary.Model
@@ -22,7 +21,7 @@ namespace PlayerLibrary.Model
                 {
                     return null;
                 }
-                string val = "";
+                string val;
                 if (string.IsNullOrEmpty(Tag.Album))
                 { val = null; return val; }
                 else

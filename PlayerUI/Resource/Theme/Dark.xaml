@@ -121,7 +121,7 @@
     <SolidColorBrush x:Key="Tooltip.Borderbrush" Color="{DynamicResource Light10}"/>
     <SolidColorBrush x:Key="GridSplitter.MouseOver" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Light.Main" Color="{DynamicResource White}"/>
-    <SolidColorBrush x:Key="ContextMenuBackground" Color="{DynamicResource White}"/>
+    <SolidColorBrush x:Key="ContextMenuBackground" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Menubar.Background" Color="{DynamicResource Light2}"/>
     <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="MediaSliderThumb.Static.Background" Color="{DynamicResource Color.Background.Static}"/>

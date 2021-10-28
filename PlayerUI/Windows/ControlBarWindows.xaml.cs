@@ -1,4 +1,5 @@
 ﻿using Helper.DarkUi;
+using PlayerUI.Config;
 using System;
 using System.Windows;
 
@@ -47,7 +48,7 @@ namespace PlayerUI.Windows
             base.OnSourceInitialized(e);
             Helper.ControlboxHelper.RemoveControls(this);
             Helper.IconHelper.RemoveIcon(this);
-            DwmApi.ToggleImmersiveDarkMode(this, Statics.IsDark);
+            DwmApi.ToggleImmersiveDarkMode(this, AppStatics.IsDark);
         }
 
         protected override void OnLocationChanged(EventArgs e)

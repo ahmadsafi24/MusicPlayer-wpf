@@ -103,10 +103,25 @@ namespace PlayerLibrary
         #endregion
 
         #region Eq
+        public EventHandlerEmpty EqUpdated;
+        private void FireEqUpdated()
+        {   
+            if (IsEventsOn)
+            {
+                EqUpdated?.Invoke();
+            }
+        }
         public void ResetEq() => nAudioCore.ResetEq();
-        public void ChangeEq(int bandIndex, float Gain) => nAudioCore.ChangeEqualizerBand(bandIndex, Gain);
+        public void ChangeEq(int bandIndex, float Gain,bool requestNotifyEqUpdate) 
+        {
+            nAudioCore.ChangeEqualizerBand(bandIndex, Gain);
+           if (requestNotifyEqUpdate)
+           {
+               FireEqUpdated();
+           } 
+        }
         public double GetEqBandGain(int BandIndex) => nAudioCore.GetEqBandGain(BandIndex);
-        public double[] Bands8 { get => nAudioCore.Bands8; }
+        public int[] EqBandsGain { get => nAudioCore.BandsGain; }
         #endregion   
 
         private bool IsEventsOn = true;
@@ -121,14 +136,7 @@ namespace PlayerLibrary
             nAudioCore.InitalEqualizer();
             if (!string.IsNullOrEmpty(nAudioCore.Source))
             {
-                if (TimePosition.TotalSeconds > 2)
-                {
-                    nAudioCore.Open(Source, TimePosition - TimeSpan.FromSeconds(1));
-                }
-                else
-                {
-                    nAudioCore.Open(Source, TimePosition);
-                }
+                nAudioCore.Open(Source, TimePosition);    
                 switch (lastpstate)
                 {
                     case PlaybackState.Paused:
@@ -144,8 +152,9 @@ namespace PlayerLibrary
                         break;
                 }
             }
-
+            
             ToggleEventsOn();
+            FireEqUpdated();
         }
 
     }

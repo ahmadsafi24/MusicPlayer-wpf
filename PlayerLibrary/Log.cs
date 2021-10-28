@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace PlayerLibrary
+﻿namespace PlayerLibrary
 {
     public static class Log
     {

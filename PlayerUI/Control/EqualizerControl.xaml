@@ -394,8 +394,10 @@
                 </ContentPresenter.Style>
             </ContentPresenter>
 
-            <StackPanel Margin="5" HorizontalAlignment="Left">
-                <Button Command="{Binding ResetEqCommand}" Content="Reset" HorizontalAlignment="Right"/>
+            <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Left">
+                <Button Command="{Binding ResetEqCommand}" Content="Reset"/>
+                <Button Command="{Binding LoadEqCommand}" Content="Import"/>
+                <Button Command="{Binding SaveEqCommand}" Content="Export"/>
             </StackPanel>
 
         </StackPanel>

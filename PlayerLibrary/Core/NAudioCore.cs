@@ -2,6 +2,7 @@ using NAudio.Extras;
 using NAudio.Wave;
 using PlayerLibrary.Model;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -292,18 +293,16 @@ namespace PlayerLibrary.Core
 
         // index: band position
         // double:gain
-        internal double[] Bands8
+        internal int[] BandsGain
         {
             get
             {
-                double[] bands = Array.Empty<double>();
-                int i = 0;
+                List<int> GainList = new();
                 foreach (var item in EqualizerBand)
                 {
-                    bands.SetValue(item.Gain, i);
-                    i++;
+                    GainList.Add((int)item.Gain);
                 }
-                return bands;
+                return GainList.ToArray();
             }
         }
 

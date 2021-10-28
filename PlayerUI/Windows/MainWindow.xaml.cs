@@ -1,4 +1,5 @@
 ﻿using Helper.DarkUi;
+using PlayerUI.Config;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,18 +32,18 @@ namespace PlayerUI.Windows
 
         private void MainWindow_Closed(object sender, EventArgs e)
         {
-            Statics.WindowsLeft = Left;
-            Statics.WindowsTop = Top;
-            Statics.WindowsWidth = ActualWidth;
-            Statics.WindowsHeight = ActualHeight;
+            AppStatics.WindowsLeft = Left;
+            AppStatics.WindowsTop = Top;
+            AppStatics.WindowsWidth = ActualWidth;
+            AppStatics.WindowsHeight = ActualHeight;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Left = Statics.WindowsLeft;
-            Top = Statics.WindowsTop;
-            Width = Statics.WindowsWidth;
-            Height = Statics.WindowsHeight; 
+            Left = AppStatics.WindowsLeft;
+            Top = AppStatics.WindowsTop;
+            Width = AppStatics.WindowsWidth;
+            Height = AppStatics.WindowsHeight; 
             _ = App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
                 Content = App.Current.FindResource("MainView");
@@ -62,7 +63,7 @@ namespace PlayerUI.Windows
         {
             base.OnSourceInitialized(e);
             Helper.IconHelper.RemoveIcon(this);
-            DwmApi.ToggleImmersiveDarkMode(this, Statics.IsDark);
+            DwmApi.ToggleImmersiveDarkMode(this, AppStatics.IsDark);
         }
     }
 }

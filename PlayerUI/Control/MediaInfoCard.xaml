@@ -35,13 +35,13 @@
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="0" BorderBrush="{DynamicResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5">
-                <!--Border.Effect>
-                    <DropShadowEffect Color="{DynamicResource AccentColor}" ShadowDepth="0" Opacity="1" BlurRadius="32" />
-                </Border.Effect-->
+                <Border.Effect>
+                    <DropShadowEffect Color="{DynamicResource Color.Main}" ShadowDepth="0" Opacity="1" BlurRadius="8" />
+                </Border.Effect>
                 <Border.Background>
                     <SolidColorBrush Color="{DynamicResource Color.Main}" Opacity="0.5"/>
                 </Border.Background>
-                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" />
             </Border>
             <TextBlock Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding TagFile.Title,FallbackValue=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="DemiBold"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding TagFile.Artist,FallbackValue=Artist}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>

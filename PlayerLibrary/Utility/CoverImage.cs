@@ -42,7 +42,9 @@ namespace PlayerLibrary.Utility
             if (filePath != null)
             {
                 Track tagfile = new(filePath);
-                if (tagfile.EmbeddedPictures.Count > 0)
+                if(tagfile.PictureTokens.Count>=1)
+                {
+                if (tagfile.EmbeddedPictures.Count >= 1)
                 {
                     byte[] pic = tagfile.EmbeddedPictures[0]?.PictureData;
                     System.IO.MemoryStream ms = new(pic);
@@ -56,6 +58,8 @@ namespace PlayerLibrary.Utility
 
                     bitmap.EndInit();
                     bitmap.Freeze();
+                    ms.Flush();
+                }
                 }
             }
 

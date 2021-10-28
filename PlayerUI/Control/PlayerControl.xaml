@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              DataContext="{StaticResource PlayerViewModel}"
              mc:Ignorable="d" x:Name="UserControl" Background="{DynamicResource PlayerControl.Background}" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0"
-             d:DesignWidth="800" d:Foreground="White" Height="48" Padding="10,0,20,0">
+             d:DesignWidth="800" d:Foreground="White" Height="48" Padding="5,0">
     <UserControl.Resources>
         <ControlTemplate x:Key="MediaPlayButtonTemplate" TargetType="{x:Type Button}">
             <Border x:Name="BackBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"  CornerRadius="4">
@@ -124,7 +124,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}" Margin="5,0" d:Text="0:00"/>
 
-            <Slider Visibility="Hidden"   Grid.Column="2" VerticalAlignment="Center" TickPlacement="None" Minimum="0" IsSelectionRangeEnabled="True" IsMoveToPointEnabled="True" SelectionStart="0" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" Foreground="#FFA77825" BorderBrush="{x:Null}" Background="#FF6B6B6B" ToolTip="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}"
+            <Slider Visibility="Hidden" Grid.Column="2" VerticalAlignment="Center" TickPlacement="None" Minimum="0" IsSelectionRangeEnabled="True" IsMoveToPointEnabled="True" SelectionStart="0" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" Foreground="#FFA77825" BorderBrush="{x:Null}" Background="#FF6B6B6B" ToolTip="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}"
                        Value="{Binding CurrentTime,Converter={StaticResource TimeSpanToDouble},Mode=TwoWay}"
                        Maximum="{Binding TotalTime,Converter={StaticResource TimeSpanToDouble}}"/>
 
@@ -141,7 +141,7 @@
             <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0"
                        Text="{Binding TotalTime,Converter={StaticResource TimeSpanToString}}" d:Text="0:00"/>
 
-            <Slider Grid.Column="5" Width="80" VerticalAlignment="Center" Margin="10,0"
+            <Slider Grid.Column="5" Width="80" VerticalAlignment="Center"
                     IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True"
                     AutoToolTipPlacement="TopLeft"
                     SelectionStart="{Binding Minimum, RelativeSource={RelativeSource Self}}"
@@ -150,7 +150,7 @@
                     Foreground="{DynamicResource MediaSlider.Foreground}"
                     Background="{DynamicResource MediaSlider.Background.Active}"/>
             
-            <Button Grid.Column="4" Command="{Binding MuteAudioCommand}">
+            <Button Grid.Column="4" Command="{Binding MuteAudioCommand}" Margin="5,0">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediaButton}">
                         <Setter Property="Template" Value="{StaticResource MediaUnmutedButtonTemplate}"/>

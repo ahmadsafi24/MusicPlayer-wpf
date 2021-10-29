@@ -8,6 +8,23 @@ namespace PlayerUI.Config
         public static string ConfigFilePath { get; set; }
         public static ConfigModel CurrentConfig { get; set; } = new();
 
+        public static ConfigModel DefaultConfig => CreateDefaultConfig();
+
+        private static ConfigModel CreateDefaultConfig()
+        {
+            ConfigModel config = new()
+            {
+                LastFile = null,
+                IsDark = false,
+                WindowsWidth = 800,
+                WindowsHeight = 600,
+                WindowsLeft = PlayerUI.App.Current.MainWindow.Left,
+                WindowsTop = PlayerUI.App.Current.MainWindow.Top,
+                EqBandsGain=new[]{0,0,0,0,0,0,0,0,0,0,0}
+            };
+            return config;
+        }
+
         public static void Initialize()
         {
             ConfigFilePath = System.AppContext.BaseDirectory + @"\Config.json";
@@ -63,8 +80,8 @@ namespace PlayerUI.Config
             else
             {
                 
-                MessageBox.Show("Config File Not Exists!");
-                return;
+                MessageBox.Show("Config Not Found \n Ok To Create Default Config");
+                CurrentConfig = DefaultConfig;
             }
             try
             {

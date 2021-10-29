@@ -12,9 +12,9 @@ namespace PlayerUI.Commands
             window.Drop += async (_, e) =>
             {
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
-                if (System.IO.Path.GetExtension(dropitems[0])==".EqPreset")
+                if (System.IO.Path.GetExtension(dropitems[0]) == ".EqPreset")
                 {
-                    PlayerLibrary.PresetManager.Equalizer.LoadPreset(PlayerUI.App.Player,dropitems[0] );
+                    PlayerLibrary.PresetManager.Equalizer.LoadPreset(PlayerUI.App.Player, dropitems[0]);
                 }
                 else
                 {

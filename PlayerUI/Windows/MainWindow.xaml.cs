@@ -1,7 +1,6 @@
 ﻿using Helper.DarkUi;
 using PlayerUI.Config;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -43,7 +42,7 @@ namespace PlayerUI.Windows
             Left = AppStatics.WindowsLeft;
             Top = AppStatics.WindowsTop;
             Width = AppStatics.WindowsWidth;
-            Height = AppStatics.WindowsHeight; 
+            Height = AppStatics.WindowsHeight;
             _ = App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
                 Content = App.Current.FindResource("MainView");

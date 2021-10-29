@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Shell;
+﻿using System.Windows.Controls;
 
 namespace PlayerUI.View
 {

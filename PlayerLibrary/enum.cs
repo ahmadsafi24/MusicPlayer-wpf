@@ -21,7 +21,7 @@
     }
     public enum EqualizerMode
     {
-        Disabled=0,
+        Disabled = 0,
         Normal = 1,
         Super = 2
     }

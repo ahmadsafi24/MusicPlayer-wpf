@@ -1,15 +1,14 @@
-using System.Net.Http;
 using System.IO;
 
 namespace PlayerLibrary.PresetManager
 {
     public static class Equalizer
     {
-        public static void LoadPreset(Player player,string presetFilePath)
+        public static void LoadPreset(Player player, string presetFilePath)
         {
             try
             {
-                if(!System.IO.File.Exists(presetFilePath))return;
+                if (!File.Exists(presetFilePath)) return;
                 var json = File.ReadAllBytes(presetFilePath);
                 Model.EqPreset eqPreset = System.Text.Json.JsonSerializer.Deserialize<Model.EqPreset>(json);
                 if (eqPreset != null)
@@ -22,12 +21,12 @@ namespace PlayerLibrary.PresetManager
                 System.Windows.MessageBox.Show(ex.Message);
             }
         }
-        public static void ExportPreset(Player player,string destinationFilePath)
+        public static void ExportPreset(Player player, string destinationFilePath)
         {
             Model.EqPreset EqPreset = new() { EqualizerMode = player.EqualizerMode, BandsGain = player.EqBandsGain };
 
             using var ms = new MemoryStream();
-            using var writer = new System.Text.Json.Utf8JsonWriter(ms,new System.Text.Json.JsonWriterOptions(){Indented=true});
+            using var writer = new System.Text.Json.Utf8JsonWriter(ms, new System.Text.Json.JsonWriterOptions() { Indented = true });
 
             writer.WriteStartObject();
             writer.WriteStartArray(nameof(EqPreset.BandsGain));
@@ -44,17 +43,17 @@ namespace PlayerLibrary.PresetManager
         {
             if (presetBands.Length < 10)
             {
-                player.EqualizerMode = PlayerLibrary.EqualizerMode.Normal;
+                player.EqualizerMode = EqualizerMode.Normal;
             }
             else if (presetBands.Length > 10)
             {
-                player.EqualizerMode = PlayerLibrary.EqualizerMode.Super;
+                player.EqualizerMode = EqualizerMode.Super;
             }
             player.ReIntialEq();
             int i = 0;
             foreach (var item in presetBands)
             {
-                player.ChangeEq(i, (float)item,true);
+                player.ChangeEq(i, (float)item, true);
                 i++;
             }
         }

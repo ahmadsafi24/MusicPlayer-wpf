@@ -26,7 +26,7 @@ namespace Helper.Taskbar
 
         public static void SetState(ProgressState state, bool dispatchInvoke = false)
         {
-            if(!dispatchInvoke)
+            if (!dispatchInvoke)
             {
                 SetProgressState(state);
 

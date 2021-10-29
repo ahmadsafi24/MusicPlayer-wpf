@@ -9,7 +9,7 @@ using System.Windows.Threading;
 
 namespace PlayerLibrary.Core
 {
-    //ToDo: EngineMode  like with eq or with mono or pitch changable
+    //TODO: EngineMode  like with eq or with mono or pitch changable
     internal class NAudioCore
     {
         #region NAudio Engine

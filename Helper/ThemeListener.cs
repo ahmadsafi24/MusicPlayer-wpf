@@ -1,10 +1,4 @@
-﻿using Helper.DarkUi;
-using System;
-using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
-
-namespace Helper
+﻿namespace Helper
 {
     public static class ThemeListener
     {

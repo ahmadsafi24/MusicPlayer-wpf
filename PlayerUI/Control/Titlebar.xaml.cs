@@ -1,7 +1,7 @@
-﻿using System.Windows;
+﻿using PlayerUI.ViewModel.Base;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using PlayerUI.ViewModel.Base;
 
 namespace PlayerUI.Control
 {

@@ -17,13 +17,12 @@ namespace PlayerUI.ViewModel
             OpenCommand = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker());
             ToggleDarkModeCommand = new DelegateCommand(() => Commands.WindowTheme.DarkThemeToggle());
             SwitchToMiniViewCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToMiniView());
-            SwitchToBlurWindowCommand=new DelegateCommand(()=>Commands.ViewSwitcher.SwitchToBlurWindow());
-            SwitchToNormalWindowCommand=new DelegateCommand(()=>Commands.ViewSwitcher.SwitchToNormalWindow());
+            SwitchToBlurWindowCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToBlurWindow());
+            SwitchToNormalWindowCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToNormalWindow());
         }
         private void TestMethod()
         {
-            //PlayerLibrary.PresetManager.Equalizer.ExportPreset(App.Player, @"C:\Users\ahmad\Desktop\test.json");
-            
+
         }
     }
 }

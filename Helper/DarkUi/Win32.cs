@@ -6,7 +6,6 @@ namespace Helper.DarkUi
 
     public static class Win32
     {
-
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetWindowInfo(IntPtr hwnd, ref WindowInfo pwi);

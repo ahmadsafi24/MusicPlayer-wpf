@@ -42,24 +42,24 @@ namespace PlayerLibrary.Utility
             if (filePath != null)
             {
                 Track tagfile = new(filePath);
-                if(tagfile.PictureTokens.Count>=1)
+                if (tagfile.PictureTokens.Count >= 1)
                 {
-                if (tagfile.EmbeddedPictures.Count >= 1)
-                {
-                    byte[] pic = tagfile.EmbeddedPictures[0]?.PictureData;
-                    System.IO.MemoryStream ms = new(pic);
-                    _ = ms.Seek(0, System.IO.SeekOrigin.Begin);
+                    if (tagfile.EmbeddedPictures.Count >= 1)
+                    {
+                        byte[] pic = tagfile.EmbeddedPictures[0]?.PictureData;
+                        System.IO.MemoryStream ms = new(pic);
+                        _ = ms.Seek(0, System.IO.SeekOrigin.Begin);
 
-                    bitmap = new();
-                    bitmap.BeginInit();
+                        bitmap = new();
+                        bitmap.BeginInit();
 
-                    bitmap.StreamSource = ms;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = ms;
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
 
-                    bitmap.EndInit();
-                    bitmap.Freeze();
-                    ms.Flush();
-                }
+                        bitmap.EndInit();
+                        bitmap.Freeze();
+                        ms.Flush();
+                    }
                 }
             }
 

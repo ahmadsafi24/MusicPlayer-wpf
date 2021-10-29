@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PlayerUI.Config
+﻿namespace PlayerUI.Config
 {
     public class ConfigModel
     {
@@ -15,6 +9,6 @@ namespace PlayerUI.Config
         public double WindowsLeft { get; set; }
         public double WindowsTop { get; set; }
 
-        public int[] EqBandsGain{get; set; }
+        public int[] EqBandsGain { get; set; }
     }
 }

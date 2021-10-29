@@ -2,7 +2,6 @@
 using PlayerLibrary.Model;
 using PlayerUI.ViewModel.Base;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -11,17 +10,14 @@ namespace PlayerUI.ViewModel
 {
     public class PlayerViewModel : ViewModelBase
     {
-        private readonly Player Player = App.Player;
+        private Player Player => App.Player;
 
         public ICommand PlayPauseCommand { get; }
         public ICommand MuteAudioCommand { get; }
         public ICommand OpenCoverFileCommand { get; }
 
-        private DelegateCommand _nextAudioCommand;
-        public ICommand NextAudioCommand => _nextAudioCommand ??= new DelegateCommand(NextAudio);
-
-        private DelegateCommand _previousAudioFileCommand;
-        public ICommand PreviousAudioFileCommand => _previousAudioFileCommand ??= new DelegateCommand(PreviousAudioFile);
+        public ICommand NextAudioCommand { get; }
+        public ICommand PreviousAudioFileCommand { get; }
 
         PlayerLibrary.Utility.CoverImage2 CoverImage2 = new();
         public PlayerViewModel()
@@ -29,6 +25,9 @@ namespace PlayerUI.ViewModel
             PlayPauseCommand = new DelegateCommand(PlayPause);
             MuteAudioCommand = new DelegateCommand(MuteUnmute);
             OpenCoverFileCommand = new DelegateCommand(OpenCoverFile);
+
+            NextAudioCommand = new DelegateCommand(NextAudio);
+            PreviousAudioFileCommand = new DelegateCommand(PreviousAudioFile);
 
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
             Player.TimePositionChanged += AudioPlayer_CurrentTimeChanged;

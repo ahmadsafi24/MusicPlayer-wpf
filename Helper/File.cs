@@ -8,10 +8,8 @@ namespace Helper
         {
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(image));
-            using (var filestream = new System.IO.FileStream(destinationFilePath, System.IO.FileMode.Create))
-            {
-                encoder.Save(filestream);
-            }
+            using System.IO.FileStream filestream = new(destinationFilePath, System.IO.FileMode.Create);
+            encoder.Save(filestream);
         }
 
         public static void OpenFileWithDefaultApp(string filepath)

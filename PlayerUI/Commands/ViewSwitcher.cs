@@ -30,7 +30,7 @@ namespace PlayerUI.Commands
             lastwin.Close();
             Chromeless.Show();
         }
-        
+
         public static void SwitchToNormalWindow()
         {
             var lastwin = Application.Current.MainWindow;

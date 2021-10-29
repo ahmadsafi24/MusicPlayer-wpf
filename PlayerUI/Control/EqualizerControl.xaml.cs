@@ -1,8 +1,4 @@
-﻿using PlayerLibrary;
-using PlayerUI.ViewModel.Base;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
+﻿using System.Windows.Controls;
 
 namespace PlayerUI.Control
 {

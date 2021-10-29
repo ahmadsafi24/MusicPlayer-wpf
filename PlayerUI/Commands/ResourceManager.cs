@@ -10,12 +10,12 @@ namespace PlayerUI.Commands
 
         public static void LoadThemeResourceDark()
         {
-            Application.Current.Resources.MergedDictionaries[0]= Dark;
-        }        
+            Application.Current.Resources.MergedDictionaries[0] = Dark;
+        }
 
         public static void LoadThemeResourceLight()
         {
-            Application.Current.Resources.MergedDictionaries[0]=Light;
+            Application.Current.Resources.MergedDictionaries[0] = Light;
         }
     }
 }

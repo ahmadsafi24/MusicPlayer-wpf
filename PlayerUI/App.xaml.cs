@@ -2,9 +2,7 @@
 using PlayerUI.Commands;
 using PlayerUI.Config;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace PlayerUI
 {
@@ -16,11 +14,11 @@ namespace PlayerUI
         internal static Player Player = new();
 
         protected override void OnStartup(StartupEventArgs e)
-        {            
+        {
             try
             {
                 base.OnStartup(e);
-                Commands.App.LoadStartupConf();
+                Commands.App.LoadStartupConfigs();
                 MainWindow.Show();
                 Commands.App.LoadStartupArgs(e.Args);
             }

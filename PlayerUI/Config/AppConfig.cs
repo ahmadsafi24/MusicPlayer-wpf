@@ -18,9 +18,9 @@ namespace PlayerUI.Config
                 IsDark = false,
                 WindowsWidth = 800,
                 WindowsHeight = 600,
-                WindowsLeft = PlayerUI.App.Current.MainWindow.Left,
-                WindowsTop = PlayerUI.App.Current.MainWindow.Top,
-                EqBandsGain=new[]{0,0,0,0,0,0,0,0,0,0,0}
+                WindowsLeft = Application.Current.MainWindow.Left,
+                WindowsTop = Application.Current.MainWindow.Top,
+                EqBandsGain = new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
             };
             return config;
         }
@@ -45,7 +45,7 @@ namespace PlayerUI.Config
         public static void WriteConfig()
         {
             using var ms = new MemoryStream();
-            using var writer = new System.Text.Json.Utf8JsonWriter(ms,new System.Text.Json.JsonWriterOptions(){Indented=true});
+            using var writer = new System.Text.Json.Utf8JsonWriter(ms, new System.Text.Json.JsonWriterOptions() { Indented = true });
 
             writer.WriteStartObject();
             writer.WriteString(nameof(ConfigModel.LastFile), CurrentConfig.LastFile);
@@ -79,13 +79,13 @@ namespace PlayerUI.Config
             }
             else
             {
-                
+
                 MessageBox.Show("Config Not Found \n Ok To Create Default Config");
                 CurrentConfig = DefaultConfig;
             }
             try
             {
-                
+
             }
             catch (System.Exception ex)
             {
@@ -94,7 +94,7 @@ namespace PlayerUI.Config
             }
         }
 
-        public static void LoadAppConfigs()
+        public static void LoadConfigs()
         {
             AppConfig.Initialize();
             AppConfig.ReadConfig();
@@ -114,18 +114,18 @@ namespace PlayerUI.Config
         {
             try
             {
-            AppConfig.CurrentConfig = new()
-            {
-                LastFile = AppStatics.LastFile,
-                IsDark = AppStatics.IsDark,
-                WindowsWidth = AppStatics.WindowsWidth,
-                WindowsHeight = AppStatics.WindowsHeight,
-                WindowsLeft = AppStatics.WindowsLeft,
-                WindowsTop = AppStatics.WindowsTop,
+                AppConfig.CurrentConfig = new()
+                {
+                    LastFile = AppStatics.LastFile,
+                    IsDark = AppStatics.IsDark,
+                    WindowsWidth = AppStatics.WindowsWidth,
+                    WindowsHeight = AppStatics.WindowsHeight,
+                    WindowsLeft = AppStatics.WindowsLeft,
+                    WindowsTop = AppStatics.WindowsTop,
 
-                EqBandsGain = App.Player.EqBandsGain
-            };
-            AppConfig.WriteConfig();
+                    EqBandsGain = App.Player.EqBandsGain
+                };
+                AppConfig.WriteConfig();
             }
             catch (System.Exception ex)
             {
@@ -135,9 +135,3 @@ namespace PlayerUI.Config
 
     }
 }
-
-/*public static Config CreateNewConfig(string filePath, bool isDark)
-{
-var conf = new Config(filePath, isDark);
-return conf;
-}*/

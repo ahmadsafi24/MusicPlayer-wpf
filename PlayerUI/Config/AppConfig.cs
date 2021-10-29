@@ -106,22 +106,7 @@ namespace PlayerUI.Config
             AppStatics.WindowsWidth = AppConfig.CurrentConfig.WindowsWidth;
             AppStatics.WindowsHeight = AppConfig.CurrentConfig.WindowsHeight;
 
-            if (CurrentConfig.EqBandsGain.Length < 10)
-            {
-                App.Player.EqualizerMode = PlayerLibrary.EqualizerMode.Normal;
-
-            }
-            else if (CurrentConfig.EqBandsGain.Length > 10)
-            {
-                App.Player.EqualizerMode = PlayerLibrary.EqualizerMode.Super;
-            }
-            App.Player.ReIntialEq();
-            int i = 0;
-            foreach (var item in CurrentConfig.EqBandsGain)
-            {
-                App.Player.ChangeEq(i, (float)item,true);
-                i++;
-            }
+            PlayerLibrary.PresetManager.Equalizer.ApplyPresetBands(App.Player, CurrentConfig.EqBandsGain);
             Commands.WindowTheme.Refresh();
         }
 

@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.IO;
 
 namespace PlayerLibrary.PresetManager
@@ -6,27 +7,20 @@ namespace PlayerLibrary.PresetManager
     {
         public static void LoadPreset(Player player,string presetFilePath)
         {
-            if(!System.IO.File.Exists(presetFilePath))return;
-            var json = File.ReadAllBytes(presetFilePath);
+            try
+            {
+                if(!System.IO.File.Exists(presetFilePath))return;
+                var json = File.ReadAllBytes(presetFilePath);
                 Model.EqPreset eqPreset = System.Text.Json.JsonSerializer.Deserialize<Model.EqPreset>(json);
                 if (eqPreset != null)
                 {
-                    if (eqPreset.BandsGain.Length < 10)
-                    {
-                        player.EqualizerMode = PlayerLibrary.EqualizerMode.Normal;
-                    }
-                    else if (eqPreset.BandsGain.Length > 10)
-                    {
-                        player.EqualizerMode = PlayerLibrary.EqualizerMode.Super;
-                    }
-                    player.ReIntialEq();
-                    int i = 0;
-                    foreach (var item in eqPreset.BandsGain)
-                    {
-                        player.ChangeEq(i, (float)item,true);
-                        i++;
-                    }
+                    ApplyPresetBands(player, eqPreset.BandsGain);
                 }
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
         }
         public static void ExportPreset(Player player,string destinationFilePath)
         {
@@ -45,6 +39,24 @@ namespace PlayerLibrary.PresetManager
             writer.WriteEndObject();
             writer.Flush();
             File.WriteAllBytes(destinationFilePath, ms.ToArray());
+        }
+        public static void ApplyPresetBands(Player player, int[] presetBands)
+        {
+            if (presetBands.Length < 10)
+            {
+                player.EqualizerMode = PlayerLibrary.EqualizerMode.Normal;
+            }
+            else if (presetBands.Length > 10)
+            {
+                player.EqualizerMode = PlayerLibrary.EqualizerMode.Super;
+            }
+            player.ReIntialEq();
+            int i = 0;
+            foreach (var item in presetBands)
+            {
+                player.ChangeEq(i, (float)item,true);
+                i++;
+            }
         }
     }
 }

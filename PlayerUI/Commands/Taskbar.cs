@@ -22,9 +22,19 @@ namespace PlayerUI.Commands
                 SetTaskbarValue(0);
                 return;
             }
-            int percentValue = (int)maxTime.TotalSeconds / 100;
-            int currentValue = (int)currentTime.TotalSeconds / percentValue;
-            SetTaskbarValue(currentValue);
+                int percentValue = (int)maxTime.TotalSeconds / 100;
+                if (percentValue==0)
+                {
+                SetTaskbarValue(0);
+                return;
+                }
+                int currentValue = (int)currentTime.TotalSeconds / percentValue;
+                SetTaskbarValue(currentValue);
+        }
+
+        public static void SetTaskbarState(Helper.Taskbar.ProgressState progressState)
+        {
+            Helper.Taskbar.Progress.SetState(progressState, true);
         }
     }
 }

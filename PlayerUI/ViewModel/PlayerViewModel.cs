@@ -2,6 +2,7 @@
 using PlayerLibrary.Model;
 using PlayerUI.ViewModel.Base;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -14,6 +15,7 @@ namespace PlayerUI.ViewModel
 
         public ICommand PlayPauseCommand { get; }
         public ICommand MuteAudioCommand { get; }
+        public ICommand OpenCoverFileCommand { get; }
 
         private DelegateCommand _nextAudioCommand;
         public ICommand NextAudioCommand => _nextAudioCommand ??= new DelegateCommand(NextAudio);
@@ -24,13 +26,22 @@ namespace PlayerUI.ViewModel
         PlayerLibrary.Utility.CoverImage2 CoverImage2 = new();
         public PlayerViewModel()
         {
-            PlayPauseCommand = new DelegateCommand(() => PlayPause());
-            MuteAudioCommand = new DelegateCommand(() => MuteUnmute());
+            PlayPauseCommand = new DelegateCommand(PlayPause);
+            MuteAudioCommand = new DelegateCommand(MuteUnmute);
+            OpenCoverFileCommand = new DelegateCommand(OpenCoverFile);
 
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
             Player.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
             Player.PlaybackStateChanged += Player_PlaybackStateChanged;
             CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
+        }
+
+        private void OpenCoverFile()
+        {
+            if (Cover == null) return;
+            string ImageFilePath = @"C:\Users\ahmad\Desktop\test.png";
+            Helper.File.SaveBitmapImageToPng(Cover, ImageFilePath);
+            Helper.File.OpenFileWithDefaultApp(ImageFilePath);
         }
 
         public bool IsMuted { get => Player.IsMuted; set => Player.IsMuted = value; }
@@ -65,11 +76,13 @@ namespace PlayerUI.ViewModel
                     break;
                 //if
                 case PlaybackState.Paused:
-                    Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Paused, true);
+                    Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Paused);
                     return;
                 case PlaybackState.Playing:
+                    Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Normal);
                     break;
                 case PlaybackState.Stopped:
+                    Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Normal);
                     break;
                 case PlaybackState.Ended:
                     await Player.OpenAsync(Player.Source);
@@ -84,7 +97,7 @@ namespace PlayerUI.ViewModel
             }
 
             //else
-            Helper.Taskbar.Progress.SetState(Helper.Taskbar.ProgressState.Normal, true);
+
         }
 
         private void UpdateAll()

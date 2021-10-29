@@ -41,7 +41,11 @@
                 <Border.Background>
                     <SolidColorBrush Color="{DynamicResource Color.Main}" Opacity="0.5"/>
                 </Border.Background>
-                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" />
+                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" Cursor="Hand">
+                    <Image.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCoverFileCommand}"/>
+                    </Image.InputBindings>
+                </Image>
             </Border>
             <TextBlock Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding TagFile.Title,FallbackValue=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="DemiBold"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding TagFile.Artist,FallbackValue=Artist}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>

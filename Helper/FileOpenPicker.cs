@@ -70,6 +70,31 @@ namespace Helper
             IsFileOk = (bool)openFileDialog.ShowDialog().HasValue;
             return IsFileOk ? openFileDialog.FileNames : null;
         }
+        public static string[] GetFiles(string fileExtention)
+        {
+            OpenFileDialog openFileDialog = new()
+            {
 
+                Filter = $"{fileExtention} | *.{fileExtention}",
+
+                AddExtension = true,
+                //DefaultExt = ".mp3",
+                Multiselect = true,
+                CheckFileExists = true,
+                CustomPlaces = CustomPlacelist,
+                InitialDirectory = "",
+                Title = PickerTitle
+
+            };
+            openFileDialog.ShowDialog();
+            if (openFileDialog.FileNames.Count() > 0)
+            {
+                return openFileDialog.FileNames;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

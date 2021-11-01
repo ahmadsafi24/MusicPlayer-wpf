@@ -14,7 +14,7 @@ namespace PlayerLibrary
 
         public Player()
         {
-            nAudioCore = new(this);
+            nAudioCore = new(this) {CurrentTimeWatcherInterval= 0.1};
         }
         #endregion
 
@@ -53,19 +53,16 @@ namespace PlayerLibrary
 
         internal void InvokePlaybackStateChanged(PlaybackState value)
         {
-            if (IsEventsOn)
-            {
-                PlaybackStateChanged?.Invoke(value);
-            }
+
+            PlaybackStateChanged?.Invoke(value);
+
         }
 
         public event EventHandlerTimeSpan TimePositionChanged;
         internal async void InvokeCurrentTime(TimeSpan timespan)
         {
-            if (IsEventsOn)
-            {
-                await Task.Run(() => TimePositionChanged?.Invoke(timespan));
-            }
+            await Task.Run(() => TimePositionChanged?.Invoke(timespan));
+
         }
 
         #endregion
@@ -74,10 +71,8 @@ namespace PlayerLibrary
         public event EventHandlerVolume VolumeChanged;
         internal void InvokeVolumeChanged(int newVolume)
         {
-            if (IsEventsOn)
-            {
-                VolumeChanged?.Invoke(newVolume);
-            }
+            VolumeChanged?.Invoke(newVolume);
+
         }
 
         public int Volume { get => nAudioCore.Volume; private set => nAudioCore.Volume = value; }
@@ -103,59 +98,32 @@ namespace PlayerLibrary
         #endregion
 
         #region Eq
-        public EventHandlerEmpty EqUpdated;
-        private void FireEqUpdated()
-        {
-            if (IsEventsOn)
-            {
-                EqUpdated?.Invoke();
-            }
-        }
+
         public void ResetEq() => nAudioCore.ResetEq();
-        public void ChangeEq(int bandIndex, float Gain, bool requestNotifyEqUpdate)
-        {
-            nAudioCore.ChangeEqualizerBand(bandIndex, Gain);
-            if (requestNotifyEqUpdate)
-            {
-                FireEqUpdated();
-            }
-        }
+
+        public void ChangeEq(int bandIndex, float Gain, bool requestNotifyEqUpdate) => nAudioCore.ChangeEq(bandIndex, Gain, requestNotifyEqUpdate);
+
         public double GetEqBandGain(int BandIndex) => nAudioCore.GetEqBandGain(BandIndex);
+
         public int[] EqBandsGain { get => nAudioCore.BandsGain; }
-        #endregion   
 
-        private bool IsEventsOn = true;
-        private void ToggleEventsOff() => IsEventsOn = false;
-        private void ToggleEventsOn() => IsEventsOn = true;
+        public void ReIntialEq() => nAudioCore.ReIntialEq();
 
-        public void ReIntialEq()
+        public void ChangeBands(int[] bands) => nAudioCore.ChangeBands(bands);
+
+        public void ImportEq(EqPreset preset) => ChangeBands(preset.BandsGain);
+
+        public void ExportEq(string filepath)
         {
-            PlaybackState lastpstate = PlaybackState;
-            ToggleEventsOff();
-
-            nAudioCore.InitalEqualizer();
-            if (!string.IsNullOrEmpty(nAudioCore.Source))
-            {
-                nAudioCore.Open(Source, TimePosition);
-                switch (lastpstate)
-                {
-                    case PlaybackState.Paused:
-                        Pause();
-                        break;
-                    case PlaybackState.Playing:
-                        Play();
-                        break;
-                    case PlaybackState.Stopped:
-                        Stop();
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            ToggleEventsOn();
-            FireEqUpdated();
+            EqPreset EqPreset = new(EqualizerMode, EqBandsGain);
+            Preset.Equalizer.PresetToFile(EqPreset, filepath);
         }
 
+        public EventHandlerEmpty EqUpdated;
+        internal void FireEqUpdated()
+        {
+            EqUpdated?.Invoke();
+        }
+        #endregion
     }
 }

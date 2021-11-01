@@ -1,4 +1,5 @@
 ﻿using PlayerLibrary;
+using PlayerLibrary.Preset;
 using PlayerUI.ViewModel.Base;
 using System.Windows.Input;
 
@@ -6,7 +7,7 @@ namespace PlayerUI.ViewModel
 {
     public class EqualizerViewModel : ViewModelBase
     {
-        private readonly Player Player = App.Player;
+        private Player Player => App.Player;
         public ICommand ResetEqCommand { get; }
         public ICommand LoadEqCommand { get; }
         public ICommand SaveEqCommand { get; }
@@ -25,12 +26,13 @@ namespace PlayerUI.ViewModel
             string[] files = Helper.FileOpenPicker.GetFiles("EqPreset");
             if (files != null)
             {
-                PlayerLibrary.PresetManager.Equalizer.LoadPreset(App.Player, files[0]);
+                Player.ImportEq(Equalizer.PresetFromFile(files[0]));
             }
         }
+
         private void SaveEq()
         {
-            PlayerLibrary.PresetManager.Equalizer.ExportPreset(App.Player, @"C:\Users\ahmad\Desktop\test.EqPreset");
+            Player.ExportEq(@"C:\temp\test.EqPreset");
         }
 
         private void ResetEq()

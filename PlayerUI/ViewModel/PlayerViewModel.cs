@@ -38,7 +38,7 @@ namespace PlayerUI.ViewModel
         private void OpenCoverFile()
         {
             if (Cover == null) return;
-            string ImageFilePath = @"C:\Users\ahmad\Desktop\test.png";
+            string ImageFilePath = System.AppContext.BaseDirectory + @"\temp_cover.png";
             Helper.File.SaveBitmapImageToPng(Cover, ImageFilePath);
             Helper.File.OpenFileWithDefaultApp(ImageFilePath);
         }
@@ -54,6 +54,9 @@ namespace PlayerUI.ViewModel
         private void UpdateCurrentTime() => NotifyPropertyChanged(nameof(CurrentTime));
         private async void Player_PlaybackStateChanged(PlaybackState playbackState)
         {
+            CurrentPlaybackState = playbackState.ToString();
+            NotifyPropertyChanged(nameof(CurrentPlaybackState));
+
             IsPlaying = playbackState == PlaybackState.Playing;
             NotifyPropertyChanged(nameof(IsPlaying));
             await Task.Run(() =>
@@ -124,7 +127,7 @@ namespace PlayerUI.ViewModel
                     Player.Play();
                     break;
                 case PlaybackState.Closed:
-                    Commands.FilePicker.OpenFilePicker();
+                    Commands.FilePicker.OpenFilePicker(Player);
                     break;
                 default:
                     Player.Play();
@@ -184,7 +187,7 @@ namespace PlayerUI.ViewModel
                 {
                     if (!string.IsNullOrEmpty(Player.Source))
                     {
-                        return $"{Player.ReaderInfo.SampleRate} {Player.ReaderInfo.BitsPerSample}bit {Player.ReaderInfo.Encoding}";
+                        return $"{Player.ReaderInfo.AverageBytesPerSecond}_{Player.ReaderInfo.SampleRate} {Player.ReaderInfo.BitsPerSample}bit {Player.ReaderInfo.Encoding}";
                     }
                     return "";
                 }
@@ -194,5 +197,6 @@ namespace PlayerUI.ViewModel
                 }
             }
         }
+        public string CurrentPlaybackState { get; set; }
     }
 }

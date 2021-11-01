@@ -19,8 +19,13 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Window">
-                        <Border Background="{DynamicResource MainWindow.Background}">
-                            <ContentPresenter x:Name="ContentPresenter"/>
+                        <Border>
+                            <Border.Background>
+                                <SolidColorBrush Color="{DynamicResource White}"/>
+                            </Border.Background>
+                            <Border Background="{DynamicResource MainWindow.Background}">
+                                <ContentPresenter x:Name="ContentPresenter"/>
+                            </Border>
                         </Border>
                         <ControlTemplate.Triggers>
                             <EventTrigger RoutedEvent="Loaded">

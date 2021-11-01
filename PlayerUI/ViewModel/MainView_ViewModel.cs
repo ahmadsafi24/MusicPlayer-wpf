@@ -12,7 +12,7 @@ namespace PlayerUI.ViewModel
 
         public MainView_ViewModel()
         {
-            Open = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker());
+            Open = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker(App.Player));
             OpenFileLocation = new DelegateCommand(() => Helper.OpenFileLocation.Open(App.Player.Source));
             SwitchToMainView = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToMiniView());
             Exit = new DelegateCommand(() => Commands.App.CloseMainWindow());

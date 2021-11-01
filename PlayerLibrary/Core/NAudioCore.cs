@@ -38,7 +38,6 @@ namespace PlayerLibrary.Core
 
         private void InitializeTimers()
         {
-            CurrentTimeWatcher.Interval = TimeSpan.FromMilliseconds(200);
             CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
         }
 
@@ -94,6 +93,9 @@ namespace PlayerLibrary.Core
         private string source;
         internal string Source { get => source; set { source = value; Log.WriteLine($"Source: {value}"); } }
 
+        /// <summary>
+        /// TimeInterval In Second. Notify View in this seconds
+        /// </summary>
         internal double CurrentTimeWatcherInterval
         {
             get => CurrentTimeWatcher.Interval.TotalSeconds;
@@ -314,7 +316,10 @@ namespace PlayerLibrary.Core
             {
                 Log.WriteLine("PlaybackState: " + value.ToString());
                 _playbackState = value;
-                PublicPlayer.InvokePlaybackStateChanged(value);
+                if (IsEventsOn)
+                {
+                    PublicPlayer.InvokePlaybackStateChanged(value);
+                }
                 if (value is PlaybackState.Playing)
                 {
                     CurrentTimeWatcher.Start();
@@ -349,8 +354,6 @@ namespace PlayerLibrary.Core
         private void CurrentTimeWatcher_Tick(object sender, EventArgs e)
         {
             PublicPlayer.InvokeCurrentTime(Reader.CurrentTime);
-
-            GC.Collect();
         }
 
         internal static float ToSingle(double value)
@@ -379,5 +382,71 @@ namespace PlayerLibrary.Core
         }
         private readonly DispatcherTimer CurrentTimeWatcher = new();
         internal const string stringformat = "mm\\:ss";
+
+        public void ReIntialEq()
+        {
+            PlaybackState lastpstate = PlaybackState;
+            ToggleEventsOff();
+
+            InitalEqualizer();
+            if (!string.IsNullOrEmpty(Source))
+            {
+                Open(Source, CurrentTime);
+                switch (lastpstate)
+                {
+                    case PlaybackState.Paused:
+                        Pause();
+                        break;
+                    case PlaybackState.Playing:
+                        Play();
+                        break;
+                    case PlaybackState.Stopped:
+                        Stop();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            ToggleEventsOn();
+            PublicPlayer.FireEqUpdated();
+        }
+
+        public void ChangeEq(int bandIndex, float Gain, bool requestNotifyEqUpdate)
+        {
+            ChangeEqualizerBand(bandIndex, Gain);
+            if (requestNotifyEqUpdate)
+            {
+                PublicPlayer.FireEqUpdated();
+            }
+        }
+
+        public void ChangeBands(int[] Bands)
+        {
+            EqualizerMode newEqMode = new();
+            if (Bands.Length == 8)
+            {
+                newEqMode = EqualizerMode.Normal;
+            }
+            else if (Bands.Length == 12)
+            {
+                newEqMode = EqualizerMode.Super;
+            }
+            if (equalizerMode != newEqMode)
+            {
+                equalizerMode = newEqMode;
+                ReIntialEq();
+            }
+            int i = 0;
+            foreach (var item in Bands)
+            {
+                ChangeEqualizerBand(i, (float)item);
+                PublicPlayer.FireEqUpdated();
+                i++;
+            }
+        }
+        private bool IsEventsOn = true;
+        private void ToggleEventsOff() => IsEventsOn = false;
+        private void ToggleEventsOn() => IsEventsOn = true;
     }
 }

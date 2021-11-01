@@ -79,8 +79,7 @@ namespace PlayerUI.Config
             }
             else
             {
-
-                MessageBox.Show("Config Not Found \n Ok To Create Default Config");
+                MessageBox.Show("Config Not Found\nOk To Create Default Config");
                 CurrentConfig = DefaultConfig;
             }
             try
@@ -96,17 +95,17 @@ namespace PlayerUI.Config
 
         public static void LoadConfigs()
         {
-            AppConfig.Initialize();
-            AppConfig.ReadConfig();
+            Initialize();
+            ReadConfig();
 
-            AppStatics.IsDark = AppConfig.CurrentConfig.IsDark;
-            AppStatics.LastFile = AppConfig.CurrentConfig.LastFile;
-            AppStatics.WindowsLeft = AppConfig.CurrentConfig.WindowsLeft;
-            AppStatics.WindowsTop = AppConfig.CurrentConfig.WindowsTop;
-            AppStatics.WindowsWidth = AppConfig.CurrentConfig.WindowsWidth;
-            AppStatics.WindowsHeight = AppConfig.CurrentConfig.WindowsHeight;
+            AppStatics.IsDark = CurrentConfig.IsDark;
+            AppStatics.LastFile = CurrentConfig.LastFile;
+            AppStatics.WindowsLeft = CurrentConfig.WindowsLeft;
+            AppStatics.WindowsTop = CurrentConfig.WindowsTop;
+            AppStatics.WindowsWidth = CurrentConfig.WindowsWidth;
+            AppStatics.WindowsHeight = CurrentConfig.WindowsHeight;
 
-            PlayerLibrary.PresetManager.Equalizer.ApplyPresetBands(App.Player, CurrentConfig.EqBandsGain);
+            App.Player.ChangeBands(CurrentConfig.EqBandsGain);
             Commands.WindowTheme.Refresh();
         }
 
@@ -114,7 +113,7 @@ namespace PlayerUI.Config
         {
             try
             {
-                AppConfig.CurrentConfig = new()
+                CurrentConfig = new()
                 {
                     LastFile = AppStatics.LastFile,
                     IsDark = AppStatics.IsDark,
@@ -125,7 +124,7 @@ namespace PlayerUI.Config
 
                     EqBandsGain = App.Player.EqBandsGain
                 };
-                AppConfig.WriteConfig();
+                WriteConfig();
             }
             catch (System.Exception ex)
             {

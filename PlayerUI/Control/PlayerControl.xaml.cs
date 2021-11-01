@@ -7,7 +7,7 @@ namespace PlayerUI.Control
     /// </summary>
     public partial class PlayerControl : UserControl
     {
-        private readonly PlayerLibrary.Player Player = App.Player;
+        private PlayerLibrary.Player Player => App.Player;
         public PlayerControl()
         {
             InitializeComponent();

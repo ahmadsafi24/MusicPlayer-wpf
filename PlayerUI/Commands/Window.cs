@@ -1,10 +1,11 @@
-﻿using System.Windows;
+﻿using PlayerLibrary.Preset;
+using System.Windows;
 
 namespace PlayerUI.Commands
 {
     public static class Window
     {
-        private static readonly PlayerLibrary.Player Player = PlayerUI.App.Player;
+        private static PlayerLibrary.Player Player => PlayerUI.App.Player;
         public static void AttachDrop(System.Windows.Window window)
         {
             window.AllowDrop = true;
@@ -14,7 +15,7 @@ namespace PlayerUI.Commands
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 if (System.IO.Path.GetExtension(dropitems[0]) == ".EqPreset")
                 {
-                    PlayerLibrary.PresetManager.Equalizer.LoadPreset(PlayerUI.App.Player, dropitems[0]);
+                    Player.ImportEq(Equalizer.PresetFromFile(dropitems[0]));
                 }
                 else
                 {
@@ -33,10 +34,10 @@ namespace PlayerUI.Commands
             switch (e.Delta)
             {
                 case > 0:
-                    PlayerUI.App.Player.VolumeUp(5);
+                    Player.VolumeUp(5);
                     break;
                 default:
-                    PlayerUI.App.Player.VolumeDown(5);
+                    Player.VolumeDown(5);
                     break;
             }
         }

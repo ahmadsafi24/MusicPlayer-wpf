@@ -14,7 +14,7 @@ namespace PlayerUI.ViewModel
         public MenuViewModel()
         {
             TestCommand = new DelegateCommand(() => TestMethod());
-            OpenCommand = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker());
+            OpenCommand = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker(App.Player));
             ToggleDarkModeCommand = new DelegateCommand(() => Commands.WindowTheme.DarkThemeToggle());
             SwitchToMiniViewCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToMiniView());
             SwitchToBlurWindowCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToBlurWindow());

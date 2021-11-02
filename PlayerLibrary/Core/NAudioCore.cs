@@ -18,22 +18,31 @@ namespace PlayerLibrary.Core
         private Equalizer EqualizerCore;
         private readonly WaveOutEvent WaveOutEvent = new();
 
-        internal EqualizerMode equalizerMode = EqualizerMode.Super;
-        internal EqualizerBand[] EqualizerBand { get; set; }
+        internal EqualizerMode equalizerMode { get; set; } = EqualizerMode.Super;
+        private EqualizerBand[] EqualizerBand { get; set; }
         #endregion
 
-        private readonly Player PublicPlayer;
+        private readonly Player publicPlayer;
         #region Initial
         internal NAudioCore(Player player)
         {
-            PublicPlayer = player;
+            publicPlayer = player;
+            InternalInitialize();
+        }
+
+        internal NAudioCore()
+        {
+            InternalInitialize();
+        }
+
+        private void InternalInitialize()
+        {
             InitalEqualizer();
             InitializeTimers();
 
             WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
             Log.WriteLine("PlayerInitialized");
             PlaybackState = PlaybackState.Closed;
-
         }
 
         private void InitializeTimers()
@@ -125,7 +134,7 @@ namespace PlayerLibrary.Core
                     {
                         ismute = true;
                     }
-                    PublicPlayer.InvokeVolumeChanged(iv);
+                    publicPlayer.InvokeVolumeChanged(iv);
                     Log.WriteLine("volume: " + iv);
                 }
                 catch (Exception ex)
@@ -157,7 +166,7 @@ namespace PlayerLibrary.Core
                 if (Reader is not null)
                 {
                     Reader.CurrentTime = value.TotalSeconds <= 0 ? TimeSpan.FromSeconds(0) : value;
-                    PublicPlayer.InvokeCurrentTime(value);
+                    publicPlayer.InvokeCurrentTime(value);
                 }
             }
         }
@@ -190,6 +199,7 @@ namespace PlayerLibrary.Core
                     return;
                 }
                 Reader = new MediaFoundationReader(Source);
+                if (Reader.TotalTime.TotalSeconds <= 0) { PlaybackState = PlaybackState.Failed; return; }
                 if (equalizerMode == EqualizerMode.Disabled)
                 {
                     WaveOutEvent.Init(Reader);
@@ -213,12 +223,11 @@ namespace PlayerLibrary.Core
         {
             try
             {
-                if (PlaybackState is PlaybackState.Closed)
+                if (PlaybackState != PlaybackState.Playing)
                 {
-                    return;
+                    WaveOutEvent.Play();
+                    PlaybackState = PlaybackState.Playing;
                 }
-                WaveOutEvent.Play();
-                PlaybackState = PlaybackState.Playing;
             }
             catch (Exception ex)
             {
@@ -318,7 +327,7 @@ namespace PlayerLibrary.Core
                 _playbackState = value;
                 if (IsEventsOn)
                 {
-                    PublicPlayer.InvokePlaybackStateChanged(value);
+                    publicPlayer.InvokePlaybackStateChanged(value);
                 }
                 if (value is PlaybackState.Playing)
                 {
@@ -353,7 +362,7 @@ namespace PlayerLibrary.Core
 
         private void CurrentTimeWatcher_Tick(object sender, EventArgs e)
         {
-            PublicPlayer.InvokeCurrentTime(Reader.CurrentTime);
+            publicPlayer.InvokeCurrentTime(Reader.CurrentTime);
         }
 
         internal static float ToSingle(double value)
@@ -374,16 +383,22 @@ namespace PlayerLibrary.Core
                     PlaybackState = PlaybackState.Ended;
                 }
             }
+            else if (string.IsNullOrEmpty(e.Exception?.Message))
+            {
+                Log.WriteLine("WaveOutEvent_PlaybackStopped With No Exception");
+                PlaybackState = PlaybackState.Stopped;
+            }
             else
             {
                 Log.WriteLine(e.Exception.Message + "WaveOutEvent_PlaybackStopped");
                 PlaybackState = PlaybackState.Failed;
+                MessageBox.Show(e.Exception.ToString());
             }
         }
         private readonly DispatcherTimer CurrentTimeWatcher = new();
         internal const string stringformat = "mm\\:ss";
 
-        public void ReIntialEq()
+        internal void ReIntialEq()
         {
             PlaybackState lastpstate = PlaybackState;
             ToggleEventsOff();
@@ -409,19 +424,19 @@ namespace PlayerLibrary.Core
             }
 
             ToggleEventsOn();
-            PublicPlayer.FireEqUpdated();
+            publicPlayer.FireEqUpdated();
         }
 
-        public void ChangeEq(int bandIndex, float Gain, bool requestNotifyEqUpdate)
+        internal void ChangeEq(int bandIndex, float Gain, bool requestNotifyEqUpdate)
         {
             ChangeEqualizerBand(bandIndex, Gain);
             if (requestNotifyEqUpdate)
             {
-                PublicPlayer.FireEqUpdated();
+                publicPlayer.FireEqUpdated();
             }
         }
 
-        public void ChangeBands(int[] Bands)
+        internal void ChangeBands(int[] Bands)
         {
             EqualizerMode newEqMode = new();
             if (Bands.Length == 8)
@@ -441,7 +456,7 @@ namespace PlayerLibrary.Core
             foreach (var item in Bands)
             {
                 ChangeEqualizerBand(i, (float)item);
-                PublicPlayer.FireEqUpdated();
+                publicPlayer.FireEqUpdated();
                 i++;
             }
         }

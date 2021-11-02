@@ -121,8 +121,6 @@ namespace Native
 
     internal enum WindowCompositionAttribute
     {
-        // 省略其他未使用的字段
         WCA_ACCENT_POLICY = 19,
-        // 省略其他未使用的字段
     }
 }

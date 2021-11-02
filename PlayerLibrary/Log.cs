@@ -4,7 +4,7 @@
     {
         public static void WriteLine(object message)
         {
-            //Debug.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
+            System.Console.WriteLine($"Log: {message} "); //@{DateTime.Now.TimeOfDay}
         }
     }
 }

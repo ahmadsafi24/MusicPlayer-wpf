@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PlayerUI.Windows" xmlns:View="clr-namespace:PlayerUI.View" xmlns:control="clr-namespace:PlayerUI.Control"
+        xmlns:control="clr-namespace:PlayerUI.Control"
         mc:Ignorable="d"
         x:Name="Window"
         Title="MainWindowChromeless" Width="700" Height="500" d:Content="{StaticResource MainView}">

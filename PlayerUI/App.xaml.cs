@@ -6,15 +6,16 @@ using System.Windows;
 
 namespace PlayerUI
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        public static extern void AllocConsole();
+
         internal static Player Player = new();
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            AllocConsole();
             try
             {
                 base.OnStartup(e);

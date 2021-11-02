@@ -1,6 +1,6 @@
-﻿using PlayerLibrary;
+﻿using Helper.ViewModelBase;
+using PlayerLibrary;
 using PlayerLibrary.Model;
-using PlayerUI.ViewModel.Base;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -17,7 +17,7 @@ namespace PlayerUI.ViewModel
         public ICommand OpenCoverFileCommand { get; }
 
         public ICommand NextAudioCommand { get; }
-        public ICommand PreviousAudioFileCommand { get; }
+        public ICommand PreviousAudioCommand { get; }
 
         PlayerLibrary.Utility.CoverImage2 CoverImage2 = new();
         public PlayerViewModel()
@@ -27,7 +27,7 @@ namespace PlayerUI.ViewModel
             OpenCoverFileCommand = new DelegateCommand(OpenCoverFile);
 
             NextAudioCommand = new DelegateCommand(NextAudio);
-            PreviousAudioFileCommand = new DelegateCommand(PreviousAudioFile);
+            PreviousAudioCommand = new DelegateCommand(PreviousAudio);
 
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
             Player.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
@@ -113,7 +113,7 @@ namespace PlayerUI.ViewModel
         }
         public BitmapImage Cover { get; set; }
 
-        public AudioFile TagFile { get; set; }
+        public AudioTag TagFile { get; set; }
 
         private async void PlayPause()
         {
@@ -174,7 +174,7 @@ namespace PlayerUI.ViewModel
             //Player.PlaylistManager.PlayNext();
         }
 
-        private void PreviousAudioFile()
+        private void PreviousAudio()
         {
 
         }

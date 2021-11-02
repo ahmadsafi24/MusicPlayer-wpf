@@ -7,4 +7,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Helper\Helper.csproj" />
+    <ProjectReference Include="..\PlayerLibrary\PlayerLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

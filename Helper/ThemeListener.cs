@@ -8,7 +8,7 @@
             const string UseLightThemeRegistryKey = "AppsUseLightTheme";
             Microsoft.Win32.RegistryKey registry = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(PersonalizeRegistryKeyPath);
             string islighttheme = registry.GetValue(UseLightThemeRegistryKey).ToString();
-            return islighttheme != "1";//means valueisdark
+            return islighttheme != "1";
         }
     }
 }

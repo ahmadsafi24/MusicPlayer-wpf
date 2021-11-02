@@ -1,4 +1,4 @@
-﻿using PlayerUI.ViewModel.Base;
+﻿using Helper.ViewModelBase;
 using System.Windows.Input;
 
 namespace PlayerUI.ViewModel

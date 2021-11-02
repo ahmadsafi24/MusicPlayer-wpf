@@ -163,7 +163,7 @@
                 </Button.Style>
             </Button>
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                <Button Command="{Binding PreviousAudioFileCommand }" Style="{StaticResource MediaButton}" Template="{StaticResource MediaBackButtonTemplate}"/>
+                <Button Command="{Binding PreviousAudioCommand }" Style="{StaticResource MediaButton}" Template="{StaticResource MediaBackButtonTemplate}"/>
                 <Button Command="{Binding PlayPauseCommand}">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediaButton}">

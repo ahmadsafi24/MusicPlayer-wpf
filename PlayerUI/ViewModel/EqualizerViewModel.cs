@@ -1,6 +1,6 @@
-﻿using PlayerLibrary;
+﻿using Helper.ViewModelBase;
+using PlayerLibrary;
 using PlayerLibrary.Preset;
-using PlayerUI.ViewModel.Base;
 using System.Windows.Input;
 
 namespace PlayerUI.ViewModel

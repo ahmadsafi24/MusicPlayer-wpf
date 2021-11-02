@@ -48,7 +48,6 @@ namespace Helper.Taskbar
                 return;
             }
 
-            // using System.Windows.Interop
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
                 SetProgressValue(current, max);

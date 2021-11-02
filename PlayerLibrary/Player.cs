@@ -12,13 +12,20 @@ namespace PlayerLibrary
         #region base
         private readonly NAudioCore nAudioCore;
 
+        internal Player(NAudioCore nAudioCore)
+        {
+            this.nAudioCore = nAudioCore;
+            nAudioCore.CurrentTimeWatcherInterval = 0.5;//half second
+        }
         public Player()
         {
-            nAudioCore = new(this) {CurrentTimeWatcherInterval= 0.1};
+            this.nAudioCore = new NAudioCore(this);
+            nAudioCore.CurrentTimeWatcherInterval = 0.5;//half second
         }
         #endregion
 
         #region Void
+        public void Open(string filePath) => nAudioCore.Open(filePath);
         public void Play() => nAudioCore.Play();
         public void Pause() => nAudioCore.Pause();
         public void Close() => nAudioCore.Close();

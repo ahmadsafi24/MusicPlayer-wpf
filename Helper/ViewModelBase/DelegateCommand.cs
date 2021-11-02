@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace PlayerUI.ViewModel.Base
+namespace Helper.ViewModelBase
 {
-    class DelegateCommand : ICommand
+    public class DelegateCommand : ICommand
     {
         private readonly Action action;
         private bool isEnabled;

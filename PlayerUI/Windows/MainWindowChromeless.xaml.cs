@@ -6,9 +6,6 @@ using System.Windows.Threading;
 
 namespace PlayerUI.Windows
 {
-    /// <summary>
-    /// Interaction logic for MainWindow_Chromeless.xaml
-    /// </summary>
     public partial class MainWindowChromeless : Window
     {
         public MainWindowChromeless()

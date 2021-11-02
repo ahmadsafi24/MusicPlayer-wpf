@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace PlayerUI.ViewModel.Base
+namespace Helper.ViewModelBase
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
@@ -13,7 +8,6 @@ namespace PlayerUI.ViewModel.Base
 
         protected void NotifyPropertyChanged(string propertyName)
         {
-            //Console.WriteLine(propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

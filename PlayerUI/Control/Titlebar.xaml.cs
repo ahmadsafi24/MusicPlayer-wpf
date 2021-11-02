@@ -1,13 +1,10 @@
-﻿using PlayerUI.ViewModel.Base;
+﻿using Helper.ViewModelBase;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace PlayerUI.Control
 {
-    /// <summary>
-    /// Interaction logic for TitleBar.xaml
-    /// </summary>
     public partial class Titlebar : UserControl
     {
         public Titlebar()

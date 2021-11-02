@@ -35,7 +35,7 @@ namespace PlayerUI.Config
         {
             if (playbackState == PlayerLibrary.PlaybackState.Opened)
             {
-                AppStatics.LastFile = App.Player.Source;
+                AppStatics.LastFile = App.Player.Controller.AudioFilePath;
             }
         }
 

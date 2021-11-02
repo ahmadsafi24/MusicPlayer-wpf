@@ -19,7 +19,7 @@ namespace PlayerUI.Commands
                 }
                 else
                 {
-                    await Player.OpenAsync(dropitems[0]);
+                    await Player.Controller.OpenAsync(dropitems[0]);
                 }
             };
         }

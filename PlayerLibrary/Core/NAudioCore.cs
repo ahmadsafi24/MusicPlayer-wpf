@@ -1,11 +1,7 @@
 using NAudio.Extras;
 using NAudio.Wave;
-using PlayerLibrary.Model;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace PlayerLibrary.Core
 {
@@ -13,13 +9,12 @@ namespace PlayerLibrary.Core
     internal class NAudioCore
     {
         #region NAudio Engine
-        private MediaFoundationReader Reader;
-        private ISampleProvider SampleProvider => Reader.ToSampleProvider();
-        private Equalizer EqualizerCore;
-        private readonly WaveOutEvent WaveOutEvent = new();
-
+        internal MediaFoundationReader Reader;
+        internal ISampleProvider SampleProvider => Reader.ToSampleProvider();
+        internal Equalizer EqualizerCore;
+        internal WaveOutEvent WaveOutEvent = new();
         internal EqualizerMode equalizerMode { get; set; } = EqualizerMode.Super;
-        private EqualizerBand[] EqualizerBand { get; set; }
+        internal EqualizerBand[] EqualizerBand { get; set; }
         #endregion
 
         private readonly Player publicPlayer;
@@ -38,17 +33,11 @@ namespace PlayerLibrary.Core
         private void InternalInitialize()
         {
             InitalEqualizer();
-            InitializeTimers();
 
-            WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
-            Log.WriteLine("PlayerInitialized");
-            PlaybackState = PlaybackState.Closed;
+
+            //PlaybackState = PlaybackState.Closed;
         }
 
-        private void InitializeTimers()
-        {
-            CurrentTimeWatcher.Tick += CurrentTimeWatcher_Tick;
-        }
 
         internal void InitalEqualizer()
         {
@@ -92,24 +81,8 @@ namespace PlayerLibrary.Core
             }
         }
 
-        internal void Open(string filePath, TimeSpan timePosition)
-        {
-            Open(filePath);
-            Seek(timePosition);
-        }
+
         #endregion
-
-        private string source;
-        internal string Source { get => source; set { source = value; Log.WriteLine($"Source: {value}"); } }
-
-        /// <summary>
-        /// TimeInterval In Second. Notify View in this seconds
-        /// </summary>
-        internal double CurrentTimeWatcherInterval
-        {
-            get => CurrentTimeWatcher.Interval.TotalSeconds;
-            set => CurrentTimeWatcher.Interval = TimeSpan.FromSeconds(value);
-        }
 
         internal int Volume
         {
@@ -141,136 +114,6 @@ namespace PlayerLibrary.Core
                 {
                     Log.WriteLine(ex.Message);
                 }
-            }
-        }
-
-        internal void Seek(TimeSpan timePosition)
-        {
-            try
-            {
-                CurrentTime = timePosition;
-                Log.WriteLine($"Seeking to {timePosition.ToString(stringformat)}");
-            }
-            catch (Exception ex)
-            {
-                Log.WriteLine(ex.Message);
-            }
-        }
-
-        internal TimeSpan CurrentTime
-        {
-            get => Reader is null ? TimeSpan.FromSeconds(0) : Reader.CurrentTime;
-
-            set
-            {
-                if (Reader is not null)
-                {
-                    Reader.CurrentTime = value.TotalSeconds <= 0 ? TimeSpan.FromSeconds(0) : value;
-                    publicPlayer.InvokeCurrentTime(value);
-                }
-            }
-        }
-
-        internal TimeSpan TotalTime => Reader is null ? TimeSpan.FromSeconds(0) : Reader.TotalTime;
-
-        internal ReaderInfo ReaderInfo;
-        internal async Task OpenAsync(string filePath)
-        {
-            await Task.Run(() =>
-            {
-                Open(filePath);
-            });
-
-        }
-
-        internal void Open(string filePath)
-        {
-            try
-            {
-                if (PlaybackState is PlaybackState.Playing or PlaybackState.Paused)
-                {
-                    Stop();
-                    Close();
-                }
-                Source = filePath;
-                if (string.IsNullOrEmpty(Source))
-                {
-                    MessageBox.Show("Core: Empty Source");
-                    return;
-                }
-                Reader = new MediaFoundationReader(Source);
-                if (Reader.TotalTime.TotalSeconds <= 0) { PlaybackState = PlaybackState.Failed; return; }
-                if (equalizerMode == EqualizerMode.Disabled)
-                {
-                    WaveOutEvent.Init(Reader);
-                }
-                else
-                {
-                    EqualizerCore = new(SampleProvider, EqualizerBand);
-                    WaveOutEvent.Init(EqualizerCore);
-                }
-
-                PlaybackState = PlaybackState.Opened;
-                ReaderInfo = new(Reader);
-            }
-            catch (Exception ex)
-            {
-                Log.WriteLine(ex.Message);
-            }
-        }
-
-        internal void Play()
-        {
-            try
-            {
-                if (PlaybackState != PlaybackState.Playing)
-                {
-                    WaveOutEvent.Play();
-                    PlaybackState = PlaybackState.Playing;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteLine(ex);
-            }
-        }
-
-        internal void Pause()
-        {
-            WaveOutEvent.Pause();
-            PlaybackState = PlaybackState.Paused;
-        }
-
-        internal void Stop()
-        {
-            WaveOutEvent.Stop();
-            Seek(TimeSpan.Zero);
-            PlaybackState = PlaybackState.Stopped;
-        }
-
-        internal void Close()
-        {
-            WaveOutEvent.Dispose();
-            Reader.Close();
-            Source = null;
-            Reader.Dispose();
-            Reader = null;
-            PlaybackState = PlaybackState.Closed;
-        }
-
-        internal async Task SeekAsync(TimeSpan time)
-        {
-            try
-            {
-                await Task.Run(() =>
-                {
-                    CurrentTime = time;
-                    Log.WriteLine($"Seeking (async) to {time.ToString(stringformat)}");
-                });
-            }
-            catch (Exception ex)
-            {
-                Log.WriteLine(ex.Message);
             }
         }
 
@@ -317,28 +160,6 @@ namespace PlayerLibrary.Core
             }
         }
 
-        private PlaybackState _playbackState;
-        internal PlaybackState PlaybackState
-        {
-            get => _playbackState;
-            private set
-            {
-                Log.WriteLine("PlaybackState: " + value.ToString());
-                _playbackState = value;
-                if (IsEventsOn)
-                {
-                    publicPlayer.InvokePlaybackStateChanged(value);
-                }
-                if (value is PlaybackState.Playing)
-                {
-                    CurrentTimeWatcher.Start();
-                }
-                else
-                {
-                    CurrentTimeWatcher.Stop();
-                }
-            }
-        }
 
         private int volBeforeMute;
         private bool ismute;
@@ -360,10 +181,7 @@ namespace PlayerLibrary.Core
             }
         }
 
-        private void CurrentTimeWatcher_Tick(object sender, EventArgs e)
-        {
-            publicPlayer.InvokeCurrentTime(Reader.CurrentTime);
-        }
+
 
         internal static float ToSingle(double value)
         {
@@ -374,40 +192,16 @@ namespace PlayerLibrary.Core
             return value;
         }
 
-        private void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(e.Exception?.Message))
-            {
-                if ((int)Reader.CurrentTime.TotalSeconds >= (int)Reader.TotalTime.TotalSeconds - 1)
-                {
-                    PlaybackState = PlaybackState.Ended;
-                }
-            }
-            else if (string.IsNullOrEmpty(e.Exception?.Message))
-            {
-                Log.WriteLine("WaveOutEvent_PlaybackStopped With No Exception");
-                PlaybackState = PlaybackState.Stopped;
-            }
-            else
-            {
-                Log.WriteLine(e.Exception.Message + "WaveOutEvent_PlaybackStopped");
-                PlaybackState = PlaybackState.Failed;
-                MessageBox.Show(e.Exception.ToString());
-            }
-        }
-        private readonly DispatcherTimer CurrentTimeWatcher = new();
-        internal const string stringformat = "mm\\:ss";
-
         internal void ReIntialEq()
         {
-            PlaybackState lastpstate = PlaybackState;
-            ToggleEventsOff();
+            //PlaybackState lastpstate = PlaybackState;
+            //ToggleEventsOff();
 
             InitalEqualizer();
-            if (!string.IsNullOrEmpty(Source))
+            //if (!string.IsNullOrEmpty(Source))
             {
-                Open(Source, CurrentTime);
-                switch (lastpstate)
+                //Open(Source, Reader.CurrentTime);
+                /*switch (lastpstate)
                 {
                     case PlaybackState.Paused:
                         Pause();
@@ -420,10 +214,10 @@ namespace PlayerLibrary.Core
                         break;
                     default:
                         break;
-                }
+                }*/
             }
 
-            ToggleEventsOn();
+            //ToggleEventsOn();
             publicPlayer.FireEqUpdated();
         }
 
@@ -460,8 +254,6 @@ namespace PlayerLibrary.Core
                 i++;
             }
         }
-        private bool IsEventsOn = true;
-        private void ToggleEventsOff() => IsEventsOn = false;
-        private void ToggleEventsOn() => IsEventsOn = true;
+
     }
 }

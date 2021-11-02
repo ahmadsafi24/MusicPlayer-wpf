@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerUI", "PlayerUI\Player
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerLibrary", "PlayerLibrary\PlayerLibrary.csproj", "{EB179557-F365-4769-A44F-ED950AE817F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{73899ABE-DA50-430C-A573-0FD9EDFF9FBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{73899ABE-DA50-430C-A573-0FD9EDFF9FBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

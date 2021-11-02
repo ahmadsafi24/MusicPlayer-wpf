@@ -30,14 +30,14 @@
                {
                    if (args?.Length > 0)
                    {
-                       await PlayerUI.App.Player.OpenAsync(args[0]);
+                       await PlayerUI.App.Player.Controller.OpenAsync(args[0]);
                    }
                    else
                    {
                        string file = Config.AppConfig.CurrentConfig.LastFile;
                        if (!string.IsNullOrEmpty(file))
                        {
-                           await PlayerUI.App.Player.OpenAsync(file);
+                           await PlayerUI.App.Player.Controller.OpenAsync(file);
                        };
                    }
                });

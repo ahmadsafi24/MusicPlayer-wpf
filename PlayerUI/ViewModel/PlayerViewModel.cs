@@ -1,5 +1,6 @@
 ﻿using Helper.ViewModelBase;
 using PlayerLibrary;
+using PlayerLibrary.FileInfo;
 using PlayerLibrary.Model;
 using System;
 using System.Threading.Tasks;
@@ -11,11 +12,9 @@ namespace PlayerUI.ViewModel
     public class PlayerViewModel : ViewModelBase
     {
         private Player Player => App.Player;
-
         public ICommand PlayPauseCommand { get; }
         public ICommand MuteAudioCommand { get; }
         public ICommand OpenCoverFileCommand { get; }
-
         public ICommand NextAudioCommand { get; }
         public ICommand PreviousAudioCommand { get; }
 
@@ -30,7 +29,7 @@ namespace PlayerUI.ViewModel
             PreviousAudioCommand = new DelegateCommand(PreviousAudio);
 
             Player.VolumeChanged += AudioPlayer_VolumeChanged;
-            Player.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
+            Player.Timing.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
             Player.PlaybackStateChanged += Player_PlaybackStateChanged;
             CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
         }
@@ -38,7 +37,7 @@ namespace PlayerUI.ViewModel
         private void OpenCoverFile()
         {
             if (Cover == null) return;
-            string ImageFilePath = System.AppContext.BaseDirectory + @"\temp_cover.png";
+            string ImageFilePath = AppContext.BaseDirectory + @"\temp_cover.png";
             Helper.File.SaveBitmapImageToPng(Cover, ImageFilePath);
             Helper.File.OpenFileWithDefaultApp(ImageFilePath);
         }
@@ -71,10 +70,10 @@ namespace PlayerUI.ViewModel
                 case PlaybackState.Failed:
                     break;
                 case PlaybackState.Opened:
-                    TagFile = new() { FilePath = Player.Source };
-                    CoverImage2.CreateImage(Player.Source);
+                    TagFile = new() { FilePath = Player.Controller.AudioFilePath };
+                    CoverImage2.CreateImage(Player.Controller.AudioFilePath);
                     UpdateAll();
-                    Player.Play();
+                    Player.Controller.Play();
                     break;
                 //if
                 case PlaybackState.Paused:
@@ -87,10 +86,10 @@ namespace PlayerUI.ViewModel
                     Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Normal);
                     break;
                 case PlaybackState.Ended:
-                    await Player.OpenAsync(Player.Source);
+                    await Player.Controller.OpenAsync(Player.Controller.AudioFilePath);
                     break;
                 case PlaybackState.Closed:
-                    TagFile = new() { FilePath = Player.Source };
+                    TagFile = new() { FilePath = Player.Controller.AudioFilePath };
                     Cover = null;
                     UpdateAll();
                     break;
@@ -108,8 +107,9 @@ namespace PlayerUI.ViewModel
             NotifyPropertyChanged(nameof(TagFile));
             UpdateTotalTime();
             UpdateCurrentTime();
-            NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
             AudioPlayer_CurrentTimeChanged(TimeSpan.Zero);
+
+            NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
         }
         public BitmapImage Cover { get; set; }
 
@@ -117,20 +117,20 @@ namespace PlayerUI.ViewModel
 
         private async void PlayPause()
         {
-            switch (Player.PlaybackState)
+            switch (Player.Controller.PlaybackState)
             {
                 case PlaybackState.Playing:
-                    Player.Pause();
+                    Player.Controller.Pause();
                     break;
                 case PlaybackState.Ended:
-                    await Player.SeekAsync(TimeSpan.Zero);
-                    Player.Play();
+                    await Player.Timing.SeekAsync(TimeSpan.Zero);
+                    Player.Controller.Play();
                     break;
                 case PlaybackState.Closed:
                     Commands.FilePicker.OpenFilePicker(Player);
                     break;
                 default:
-                    Player.Play();
+                    Player.Controller.Play();
                     break;
             }
         }
@@ -151,13 +151,13 @@ namespace PlayerUI.ViewModel
         }
 
 
-        public TimeSpan TotalTime => Player.TimeDuration;
+        public TimeSpan TotalTime => Player.Timing.Total;
 
         private TimeSpan _currentTime;
         public TimeSpan CurrentTime
         {
             get => _currentTime;
-            set => Task.Run(async () => await Player.SeekAsync(value));
+            set => Task.Run(async () => await Player.Timing.SeekAsync(value));
         }
 
         private double _volume = App.Player.Volume;
@@ -167,7 +167,7 @@ namespace PlayerUI.ViewModel
             set => Player.ChangeVolume((int)value);
         }
 
-        public bool IsPlaying { get; set; } = App.Player.PlaybackState == PlaybackState.Playing;
+        public bool IsPlaying { get; set; } = App.Player.Controller.PlaybackState == PlaybackState.Playing;
 
         private void NextAudio()
         {
@@ -179,15 +179,18 @@ namespace PlayerUI.ViewModel
 
         }
 
+
         public string CoreCurrentFileInfo
         {
             get
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(Player.Source))
+                    if (!string.IsNullOrEmpty(Player.Controller.AudioFilePath))
                     {
-                        return $"{Player.ReaderInfo.AverageBytesPerSecond}_{Player.ReaderInfo.SampleRate} {Player.ReaderInfo.BitsPerSample}bit {Player.ReaderInfo.Encoding}";
+                        if (Player.Controller.AudioInfo == null) return "empty";
+                        AudioInfo audioInfo = Player.Controller.AudioInfo;
+                        return $"{audioInfo.Format} {audioInfo.BitrateString} {audioInfo.SampleRate/1000}kHz {audioInfo.Channels}ch";
                     }
                     return "";
                 }

@@ -15,11 +15,11 @@ namespace PlayerUI.Commands
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 if (System.IO.Path.GetExtension(dropitems[0]) == ".EqPreset")
                 {
-                    Player.ImportEq(Equalizer.PresetFromFile(dropitems[0]));
+                    Player.EqualizerController.ImportEq(Equalizer.PresetFromFile(dropitems[0]));
                 }
                 else
                 {
-                    await Player.Controller.OpenAsync(dropitems[0]);
+                    await Player.PlaybackSession.OpenAsync(dropitems[0]);
                 }
             };
         }
@@ -34,10 +34,10 @@ namespace PlayerUI.Commands
             switch (e.Delta)
             {
                 case > 0:
-                    Player.VolumeUp(5);
+                    Player.VolumeController.VolumeUp(5);
                     break;
                 default:
-                    Player.VolumeDown(5);
+                    Player.VolumeController.VolumeDown(5);
                     break;
             }
         }

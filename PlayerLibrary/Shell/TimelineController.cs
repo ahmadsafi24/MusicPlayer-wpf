@@ -6,20 +6,20 @@ using static PlayerLibrary.Events;
 
 namespace PlayerLibrary.Shell
 {
-    public class Timing
+    public class TimelineController
     {
-        private Player player; //remove it
+        private PlaybackSession playbackSession; //remove it
         private NAudioCore nAudioCore;
 
-        internal Timing(Player player)
+        internal TimelineController(PlaybackSession playbackSession)
         {
-            this.player = player;
-            this.nAudioCore = player.nAudioCore;
+            this.playbackSession = playbackSession;
+            this.nAudioCore = playbackSession.nAudioCore;
             InitializeTimers();
-            player.PlaybackStateChanged += PlaybackStateChanged;
+            playbackSession.PlaybackStateChanged += PlaybackStateChanged;
         }
 
-        internal Timing(NAudioCore nAudioCore)
+        internal TimelineController(NAudioCore nAudioCore)
         {
             this.nAudioCore = nAudioCore;
             InitializeTimers();

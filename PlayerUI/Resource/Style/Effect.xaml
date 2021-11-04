@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <DropShadowEffect x:Key="ControlShadow" BlurRadius="8" ShadowDepth="0" Direction="270" Color="#FF787878" RenderingBias="Performance" Opacity="0.5"/>
+    <DropShadowEffect x:Key="ControlShadow" BlurRadius="4" ShadowDepth="0" Direction="270" Color="Black" RenderingBias="Performance" Opacity="0.5"/>
 
 
     <DropShadowEffect x:Key="ContextMenuDropShadowEffect" BlurRadius="12" ShadowDepth="5" Direction="270" Color="#FF787878" RenderingBias="Performance" Opacity="0.5"/>

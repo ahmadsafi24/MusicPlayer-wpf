@@ -17,18 +17,10 @@
     <UserControl.InputBindings>
         <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding SwitchToMainView}"/>
     </UserControl.InputBindings>
-    <UserControl.ContextMenu>
-        <ContextMenu>
-            <MenuItem Header="Open" Command="{Binding Open}"/>
-            <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
-            <MenuItem Header="ControlbarWindow" Command="{Binding SwitchToMainView}"/>
-            <MenuItem Header="Exit" Command="{Binding Exit}"/>
-        </ContextMenu>
-    </UserControl.ContextMenu>
     <DockPanel LastChildFill="True">
         <control:Menubar DockPanel.Dock="Top" Style="{StaticResource UserControlDefaultStyle}"/>
         <control:PlayerControl DockPanel.Dock="Bottom" Style="{StaticResource UserControlDefaultStyle}"/>
-        <control:MediaInfoCard DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Style="{StaticResource UserControlDefaultStyle}" />
+        <control:MediaInfoCard DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Style="{StaticResource UserControlDefaultStyle}" ContextMenu="{StaticResource MainContextMenu}"/>
         <Grid DockPanel.Dock="Top" >
             <control:EqualizerControl HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource UserControlDefaultStyle}"/>
         </Grid>

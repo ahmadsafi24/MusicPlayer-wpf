@@ -78,18 +78,66 @@
         
         <!--Super Eq-->
         <StackPanel x:Key="SuperEqSliders" Orientation="Horizontal" Margin="5" MinHeight="200">
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band0}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band1}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band2}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band3}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band4}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band5}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band6}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band7}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band8}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band9}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band10}" />
-            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band11}" />
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band0}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="0"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band1}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="1"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band2}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="2"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band3}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="3"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band4}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="4"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band5}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="5"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band6}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="6"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band7}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="7"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band8}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="8"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band9}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="9"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band10}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="10"/>
+                </Slider.InputBindings>
+            </Slider>
+            <Slider Style="{StaticResource EqSliderStyle}" Value="{Binding Band11}" >
+                <Slider.InputBindings>
+                    <MouseBinding MouseAction="RightClick" Command="{Binding ResetBandCommand}" CommandParameter="11"/>
+                </Slider.InputBindings>
+            </Slider>
         </StackPanel>
 
         <!--Normal Eq-->

@@ -9,7 +9,7 @@
             if (files.Length > 0)
             {
                 string Source = files[0];
-                await player.Controller.OpenAsync(Source);
+                await player.PlaybackSession.OpenAsync(Source);
             }
         }
     }

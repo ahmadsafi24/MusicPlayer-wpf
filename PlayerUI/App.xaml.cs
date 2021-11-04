@@ -16,28 +16,35 @@ namespace PlayerUI
         protected override void OnStartup(StartupEventArgs e)
         {
             AllocConsole();
-            try
-            {
+
                 base.OnStartup(e);
                 Commands.App.LoadStartupConfigs();
                 MainWindow.Show();
                 Commands.App.LoadStartupArgs(e.Args);
+            EnableSystemThemeWatcher();
+            try
+            {
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"{ex.Message}\n{ex.StackTrace}", "OnAppStart");
+                throw;
             }
-            Microsoft.Win32.SystemEvents.UserPreferenceChanged += (_, _) =>
-            {
-                AppStatics.IsDark = Helper.ThemeListener.RegistryisDark();
-                WindowTheme.Refresh();
-            };
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
             Commands.App.SaveStartupConf();
+        }
+
+        void EnableSystemThemeWatcher()
+        {
+            Microsoft.Win32.SystemEvents.UserPreferenceChanged += (_, _) =>
+            {
+                AppStatics.IsDark = Helper.ThemeListener.RegistryisDark();
+                WindowTheme.Refresh();
+            };
         }
     }
 }

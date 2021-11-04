@@ -39,6 +39,13 @@
             <control:Titlebar x:Key="Titlebar"/>
             <view:MainView x:Key="MainView"/>
             <view:MiniView x:Key="MiniView"/>
+            <ContextMenu x:Key="MainContextMenu">
+                <MenuItem Header="Open" Command="{Binding Open}"/>
+                <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
+                <MenuItem Header="ControlbarWindow" Command="{Binding SwitchToMainView}"/>
+                <MenuItem Header="Exit" Command="{Binding Exit}"/>
+            </ContextMenu>
+
         </ResourceDictionary>
     </Application.Resources>
 

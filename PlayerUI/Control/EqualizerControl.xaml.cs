@@ -6,7 +6,7 @@ namespace PlayerUI.Control
     {
         public EqualizerControl()
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
     }
 }

@@ -18,7 +18,6 @@ namespace PlayerUI.ViewModel
         public ICommand NextAudioCommand { get; }
         public ICommand PreviousAudioCommand { get; }
 
-        PlayerLibrary.Utility.CoverImage2 CoverImage2 = new();
         public PlayerViewModel()
         {
             PlayPauseCommand = new DelegateCommand(PlayPause);
@@ -28,10 +27,9 @@ namespace PlayerUI.ViewModel
             NextAudioCommand = new DelegateCommand(NextAudio);
             PreviousAudioCommand = new DelegateCommand(PreviousAudio);
 
-            Player.VolumeChanged += AudioPlayer_VolumeChanged;
-            Player.Timing.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
-            Player.PlaybackStateChanged += Player_PlaybackStateChanged;
-            CoverImage2.OnImageCreated += (BitmapImage ti) => { Cover = ti; NotifyPropertyChanged(nameof(Cover)); };
+            Player.VolumeController.VolumeChanged += AudioPlayer_VolumeChanged;
+            Player.PlaybackSession.TimelineController.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
+            Player.PlaybackSession.PlaybackStateChanged += Player_PlaybackStateChanged;
         }
 
         private void OpenCoverFile()
@@ -42,7 +40,7 @@ namespace PlayerUI.ViewModel
             Helper.File.OpenFileWithDefaultApp(ImageFilePath);
         }
 
-        public bool IsMuted { get => Player.IsMuted; set => Player.IsMuted = value; }
+        public bool IsMuted { get => Player.VolumeController.IsMuted; set => Player.VolumeController.IsMuted = value; }
 
         private void MuteUnmute()
         {
@@ -70,10 +68,10 @@ namespace PlayerUI.ViewModel
                 case PlaybackState.Failed:
                     break;
                 case PlaybackState.Opened:
-                    TagFile = new() { FilePath = Player.Controller.AudioFilePath };
-                    CoverImage2.CreateImage(Player.Controller.AudioFilePath);
+                    TagFile = new() { FilePath = Player.PlaybackSession.AudioFilePath };
+                    //Cover =  await CoverImage.AlbumArtAsync(Player.Controller.AudioFilePath);
                     UpdateAll();
-                    Player.Controller.Play();
+                    Player.PlaybackSession.Play();
                     break;
                 //if
                 case PlaybackState.Paused:
@@ -86,10 +84,10 @@ namespace PlayerUI.ViewModel
                     Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Normal);
                     break;
                 case PlaybackState.Ended:
-                    await Player.Controller.OpenAsync(Player.Controller.AudioFilePath);
+                    await Player.PlaybackSession.OpenAsync(Player.PlaybackSession.AudioFilePath);
                     break;
                 case PlaybackState.Closed:
-                    TagFile = new() { FilePath = Player.Controller.AudioFilePath };
+                    TagFile = new() { FilePath = Player.PlaybackSession.AudioFilePath };
                     Cover = null;
                     UpdateAll();
                     break;
@@ -117,20 +115,20 @@ namespace PlayerUI.ViewModel
 
         private async void PlayPause()
         {
-            switch (Player.Controller.PlaybackState)
+            switch (Player.PlaybackSession.PlaybackState)
             {
                 case PlaybackState.Playing:
-                    Player.Controller.Pause();
+                    Player.PlaybackSession.Pause();
                     break;
                 case PlaybackState.Ended:
-                    await Player.Timing.SeekAsync(TimeSpan.Zero);
-                    Player.Controller.Play();
+                    await Player.PlaybackSession.TimelineController.SeekAsync(TimeSpan.Zero);
+                    Player.PlaybackSession.Play();
                     break;
                 case PlaybackState.Closed:
                     Commands.FilePicker.OpenFilePicker(Player);
                     break;
                 default:
-                    Player.Controller.Play();
+                    Player.PlaybackSession.Play();
                     break;
             }
         }
@@ -151,23 +149,23 @@ namespace PlayerUI.ViewModel
         }
 
 
-        public TimeSpan TotalTime => Player.Timing.Total;
+        public TimeSpan TotalTime => Player.PlaybackSession.TimelineController.Total;
 
         private TimeSpan _currentTime;
         public TimeSpan CurrentTime
         {
             get => _currentTime;
-            set => Task.Run(async () => await Player.Timing.SeekAsync(value));
+            set => Task.Run(async () => await Player.PlaybackSession.TimelineController.SeekAsync(value));
         }
 
-        private double _volume = App.Player.Volume;
+        private double _volume = App.Player.VolumeController.Volume;
         public double Volume
         {
             get => _volume;
-            set => Player.ChangeVolume((int)value);
+            set => Player.VolumeController.ChangeVolume((int)value);
         }
 
-        public bool IsPlaying { get; set; } = App.Player.Controller.PlaybackState == PlaybackState.Playing;
+        public bool IsPlaying { get; set; } = App.Player.PlaybackSession.PlaybackState == PlaybackState.Playing;
 
         private void NextAudio()
         {
@@ -186,11 +184,11 @@ namespace PlayerUI.ViewModel
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(Player.Controller.AudioFilePath))
+                    if (!string.IsNullOrEmpty(Player.PlaybackSession.AudioFilePath))
                     {
-                        if (Player.Controller.AudioInfo == null) return "empty";
-                        AudioInfo audioInfo = Player.Controller.AudioInfo;
-                        return $"{audioInfo.Format} {audioInfo.BitrateString} {audioInfo.SampleRate/1000}kHz {audioInfo.Channels}ch";
+                        if (Player.PlaybackSession.AudioInfo == null) return "empty";
+                        AudioInfo audioInfo = Player.PlaybackSession.AudioInfo;
+                        return $"{audioInfo.Format} {audioInfo.BitrateString} {audioInfo.SampleRate / 1000}kHz {audioInfo.Channels}ch";
                     }
                     return "";
                 }

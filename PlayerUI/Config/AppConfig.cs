@@ -28,14 +28,14 @@ namespace PlayerUI.Config
         public static void Initialize()
         {
             ConfigFilePath = System.AppContext.BaseDirectory + @"\Config.json";
-            App.Player.PlaybackStateChanged += Player_PlaybackStateChanged;
+            App.Player.PlaybackSession.PlaybackStateChanged += Player_PlaybackStateChanged;
         }
 
         private static void Player_PlaybackStateChanged(PlayerLibrary.PlaybackState playbackState)
         {
             if (playbackState == PlayerLibrary.PlaybackState.Opened)
             {
-                AppStatics.LastFile = App.Player.Controller.AudioFilePath;
+                AppStatics.LastFile = App.Player.PlaybackSession.AudioFilePath;
             }
         }
 
@@ -105,7 +105,7 @@ namespace PlayerUI.Config
             AppStatics.WindowsWidth = CurrentConfig.WindowsWidth;
             AppStatics.WindowsHeight = CurrentConfig.WindowsHeight;
 
-            App.Player.ChangeBands(CurrentConfig.EqBandsGain);
+            App.Player.EqualizerController.ChangeAllBands(CurrentConfig.EqBandsGain);
             Commands.WindowTheme.Refresh();
         }
 
@@ -122,7 +122,7 @@ namespace PlayerUI.Config
                     WindowsLeft = AppStatics.WindowsLeft,
                     WindowsTop = AppStatics.WindowsTop,
 
-                    EqBandsGain = App.Player.EqBandsGain
+                    EqBandsGain = App.Player.EqualizerController.EqBandsGain
                 };
                 WriteConfig();
             }

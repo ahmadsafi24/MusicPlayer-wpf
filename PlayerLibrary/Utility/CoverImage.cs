@@ -65,6 +65,11 @@ namespace PlayerLibrary.Utility
 
             return bitmap;
         }
+
+        public static async Task<BitmapImage> AlbumArtAsync(string filePath)
+        {
+            return await Task.Run<BitmapImage>(() => ExtractCover(filePath));
+        }
     }
 
     public class CoverImage2

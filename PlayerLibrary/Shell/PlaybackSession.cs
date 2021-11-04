@@ -2,81 +2,43 @@ using NAudio.Wave;
 using PlayerLibrary.Core;
 using System;
 using System.Threading.Tasks;
+using static PlayerLibrary.Events;
 
 namespace PlayerLibrary.Shell
 {
-    public class Controller
+    public class PlaybackSession
     {
         public string AudioFilePath { get; set; }
-        private NAudioCore nAudioCore;
+        internal readonly NAudioCore nAudioCore;
 
-        private Player player;
-
-        internal Controller(NAudioCore nAudioCore)
+        public readonly TimelineController TimelineController;
+        internal PlaybackSession(NAudioCore nAudioCore)
         {
             this.nAudioCore = nAudioCore;
+            TimelineController = new(this);
             Intialize();
         }
 
-        internal Controller(Player player)
-        {
-            this.player = player;
-            this.nAudioCore = player.nAudioCore;
-            Intialize();
-        }
         private void Intialize()
         {
             nAudioCore.WaveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
             Log.WriteLine("PlayerInitialized");
         }
-        public void Open(string filePath)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(filePath))
-                {
-                    Log.WriteLine("Core: parameter path is null");
-                    return;
-                }
-                if (PlaybackState is PlaybackState.Playing or PlaybackState.Paused)
-                {
-                    Stop();
-                    Close();
-                }
-                AudioFilePath = filePath;
-                nAudioCore.Reader = new(filePath);
-                if (nAudioCore.Reader.TotalTime.TotalSeconds <= 0) { PlaybackState = PlaybackState.Failed; return; }
-                if (nAudioCore.equalizerMode == EqualizerMode.Disabled)
-                {
-                    nAudioCore.WaveOutEvent.Init(nAudioCore.Reader);
-                }
-                else
-                {
-                    nAudioCore.EqualizerCore = new(nAudioCore.SampleProvider, nAudioCore.EqualizerBand);
-                    nAudioCore.WaveOutEvent.Init(nAudioCore.EqualizerCore);
-                }
-                AudioInfo = new(filePath);
-                PlaybackState = PlaybackState.Opened;
-            }
-            catch (Exception ex)
-            {
-                Log.WriteLine(ex.Message);
-            }
-        }
         public async Task OpenAsync(string filePath)
         {
             await Task.Run(() =>
             {
-                Open(filePath);
+                CoreOpen(filePath);
             });
 
         }
         public void Open(string filePath, TimeSpan timePosition)
         {
-            Open(filePath);
+            CoreOpen(filePath);
             nAudioCore.Reader.CurrentTime = timePosition;
         }
 
+        public void Open(string filePath) => CoreOpen(filePath);
         public void Play()
         {
             try
@@ -126,7 +88,7 @@ namespace PlayerLibrary.Shell
                 _playbackState = value;
                 if (IsEventsOn)
                 {
-                    player.InvokePlaybackStateChanged(value);
+                    InvokePlaybackStateChanged(value);
                 }
             }
         }
@@ -152,12 +114,99 @@ namespace PlayerLibrary.Shell
             }
         }
 
+        #region Events
+        public event EventHandlerPlaybackState PlaybackStateChanged;
+
+        internal void InvokePlaybackStateChanged(PlaybackState value)
+        {
+            PlaybackStateChanged?.Invoke(value);
+        }
+
+        #endregion
+
         private bool IsEventsOn = true;
-        private void ToggleEventsOff() => IsEventsOn = false;
-        private void ToggleEventsOn() => IsEventsOn = true;
+        internal void ToggleEventsOff() => IsEventsOn = false;
+        internal void ToggleEventsOn() => IsEventsOn = true;
 
 
         public FileInfo.AudioInfo AudioInfo;
 
+        internal bool IsEqEnabled = false;
+
+        private bool CheckFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                Log.WriteLine("Core: parameter path is null");
+                return false;
+            }
+            else if (!System.IO.File.Exists(filePath))
+            {
+                Log.WriteLine("Core: parameter path is null");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private void CloseIfOpen()
+        {
+            if (PlaybackState is PlaybackState.Playing or PlaybackState.Paused)
+            {
+                Stop();
+                Close();
+            }
+        }
+
+        private void CoreOpen(string filePath)
+        {
+            try
+            {
+                if (CheckFile(filePath) == false) return;
+                AudioFilePath = filePath;
+
+                CloseIfOpen();
+                nAudioCore.Reader = new(filePath);
+
+
+                if (IsEqEnabled == false)
+                {
+                    CoreNormal();
+                }
+                else
+                {
+                    CoreWithEq();
+                }
+
+                AudioInfo = new(filePath);
+
+                if (nAudioCore.Reader.TotalTime.TotalSeconds <= 0)
+                {
+                    PlaybackState = PlaybackState.Failed;
+                    return;
+                }
+                else
+                {
+                    PlaybackState = PlaybackState.Opened;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteLine(ex.Message);
+            }
+        }
+
+        private void CoreNormal()
+        {
+            nAudioCore.WaveOutEvent.Init(nAudioCore.Reader);
+        }
+
+        private void CoreWithEq()
+        {
+            nAudioCore.EqualizerCore = new(nAudioCore.SampleProvider, nAudioCore.EqualizerBand);
+            nAudioCore.WaveOutEvent.Init(nAudioCore.EqualizerCore);
+        }
     }
 }

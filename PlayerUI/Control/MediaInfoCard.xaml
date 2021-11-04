@@ -41,7 +41,7 @@
                 <Border.Background>
                     <SolidColorBrush Color="{DynamicResource Color.Main}" Opacity="0.5"/>
                 </Border.Background>
-                <Image Source="{Binding Cover}" RenderOptions.BitmapScalingMode="HighQuality" Cursor="Hand">
+                <Image Source="{Binding TagFile.AlbumArtAsync.Result,IsAsync=True}" RenderOptions.BitmapScalingMode="HighQuality" Cursor="Hand">
                     <Image.InputBindings>
                         <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCoverFileCommand}"/>
                     </Image.InputBindings>

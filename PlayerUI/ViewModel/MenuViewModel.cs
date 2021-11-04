@@ -1,5 +1,7 @@
 ﻿using Helper.ViewModelBase;
+using System;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace PlayerUI.ViewModel
 {
@@ -22,7 +24,21 @@ namespace PlayerUI.ViewModel
         }
         private void TestMethod()
         {
+            Random rnd = new Random();
+            Color randomColor = Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
+
+            ChangeResource("Color.Background.Static", randomColor);
 
         }
+        private void ChangeResource(string key, Color color)
+        {
+            object obj = App.Current.TryFindResource(key);
+
+            if (obj != null)
+            {
+                App.Current.Resources[key] = color;
+            }
+        }
+
     }
 }

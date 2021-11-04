@@ -5,8 +5,8 @@ namespace PlayerUI.Commands
 {
     public static class ResourceManager
     {
-        private static readonly ResourceDictionary Dark = new() { Source = new Uri("..\\Resource\\Theme\\Dark.Xaml", UriKind.Relative) };
-        private static readonly ResourceDictionary Light = new() { Source = new Uri("..\\Resource\\Theme\\Light.Xaml", UriKind.Relative) };
+        private static readonly ResourceDictionary Dark = new() { Source = new Uri(@"pack://application:,,,/PlayerStyles;component/Resource/Theme/Dark.Xaml") };
+        private static readonly ResourceDictionary Light = new() { Source = new Uri(@"pack://application:,,,/PlayerStyles;component/Resource/Theme/Light.xaml") };
 
         public static void LoadThemeResourceDark()
         {

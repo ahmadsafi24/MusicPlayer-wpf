@@ -59,7 +59,7 @@ namespace PlayerUI.ViewModel
                     EqualizerController.EqualizerMode = EqualizerMode.Normal;
                 }
                 //ResetEq();
-                EqualizerController.ResetEqController();
+                EqualizerController.RequestResetEqController();
                 NotifyPropertyChanged(nameof(IsSuperEq));
             }
         }

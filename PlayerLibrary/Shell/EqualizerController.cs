@@ -43,13 +43,17 @@ namespace PlayerLibrary.Shell
             this.playbackSession = playbackSession;
             this.nAudioCore = playbackSession.nAudioCore;
             EqualizerMode = EqualizerMode.Super;
-            ResetEqController();
+            ResetEqController(EqualizerMode.Super, playbackSession);
         }
 
         public void SetEqPreset(EqPreset preset)
         {
-            EqualizerMode = (EqualizerMode)Enum.Parse(typeof(PlayerLibrary.EqualizerMode), preset.EqualizerMode);
-            ResetEqController();
+            EqualizerMode mode = (EqualizerMode)Enum.Parse(typeof(PlayerLibrary.EqualizerMode), preset.EqualizerMode);
+            if (mode != EqualizerMode)
+            {
+                EqualizerMode = mode;
+                ResetEqController(mode, playbackSession);
+            }
             SetAllBands(preset.BandsGain);
         }
 
@@ -147,13 +151,14 @@ namespace PlayerLibrary.Shell
             }
         }
 
-        public void ResetEqController()
+        public void RequestResetEqController() { ResetEqController(EqualizerMode, playbackSession); }
+        public void ResetEqController(EqualizerMode equalizerMode, PlaybackSession playbackSession)
         {
             playbackSession.ToggleEventsOff();
             ///playbackSession.Stop();
             //if (nAudioCore.EqualizerBand == null) return;
 
-            InstalEqualizer(this.EqualizerMode, this.nAudioCore, this.playbackSession);
+            InstalEqualizer(equalizerMode, playbackSession);
             SetAllBandsGain(0);
             FireEqUpdated();
 
@@ -181,20 +186,20 @@ namespace PlayerLibrary.Shell
 
         }
 
-        private static void InstalEqualizer(EqualizerMode equalizerMode, NAudioCore nAudioCore, PlaybackSession playbackSession)
+        private static void InstalEqualizer(EqualizerMode equalizerMode, PlaybackSession playbackSession)
         {
             switch (equalizerMode)
             {
                 case EqualizerMode.Normal:
-                    Create8Band(nAudioCore);
+                    Create8Band(playbackSession.nAudioCore);
                     playbackSession.IsEqEnabled = true;
                     break;
                 case EqualizerMode.Super:
-                    Create11Band(nAudioCore);
+                    Create11Band(playbackSession.nAudioCore);
                     playbackSession.IsEqEnabled = true;
                     break;
                 case EqualizerMode.Disabled:
-                    CreateEmptyBand(nAudioCore);
+                    CreateEmptyBand(playbackSession.nAudioCore);
                     playbackSession.IsEqEnabled = false;
                     break;
                 default:

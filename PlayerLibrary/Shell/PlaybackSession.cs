@@ -1,3 +1,4 @@
+using Helper;
 using NAudio.Wave;
 using PlayerLibrary.Core;
 using System;
@@ -12,10 +13,13 @@ namespace PlayerLibrary.Shell
         internal readonly NAudioCore nAudioCore;
 
         public readonly TimelineController TimelineController;
+        public readonly VolumeController VolumeController;
+
         internal PlaybackSession(NAudioCore nAudioCore)
         {
             this.nAudioCore = nAudioCore;
             TimelineController = new(this);
+            VolumeController = new(this);
             Intialize();
         }
 
@@ -30,7 +34,6 @@ namespace PlayerLibrary.Shell
             {
                 CoreOpen(filePath);
             });
-
         }
         public void Open(string filePath, TimeSpan timePosition)
         {
@@ -43,29 +46,29 @@ namespace PlayerLibrary.Shell
         {
             try
             {
-                if (PlaybackState != PlaybackState.Playing)
+                if (PlaybackState != PlaybackState.Playing && IsFileOpen == true)
                 {
                     nAudioCore.WaveOutEvent.Play();
-                    PlaybackState = PlaybackState.Playing;
+                    TriggerStatePlaying();
                 }
             }
             catch (Exception ex)
             {
                 Log.WriteLine(ex);
+                throw;
             }
-
         }
 
         public void Pause()
         {
             nAudioCore.WaveOutEvent.Pause();
-            PlaybackState = PlaybackState.Paused;
+            TriggerStatePaused();
         }
         public void Stop()
         {
             nAudioCore.WaveOutEvent.Stop();
             nAudioCore.Reader.CurrentTime = TimeSpan.Zero;
-            PlaybackState = PlaybackState.Stopped;
+            TriggerStateStopped();
         }
 
         public void Close()
@@ -75,9 +78,9 @@ namespace PlayerLibrary.Shell
             AudioFilePath = null;
             nAudioCore.Reader.Dispose();
             nAudioCore.Reader = null;
-            PlaybackState = PlaybackState.Closed;
+            TriggerStateClosed();
         }
-        private PlaybackState _playbackState;
+        private PlaybackState _playbackState = PlaybackState.None;
         public PlaybackState PlaybackState
         {
             get => _playbackState;
@@ -105,12 +108,12 @@ namespace PlayerLibrary.Shell
             else if (string.IsNullOrEmpty(e.Exception?.Message))
             {
                 Log.WriteLine("WaveOutEvent_PlaybackStopped With No Exception");
-                PlaybackState = PlaybackState.Stopped;
+                TriggerStateStopped();
             }
             else
             {
                 Log.WriteLine(e.Exception.Message + "WaveOutEvent_PlaybackStopped");
-                PlaybackState = PlaybackState.Failed;
+                TriggerStateFailed();
             }
         }
 
@@ -132,6 +135,10 @@ namespace PlayerLibrary.Shell
         public FileInfo.AudioInfo AudioInfo;
 
         internal bool IsEqEnabled = false;
+
+        public bool IsFileOpen = false;
+
+        public bool IsPlaying = false;
 
         private bool CheckFile(string filePath)
         {
@@ -164,37 +171,37 @@ namespace PlayerLibrary.Shell
         {
             try
             {
+                CloseIfOpen();
                 if (CheckFile(filePath) == false) return;
                 AudioFilePath = filePath;
 
-                CloseIfOpen();
                 nAudioCore.Reader = new(filePath);
 
-
-                if (IsEqEnabled == false)
+                if (IsEqEnabled == true)
                 {
-                    CoreNormal();
+                    CoreWithEq();
                 }
                 else
                 {
-                    CoreWithEq();
+                    CoreNormal();
                 }
 
                 AudioInfo = new(filePath);
 
                 if (nAudioCore.Reader.TotalTime.TotalSeconds <= 0)
                 {
-                    PlaybackState = PlaybackState.Failed;
+                    TriggerStateFailed();
                     return;
                 }
                 else
                 {
-                    PlaybackState = PlaybackState.Opened;
+                    TriggerStateOpened();
                 }
             }
             catch (Exception ex)
             {
                 Log.WriteLine(ex.Message);
+                throw;
             }
         }
 
@@ -208,5 +215,49 @@ namespace PlayerLibrary.Shell
             nAudioCore.EqualizerCore = new(nAudioCore.SampleProvider, nAudioCore.EqualizerBand);
             nAudioCore.WaveOutEvent.Init(nAudioCore.EqualizerCore);
         }
+
+        #region FirePaybackState
+
+        private void TriggerStateFailed()
+        {
+            IsFileOpen = false;
+            IsPlaying = false;
+            PlaybackState = PlaybackState.Failed;
+        }
+
+        private void TriggerStateOpened()
+        {
+            IsFileOpen = true;
+            IsPlaying = false;
+            PlaybackState = PlaybackState.Opened;
+        }
+
+        private void TriggerStatePlaying()
+        {
+            IsPlaying = true;
+            PlaybackState = PlaybackState.Playing;
+        }
+
+        private void TriggerStatePaused()
+        {
+            IsPlaying = false;
+            PlaybackState = PlaybackState.Paused;
+        }
+
+        private void TriggerStateStopped()
+        {
+            IsPlaying = false;
+            PlaybackState = PlaybackState.Stopped;
+        }
+
+        private void TriggerStateClosed()
+        {
+            IsPlaying = false;
+            IsFileOpen = false;
+            PlaybackState = PlaybackState.Closed;
+        }
+
+        #endregion
+
     }
 }

@@ -15,4 +15,7 @@
     <PackageReference Include="z440.atl.core" Version="3.24.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Helper\Helper.csproj" />
+  </ItemGroup>
 </Project>

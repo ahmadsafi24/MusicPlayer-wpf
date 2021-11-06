@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
+using PlayerLibrary;
+using PlayerLibrary.Model;
 
 namespace PlayerUI.Config
 {
@@ -20,7 +23,7 @@ namespace PlayerUI.Config
                 WindowsHeight = 600,
                 WindowsLeft = Application.Current.MainWindow.Left,
                 WindowsTop = Application.Current.MainWindow.Top,
-                EqBandsGain = new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+                EqBandsGain = Array.Empty<int>()
             };
             return config;
         }
@@ -70,20 +73,20 @@ namespace PlayerUI.Config
         /// </summary>
         public static void ReadConfig()
         {
-            if (File.Exists(ConfigFilePath))
-            {
-                var json = File.ReadAllBytes(ConfigFilePath);
-                ConfigModel Conf = System.Text.Json.JsonSerializer.Deserialize<ConfigModel>(json);
-                if (Conf != null)
-                    CurrentConfig = Conf;
-            }
-            else
-            {
-                MessageBox.Show("Config Not Found\nOk To Create Default Config");
-                CurrentConfig = DefaultConfig;
-            }
             try
             {
+                if (File.Exists(ConfigFilePath))
+                {
+                    var json = File.ReadAllBytes(ConfigFilePath);
+                    ConfigModel Conf = System.Text.Json.JsonSerializer.Deserialize<ConfigModel>(json);
+                    if (Conf != null)
+                        CurrentConfig = Conf;
+                }
+                else
+                {
+                    Helper.Log.WriteLine("Config Not Found\nOk To Create Default Config");
+                    CurrentConfig = DefaultConfig;
+                }
 
             }
             catch (System.Exception ex)
@@ -105,7 +108,23 @@ namespace PlayerUI.Config
             AppStatics.WindowsWidth = CurrentConfig.WindowsWidth;
             AppStatics.WindowsHeight = CurrentConfig.WindowsHeight;
 
-            App.Player.EqualizerController.ChangeAllBands(CurrentConfig.EqBandsGain);
+            // bad coding
+            EqualizerMode newEqMode = new();
+            if (CurrentConfig.EqBandsGain.Length == 8)
+            {
+                newEqMode = EqualizerMode.Normal;
+            }
+            else if (CurrentConfig.EqBandsGain.Length == 12)
+            {
+                newEqMode = EqualizerMode.Super;
+            }
+            else
+            {
+                newEqMode = EqualizerMode.Disabled;
+            }
+            EqPreset preset = new(newEqMode.ToString(), CurrentConfig.EqBandsGain);
+            //
+            App.Player.EqualizerController.SetEqPreset(preset);
             Commands.WindowTheme.Refresh();
         }
 
@@ -122,7 +141,7 @@ namespace PlayerUI.Config
                     WindowsLeft = AppStatics.WindowsLeft,
                     WindowsTop = AppStatics.WindowsTop,
 
-                    EqBandsGain = App.Player.EqualizerController.EqBandsGain
+                    EqBandsGain = App.Player.EqualizerController.AllBandsGain
                 };
                 WriteConfig();
             }

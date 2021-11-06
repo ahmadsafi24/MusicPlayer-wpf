@@ -46,7 +46,7 @@
             <control:Titlebar x:Key="Titlebar"/>
             <view:MainView x:Key="MainView"/>
             <view:MiniView x:Key="MiniView"/>
-            <ContextMenu x:Key="MainContextMenu">
+            <ContextMenu x:Key="MainContextMenu" DataContext="{StaticResource MainView_ViewModel}">
                 <MenuItem Header="Open" Command="{Binding Open}"/>
                 <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
                 <MenuItem Header="ControlbarWindow" Command="{Binding SwitchToMainView}"/>

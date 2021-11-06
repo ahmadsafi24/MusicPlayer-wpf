@@ -10,16 +10,17 @@ namespace PlayerLibrary.Core
     {
         #region NAudio Engine
         internal MediaFoundationReader Reader;
+
+        /// <summary>
+        /// sample provider from reader
+        /// </summary>
+        /// <returns></returns>
         internal ISampleProvider SampleProvider => Reader.ToSampleProvider();
         internal EqualizerBand[] EqualizerBand { get; set; }
         internal Equalizer EqualizerCore;
         internal WaveOutEvent WaveOutEvent = new();
+
         #endregion
-
-        internal NAudioCore()
-        {
-
-        }
 
     }
 }

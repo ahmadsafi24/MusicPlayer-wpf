@@ -5,6 +5,7 @@ using PlayerLibrary.Model;
 using PlayerLibrary.FileInfo;
 using System;
 using static PlayerLibrary.Events;
+using Helper;
 
 namespace PlayerLibrary.Shell
 {
@@ -12,6 +13,7 @@ namespace PlayerLibrary.Shell
     {
         private readonly NAudioCore nAudioCore;
         private readonly PlaybackSession playbackSession;
+
         public VolumeController(NAudioCore nAudioCore)
         {
             this.nAudioCore = nAudioCore;
@@ -56,6 +58,7 @@ namespace PlayerLibrary.Shell
             catch (Exception ex)
             {
                 Log.WriteLine(ex.Message);
+                throw;
             }
         }
 
@@ -90,6 +93,7 @@ namespace PlayerLibrary.Shell
                 catch (Exception ex)
                 {
                     Log.WriteLine(ex.Message);
+                    throw;
                 }
             }
         }

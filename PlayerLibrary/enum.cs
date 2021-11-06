@@ -10,6 +10,7 @@
     }
     public enum PlaybackState
     {
+        None = -3,
         Unknown = -2,
         Failed = -1,
         Opened = 0,

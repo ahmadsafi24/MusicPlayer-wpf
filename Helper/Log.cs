@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 
-namespace PlayerLibrary
+namespace Helper
 {
     public static class Log
     {

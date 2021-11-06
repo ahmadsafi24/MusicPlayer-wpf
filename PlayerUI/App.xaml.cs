@@ -9,15 +9,15 @@ namespace PlayerUI
     public partial class App : Application
     {
         [System.Runtime.InteropServices.DllImport("Kernel32")]
-        public static extern void AllocConsole();
+        private static extern void AllocConsole();
 
-        internal static Player Player = new();
+        internal static SoundPlayer Player = new();
 
         protected override void OnStartup(StartupEventArgs e)
         {
             AllocConsole();
 
-                base.OnStartup(e);
+            base.OnStartup(e);
                 Commands.App.LoadStartupConfigs();
                 MainWindow.Show();
                 Commands.App.LoadStartupArgs(e.Args);
@@ -35,6 +35,9 @@ namespace PlayerUI
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
+            if (e.ApplicationExitCode != 0)
+            { MessageBox.Show(e.ApplicationExitCode.ToString()); }
+
             Commands.App.SaveStartupConf();
         }
 

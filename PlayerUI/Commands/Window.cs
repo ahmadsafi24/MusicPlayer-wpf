@@ -1,11 +1,14 @@
 ﻿using PlayerLibrary.Preset;
+using PlayerLibrary.Shell;
 using System.Windows;
 
 namespace PlayerUI.Commands
 {
     public static class Window
     {
-        private static PlayerLibrary.Player Player => PlayerUI.App.Player;
+        private static PlayerLibrary.SoundPlayer Player => PlayerUI.App.Player;
+        private static VolumeController volumeController => Player.PlaybackSession.VolumeController;
+
         public static void AttachDrop(System.Windows.Window window)
         {
             window.AllowDrop = true;
@@ -15,7 +18,7 @@ namespace PlayerUI.Commands
                 string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 if (System.IO.Path.GetExtension(dropitems[0]) == ".EqPreset")
                 {
-                    Player.EqualizerController.ImportEq(Equalizer.PresetFromFile(dropitems[0]));
+                    Player.EqualizerController.SetEqPreset(Equalizer.FileToPreset(dropitems[0]));
                 }
                 else
                 {
@@ -28,16 +31,16 @@ namespace PlayerUI.Commands
         {
             window.MouseWheel += (_, e) => MouseWheelChanged(e);
         }
-
         private static void MouseWheelChanged(System.Windows.Input.MouseWheelEventArgs e)
         {
+
             switch (e.Delta)
             {
                 case > 0:
-                    Player.VolumeController.VolumeUp(5);
+                    volumeController.VolumeUp(5);
                     break;
                 default:
-                    Player.VolumeController.VolumeDown(5);
+                    volumeController.VolumeDown(5);
                     break;
             }
         }

@@ -1,5 +1,7 @@
-﻿using NAudio.Wave;
+﻿using Helper;
+using NAudio.Wave;
 using System.Threading.Tasks;
+using PlayerLibrary.Model;
 
 namespace PlayerLibrary.FileInfo
 {
@@ -19,10 +21,13 @@ namespace PlayerLibrary.FileInfo
 
         public readonly string Bitrate;
 
+        public AudioTag AudioTag { get; set; }
+
         public AudioInfo(string filePath)
         {
             try
             {
+                AudioTag = new(filePath);
 
                 if (string.IsNullOrEmpty(filePath))
                 {
@@ -63,6 +68,7 @@ namespace PlayerLibrary.FileInfo
                 Log.WriteLine(ex.Message);
             }
         }
+
 
     }
 }

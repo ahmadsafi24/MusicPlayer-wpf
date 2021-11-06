@@ -11,6 +11,7 @@ namespace PlayerLibrary.Preset
             using var writer = new System.Text.Json.Utf8JsonWriter(ms, new System.Text.Json.JsonWriterOptions() { Indented = true });
 
             writer.WriteStartObject();
+            writer.WriteString(nameof(EqualizerMode), preset.EqualizerMode);
             writer.WriteStartArray(nameof(EqPreset.BandsGain));
             foreach (var item in preset.BandsGain)
             {
@@ -22,13 +23,29 @@ namespace PlayerLibrary.Preset
             File.WriteAllBytes(filePath, ms.ToArray());
         }
 
-        public static EqPreset PresetFromFile(string filePath)
+        public static EqPreset FileToPreset(string filePath)
         {
             EqPreset preset = null;
             if (File.Exists(filePath))
             {
                 var json = File.ReadAllBytes(filePath);
                 preset = System.Text.Json.JsonSerializer.Deserialize<EqPreset>(json);
+
+                /*bad coding
+                if (preset.BandsGain.Length == 8)
+                {
+                    preset.EqualizerMode = EqualizerMode.Normal;
+                }
+                else if (preset.BandsGain.Length == 11)
+                {
+                    preset.EqualizerMode = EqualizerMode.Super;
+                }
+                else
+                {
+                    preset.EqualizerMode = EqualizerMode.Disabled;
+                }
+
+                */
             }
             return preset;
         }

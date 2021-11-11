@@ -57,20 +57,34 @@ namespace Helper.Taskbar
         private static void SetProgressState(ProgressState state)
         {
             // Application.Current.MainWindow.TaskbarItemInfo.ProgressState = (System.Windows.Shell.TaskbarItemProgressState) state;
-            _taskbarList.SetProgressState(GetHandle(), state);
+            if (GetHandle() != IntPtr.Zero)
+            {
+                _taskbarList.SetProgressState(GetHandle(), state);
+            }
         }
 
         private static void SetProgressValue(int current, int max)
         {
-            _taskbarList.SetProgressValue(
-                     GetHandle(),
-                     Convert.ToUInt64(current),
-                     Convert.ToUInt64(max));
+                _taskbarList.SetProgressValue(
+                         GetHandle(),
+                         Convert.ToUInt64(current),
+                         Convert.ToUInt64(max));
+            
         }
 
         private static IntPtr GetHandle()
         {
-            return new WindowInteropHelper(Application.Current.MainWindow).Handle;
+            Window window = Application.Current.MainWindow;
+            if (window != null)
+            {
+                return new WindowInteropHelper(window).Handle;
+
+            }
+            else
+            {
+                return IntPtr.Zero;
+
+            }
         }
     }
 }

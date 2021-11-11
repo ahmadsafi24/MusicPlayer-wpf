@@ -1,12 +1,12 @@
 ﻿using PlayerLibrary.Preset;
-using PlayerLibrary.Shell;
+using PlayerLibrary.Core;
 using System.Windows;
 
 namespace PlayerUI.Commands
 {
     public static class Window
     {
-        private static PlayerLibrary.SoundPlayer Player => PlayerUI.App.Player;
+        private static PlayerLibrary.Player Player => PlayerUI.App.Player;
         private static VolumeController volumeController => Player.PlaybackSession.VolumeController;
 
         public static void AttachDrop(System.Windows.Window window)

@@ -22,8 +22,12 @@
     }
     public enum EqualizerMode
     {
-        Disabled = 0,
-        Normal = 1,
-        Super = 2
+        Normal = 0,
+        Super = 1
+    }
+    public enum CoreType
+    {
+        Normal = 0,
+        WithEqualizer = 1
     }
 }

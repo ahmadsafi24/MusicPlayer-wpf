@@ -1,24 +1,79 @@
 ﻿using PlayerLibrary.Core;
-using PlayerLibrary.Shell;
+using System;
+using System.Text;
+using Helper;
+using PlayerLibrary.Core.NAudioPlayer;
+using PlayerLibrary.Core.NAudioPlayer.Interface;
+using static PlayerLibrary.Events;
 
 namespace PlayerLibrary
 {
-    public class SoundPlayer
+    public class Player
     {
-        private readonly NAudioCore nAudioCore;
         public readonly PlaybackSession PlaybackSession;
-        public readonly EqualizerController EqualizerController;
+        public EqualizerController EqualizerController;
 
-        public SoundPlayer(NAudioCore nAudioCore)
+        public Player(INAudioPlayer nAudioPlayer)
         {
-            this.nAudioCore = nAudioCore;
+            Log.WriteLine("new player with type: " + nAudioPlayer.GetType());
+            this.PlaybackSession = new(nAudioPlayer);
         }
-        public SoundPlayer()
+        public Player()
         {
-            this.nAudioCore = new();
-            PlaybackSession = new(nAudioCore);
-            EqualizerController = new(PlaybackSession);
+
         }
 
+        public void EnableEqualizerController()
+        {
+            EqualizerController = new(PlaybackSession, EqualizerMode.Super);
+            PropertyChanged?.Invoke();
+        }
+
+        public void DisableEqualizerController()
+        {
+            EqualizerController = null;
+            NAudioPlayerNormal _nAudioPlayer = new NAudioPlayerNormal();
+
+            _nAudioPlayer.Reader = PlaybackSession.NAudioPlayer.Reader;
+            _nAudioPlayer.VolumeSampleProvider = PlaybackSession.NAudioPlayer.VolumeSampleProvider;
+            _nAudioPlayer.OutputDevice = PlaybackSession.NAudioPlayer.OutputDevice;
+            PlaybackSession.NAudioPlayer = _nAudioPlayer;
+
+            PlaybackSession.ToggleEventsOff();
+            PlaybackState _state = PlaybackSession.PlaybackState;
+            float lastvolume = PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume;
+            string file = PlaybackSession.TrackFilePath;
+            PlaybackSession.Open(file, _nAudioPlayer.Reader.CurrentTime);
+            switch (_state)
+            {
+                case PlaybackState.Paused:
+                    PlaybackSession.Pause();
+                    break;
+                case PlaybackState.Playing:
+                    PlaybackSession.Play();
+                    break;
+                case PlaybackState.Stopped:
+                    PlaybackSession.Stop();
+                    break;
+                default:
+                    break;
+            }
+            PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume = lastvolume;
+            PlaybackSession.InvokeNAudioPlayerChanged(_nAudioPlayer.GetType());
+        }
+
+
+        public EventHandlerEmpty PropertyChanged;
+
+        public string GetInfo()
+        {
+            StringBuilder stringBuilder = new();
+
+            stringBuilder.AppendLine($"PlaybackSession: < {PlaybackSession} >");
+            stringBuilder.AppendLine($"Audiofilepath: < {PlaybackSession?.TrackFilePath} >");
+            stringBuilder.AppendLine($"TimelineCurrent: < {PlaybackSession.TimelineController.Current.ToString()} >");
+
+            return stringBuilder.ToString();
+        }
     }
 }

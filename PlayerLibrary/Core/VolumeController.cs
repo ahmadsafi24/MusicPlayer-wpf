@@ -1,29 +1,37 @@
 using PlayerLibrary;
-using PlayerLibrary.Shell;
 using PlayerLibrary.Core;
 using PlayerLibrary.Model;
 using PlayerLibrary.FileInfo;
 using System;
-using static PlayerLibrary.Events;
 using Helper;
+using PlayerLibrary.Core.NAudioPlayer.Interface;
+using PlayerLibrary.Core.NAudioPlayer;
+using static PlayerLibrary.Events;
 
-namespace PlayerLibrary.Shell
+namespace PlayerLibrary.Core
 {
     public class VolumeController
     {
-        private readonly NAudioCore nAudioCore;
-        private readonly PlaybackSession playbackSession;
+        internal INAudioPlayer NAudioPlayer { get; set; }
 
-        public VolumeController(NAudioCore nAudioCore)
+        public VolumeController(NAudioPlayerEq nAudioCore)
         {
-            this.nAudioCore = nAudioCore;
+            this.NAudioPlayer = nAudioCore;
         }
-
         public VolumeController(PlaybackSession playbackSession)
         {
-            this.playbackSession = playbackSession;
-            this.nAudioCore = playbackSession.nAudioCore;
+            Log.WriteLine("new VolumeController");
+            this.NAudioPlayer = playbackSession.NAudioPlayer;
+            playbackSession.PlaybackStateChanged += PlaybackStateChanged;
+            InvokeVolumeChanged(Volume);
 
+        }
+        private void PlaybackStateChanged(PlaybackState state)
+        {
+            if (state == PlaybackState.Opened)
+            {
+                InvokeVolumeChanged(Volume);
+            }
         }
         #region Volume
         public event EventHandlerVolume VolumeChanged;
@@ -57,7 +65,7 @@ namespace PlayerLibrary.Shell
             }
             catch (Exception ex)
             {
-                Log.WriteLine(ex.Message);
+                Log.WriteLine("ChangeVolume", ex.Message);
                 throw;
             }
         }
@@ -68,12 +76,18 @@ namespace PlayerLibrary.Shell
         {
             get
             {
-                return (int)(ToDouble(nAudioCore.WaveOutEvent.Volume) * 100);
+                if (NAudioPlayer.VolumeSampleProvider == null)
+                {
+                    return 0;
+                }
+                return (int)(ToDouble(NAudioPlayer.VolumeSampleProvider.Volume) * 100);
             }
             set
             {
                 try
                 {
+                    if (NAudioPlayer.VolumeSampleProvider == null) return;
+
                     if (IsMuted)
                     {
                         ismute = false;
@@ -81,7 +95,7 @@ namespace PlayerLibrary.Shell
                     int iv = value < 0 ? 0 : value > 100 ? 100 : value;
                     double V = (double)iv / 100;
                     //V = V < 0 ? 0 : V > 1 ? 1 : V;
-                    nAudioCore.WaveOutEvent.Volume = (float)V;
+                    NAudioPlayer.VolumeSampleProvider.Volume = (float)V;
 
                     if (iv == 0)
                     {
@@ -92,7 +106,7 @@ namespace PlayerLibrary.Shell
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteLine(ex.Message);
+                    Log.WriteLine("Volume", ex.Message);
                     throw;
                 }
             }

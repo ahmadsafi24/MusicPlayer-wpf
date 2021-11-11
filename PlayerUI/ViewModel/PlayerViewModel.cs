@@ -2,7 +2,7 @@
 using PlayerLibrary;
 using PlayerLibrary.FileInfo;
 using PlayerLibrary.Model;
-using PlayerLibrary.Shell;
+using PlayerLibrary.Core;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +12,7 @@ namespace PlayerUI.ViewModel
 {
     public class PlayerViewModel : ViewModelBase
     {
-        private SoundPlayer player => App.Player;
+        private Player player => App.Player;
         private PlaybackSession playbackSession => App.Player.PlaybackSession;
         private TimelineController timelineController => App.Player.PlaybackSession.TimelineController;
         private VolumeController volumeController => App.Player.PlaybackSession.VolumeController;
@@ -48,9 +48,16 @@ namespace PlayerUI.ViewModel
             NextAudioCommand = new DelegateCommand(NextAudio);
             PreviousAudioCommand = new DelegateCommand(PreviousAudio);
 
-            volumeController.VolumeChanged += AudioPlayer_VolumeChanged;
             timelineController.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
             playbackSession.PlaybackStateChanged += Player_PlaybackStateChanged;
+            player.PlaybackSession.NAudioPlayerChanged += PlaybackSession_NAudioPlayerChanged;
+            NotifyPropertyChanged(null);
+            volumeController.VolumeChanged += AudioPlayer_VolumeChanged;
+        }
+
+        private void PlaybackSession_NAudioPlayerChanged(Type type)
+        {
+            //volumeController.VolumeChanged += AudioPlayer_VolumeChanged;
         }
 
         private void OpenCoverFile()
@@ -100,7 +107,6 @@ namespace PlayerUI.ViewModel
                     Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Normal);
                     break;
                 case PlaybackState.Ended:
-                    await playbackSession.OpenAsync(playbackSession.AudioFilePath);
                     break;
                 case PlaybackState.Closed:
                     UpdateAll();
@@ -194,7 +200,7 @@ namespace PlayerUI.ViewModel
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(playbackSession.AudioFilePath))
+                    if (!string.IsNullOrEmpty(playbackSession.TrackFilePath))
                     {
                         if (playbackSession.AudioInfo == null) return "empty";
                         AudioInfo audioInfo = playbackSession.AudioInfo;

@@ -65,7 +65,7 @@ namespace PlayerLibrary.FileInfo
             }
             catch (System.Exception ex)
             {
-                Log.WriteLine(ex.Message);
+                Log.WriteLine("AudioInfo",ex.Message);
             }
         }
 

@@ -1,19 +1,21 @@
-﻿using Helper.ViewModelBase;
+﻿using Helper;
+using Helper.ViewModelBase;
 using PlayerLibrary;
 using PlayerLibrary.Preset;
-using PlayerLibrary.Shell;
+using PlayerLibrary.Core;
+using System;
 using System.Windows.Input;
 
 namespace PlayerUI.ViewModel
 {
     public class EqualizerViewModel : ViewModelBase
     {
-        private SoundPlayer Player => App.Player;
+        private Player Player => App.Player;
         private EqualizerController EqualizerController => App.Player.EqualizerController;
 
-        public ICommand ResetEqCommand { get; }
-        public ICommand LoadEqCommand { get; }
-        public ICommand SaveEqCommand { get; }
+        public DelegateCommand ResetEqCommand { get; }
+        public DelegateCommand LoadEqCommand { get; }
+        public DelegateCommand SaveEqCommand { get; }
 
         public EqualizerViewModel()
         {
@@ -21,7 +23,31 @@ namespace PlayerUI.ViewModel
             LoadEqCommand = new DelegateCommand(loadEq);
             SaveEqCommand = new DelegateCommand(SaveEq);
             NotifyPropertyChanged(null);
-            EqualizerController.EqUpdated += () => NotifyPropertyChanged(string.Empty);
+            Player.PlaybackSession.NAudioPlayerChanged += PlaybackSession_NAudioPlayerChanged;
+            Player.PropertyChanged += EqControllerCreated;
+        }
+
+        private void PlaybackSession_NAudioPlayerChanged(Type type)
+        {
+            Log.WriteLine(type.ToString());
+            NotifyPropertyChanged(null);
+            if (type == typeof(PlayerLibrary.Core.NAudioPlayer.NAudioPlayerEq))
+            {
+                if (EqualizerController != null)
+                {
+
+                }
+            }
+        }
+        private void EqControllerCreated()
+        {
+            EqualizerController.EqUpdated += EqControllerUpdated;
+
+        }
+
+        private void EqControllerUpdated()
+        {
+            NotifyPropertyChanged(null);
         }
 
         private void loadEq()
@@ -29,53 +55,77 @@ namespace PlayerUI.ViewModel
             string[] files = Helper.FileOpenPicker.GetFiles(fileExtention: "EqPreset");
             if (files != null)
             {
-                EqualizerController.SetEqPreset(Equalizer.FileToPreset(files[0]));
+                if (EqualizerController != null)
+                {
+                    EqualizerController.SetEqPreset(Equalizer.FileToPreset(files[0]));
+                }
             }
         }
 
         private void SaveEq()
         {
-            Equalizer.PresetToFile(EqualizerController.GetEqPreset(), @"C:\temp\test.EqPreset");
+            if (EqualizerController != null)
+            {
+                Equalizer.PresetToFile(EqualizerController.GetEqPreset(), @"C:\temp\test.EqPreset");
+            }
         }
 
         private void ResetEq()
         {
-            EqualizerController.SetAllBandsGain(0);
-            NotifyPropertyChanged(string.Empty);
+            if (EqualizerController != null)
+            {
+
+                EqualizerController.SetAllBandsGain(0);
+                NotifyPropertyChanged(null);
+            }
         }
 
         public bool IsSuperEq
         {
-            get => EqualizerController.EqualizerMode == EqualizerMode.Super;
+            get => EqualizerController?.EqualizerMode == EqualizerMode.Super;
             set
             {
-                if (value)
+                if (EqualizerController != null)
                 {
+                    if (value)
+                    {
 
-                    EqualizerController.EqualizerMode = EqualizerMode.Super;
+                        EqualizerController.EqualizerMode = EqualizerMode.Super;
+                    }
+                    else
+                    {
+                        EqualizerController.EqualizerMode = EqualizerMode.Normal;
+                    }
+                    //ResetEq();
+                    EqualizerController.RequestResetEqController();
+                    NotifyPropertyChanged(nameof(IsSuperEq));
                 }
-                else
-                {
-                    EqualizerController.EqualizerMode = EqualizerMode.Normal;
-                }
-                //ResetEq();
-                EqualizerController.RequestResetEqController();
-                NotifyPropertyChanged(nameof(IsSuperEq));
             }
         }
 
-        public double Band0 { get => EqualizerController.GetBandGain(0); set { EqualizerController.SetBandGain(0, (float)value, false); NotifyPropertyChanged(nameof(Band0)); } }
-        public double Band1 { get => EqualizerController.GetBandGain(1); set { EqualizerController.SetBandGain(1, (float)value, false); NotifyPropertyChanged(nameof(Band1)); } }
-        public double Band2 { get => EqualizerController.GetBandGain(2); set { EqualizerController.SetBandGain(2, (float)value, false); NotifyPropertyChanged(nameof(Band2)); } }
-        public double Band3 { get => EqualizerController.GetBandGain(3); set { EqualizerController.SetBandGain(3, (float)value, false); NotifyPropertyChanged(nameof(Band3)); } }
-        public double Band4 { get => EqualizerController.GetBandGain(4); set { EqualizerController.SetBandGain(4, (float)value, false); NotifyPropertyChanged(nameof(Band4)); } }
-        public double Band5 { get => EqualizerController.GetBandGain(5); set { EqualizerController.SetBandGain(5, (float)value, false); NotifyPropertyChanged(nameof(Band5)); } }
-        public double Band6 { get => EqualizerController.GetBandGain(6); set { EqualizerController.SetBandGain(6, (float)value, false); NotifyPropertyChanged(nameof(Band6)); } }
-        public double Band7 { get => EqualizerController.GetBandGain(7); set { EqualizerController.SetBandGain(7, (float)value, false); NotifyPropertyChanged(nameof(Band7)); } }
-        public double Band8 { get => EqualizerController.GetBandGain(8); set { EqualizerController.SetBandGain(8, (float)value, false); NotifyPropertyChanged(nameof(Band8)); } }
-        public double Band9 { get => EqualizerController.GetBandGain(9); set { EqualizerController.SetBandGain(9, (float)value, false); NotifyPropertyChanged(nameof(Band9)); } }
-        public double Band10 { get => EqualizerController.GetBandGain(10); set { EqualizerController.SetBandGain(10, (float)value, false); NotifyPropertyChanged(nameof(Band10)); } }
-        public double Band11 { get => EqualizerController.GetBandGain(11); set { EqualizerController.SetBandGain(11, (float)value, false); NotifyPropertyChanged(nameof(Band11)); } }
+        public double band0 => (double)(EqualizerController?.GetBandGain(0));
+        public double Band0 { get => band0; set => EqualizerController?.SetBandGain(0, (float)value, true); }
+
+        public double band1 => (double)(EqualizerController?.GetBandGain(1));
+        public double Band1 { get => band1; set => EqualizerController?.SetBandGain(1, (float)value, true); }
+
+        public double band2 => (double)(EqualizerController?.GetBandGain(2));
+        public double Band2 { get => band2; set => EqualizerController?.SetBandGain(2, (float)value, true); }
+
+        public double band3 => (double)(EqualizerController?.GetBandGain(3));
+        public double Band3 { get => band3; set => EqualizerController?.SetBandGain(3, (float)value, true); }
+
+        public double band4 => (double)(EqualizerController?.GetBandGain(4));
+        public double Band4 { get => band4; set => EqualizerController?.SetBandGain(4, (float)value, true); }
+
+        public double Band5 { get => (double)(EqualizerController?.GetBandGain(5)); set { EqualizerController?.SetBandGain(5, (float)value, true); } }
+        //uncompleted
+        public double Band6 { get => (double)(EqualizerController?.GetBandGain(6)); set { EqualizerController?.SetBandGain(6, (float)value, true); } }
+        public double Band7 { get => (double)(EqualizerController?.GetBandGain(7)); set { EqualizerController?.SetBandGain(7, (float)value, true); } }
+        public double Band8 { get => (double)(EqualizerController?.GetBandGain(8)); set { EqualizerController?.SetBandGain(8, (float)value, true); } }
+        public double Band9 { get => (double)(EqualizerController?.GetBandGain(9)); set { EqualizerController?.SetBandGain(9, (float)value, true); } }
+        public double Band10 { get => (double)(EqualizerController?.GetBandGain(10)); set { EqualizerController?.SetBandGain(10, (float)value, true); } }
+        public double Band11 { get => (double)(EqualizerController?.GetBandGain(11)); set { EqualizerController?.SetBandGain(11, (float)value, true); } }
 
         private RelayCommand resetBandCommand;
         public ICommand ResetBandCommand => resetBandCommand ??= new RelayCommand(ResetBand);
@@ -84,7 +134,7 @@ namespace PlayerUI.ViewModel
         {
             int bandnumber = int.Parse(parameter.ToString());
 
-            EqualizerController.SetBandGain(bandnumber, 0, true);
+            EqualizerController?.SetBandGain(bandnumber, 0, true);
             NotifyPropertyChanged($"Band{bandnumber}");
         }
     }

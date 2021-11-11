@@ -43,7 +43,8 @@
     <SolidColorBrush x:Key="SolidLight8" Color="{DynamicResource Light8}"/>
     <SolidColorBrush x:Key="SolidLight9" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="SolidLight10" Color="{DynamicResource Light10}"/>
-
+    <SolidColorBrush x:Key="SolidBlack" Color="{DynamicResource Black}"/>
+    <SolidColorBrush x:Key="SolidWhite" Color="{DynamicResource White}"/>
 
     <SolidColorBrush x:Key="MainView.Background" Color="{DynamicResource Light5}"/>
     <SolidColorBrush x:Key="ProgressBar.Progress" Color="{DynamicResource Color.Main}"/>
@@ -67,21 +68,21 @@
     <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FF444444"/>
     <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="#FF444444"/>
 
-    <SolidColorBrush x:Key="Item.Static.Foreground" Color="{DynamicResource Black}"/>
+        <SolidColorBrush x:Key="Item.Static.Foreground" Color="{DynamicResource Black}"/>
     <SolidColorBrush x:Key="Item.Static.Background" Color="{DynamicResource Light5}"/>
     <SolidColorBrush x:Key="Item.Static.Border" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="Item.MouseOver.Background" Color="{DynamicResource Color.Background.MouseOver}"/>
     <SolidColorBrush x:Key="Item.MouseOver.Border" Color="{DynamicResource Color.Border.MouseOver}"/>
-    <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="{DynamicResource Light5}"/>
+    <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="{DynamicResource Color.Background.Static}"/>
     <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="{DynamicResource Light9}"/>
-    <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="{DynamicResource Light8}" />
+    <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="{DynamicResource Color.Background.Pressed}"/>
     <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="{DynamicResource Light9}"/>
 
     <SolidColorBrush x:Key="ScrollBar.Static.Background" Color="Transparent"/>
-    <SolidColorBrush x:Key="ScrollBar.Static.Thumb" Color="{DynamicResource Light4}"/>
-    <SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb" Color="{DynamicResource Light7}"/>
+    <SolidColorBrush x:Key="ScrollBar.Static.Thumb" Color="{DynamicResource Color.Background.Static}"/>
+    <SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb" Color="{DynamicResource Color.Background.MouseOver}"/>
     <SolidColorBrush x:Key="ScrollBar.Pressed.Background" Color="{DynamicResource Light3}"/>
-    <SolidColorBrush x:Key="ScrollBar.Pressed.Thumb" Color="{DynamicResource Light5}"/>
+    <SolidColorBrush x:Key="ScrollBar.Pressed.Thumb" Color="{DynamicResource Color.Background.Pressed}"/>
     <SolidColorBrush x:Key="ScrollBar.Disabled.Background" Color="{DynamicResource Light9}"/>
     <SolidColorBrush x:Key="ScrollBar.Disabled.Border" Color="{DynamicResource Light9}"/>
 

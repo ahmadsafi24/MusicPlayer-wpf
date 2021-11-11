@@ -3,7 +3,7 @@
     public static class FilePicker
     {
 
-        internal static async void OpenFilePicker(PlayerLibrary.SoundPlayer player)
+        internal static async void OpenFilePicker(PlayerLibrary.Player player)
         {
             string[] files = await Helper.FileOpenPicker.GetFileAsync();
             if (files.Length > 0)

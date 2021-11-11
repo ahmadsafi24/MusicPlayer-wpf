@@ -3,6 +3,7 @@ using PlayerUI.Commands;
 using PlayerUI.Config;
 using System;
 using System.Windows;
+using PlayerLibrary.Core.NAudioPlayer;
 
 namespace PlayerUI
 {
@@ -11,7 +12,7 @@ namespace PlayerUI
         [System.Runtime.InteropServices.DllImport("Kernel32")]
         private static extern void AllocConsole();
 
-        internal static SoundPlayer Player = new();
+        internal static Player Player = new(new NAudioPlayerNormal());
 
         protected override void OnStartup(StartupEventArgs e)
         {

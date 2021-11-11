@@ -38,7 +38,7 @@ namespace PlayerUI.Config
         {
             if (playbackState == PlayerLibrary.PlaybackState.Opened)
             {
-                AppStatics.LastFile = App.Player.PlaybackSession.AudioFilePath;
+                AppStatics.LastFile = App.Player.PlaybackSession.TrackFilePath;
             }
         }
 
@@ -118,13 +118,9 @@ namespace PlayerUI.Config
             {
                 newEqMode = EqualizerMode.Super;
             }
-            else
-            {
-                newEqMode = EqualizerMode.Disabled;
-            }
             EqPreset preset = new(newEqMode.ToString(), CurrentConfig.EqBandsGain);
             //
-            App.Player.EqualizerController.SetEqPreset(preset);
+            App.Player.EqualizerController?.SetEqPreset(preset);
             Commands.WindowTheme.Refresh();
         }
 
@@ -141,8 +137,15 @@ namespace PlayerUI.Config
                     WindowsLeft = AppStatics.WindowsLeft,
                     WindowsTop = AppStatics.WindowsTop,
 
-                    EqBandsGain = App.Player.EqualizerController.AllBandsGain
                 };
+                if (App.Player.EqualizerController != null)
+                {
+                    CurrentConfig.EqBandsGain = App.Player.EqualizerController?.AllBandsGain;
+                }
+                else
+                {
+                    CurrentConfig.EqBandsGain = System.Array.Empty<int>();
+                }
                 WriteConfig();
             }
             catch (System.Exception ex)

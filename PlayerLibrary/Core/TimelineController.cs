@@ -1,37 +1,38 @@
 using Helper;
 using PlayerLibrary.Core;
+using PlayerLibrary.Core.NAudioPlayer;
+using PlayerLibrary.Core.NAudioPlayer.Interface;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using static PlayerLibrary.Events;
 
-namespace PlayerLibrary.Shell
+namespace PlayerLibrary.Core
 {
     public class TimelineController
     {
-        private PlaybackSession playbackSession; //remove it
-        private NAudioCore nAudioCore;
+        internal INAudioPlayer NAudioPlayer { get; set; }
 
         internal TimelineController(PlaybackSession playbackSession)
         {
-            this.playbackSession = playbackSession;
-            this.nAudioCore = playbackSession.nAudioCore;
+            Log.WriteLine("new TimelineController");
+            this.NAudioPlayer = playbackSession.NAudioPlayer;
             InitializeTimers();
             playbackSession.PlaybackStateChanged += PlaybackStateChanged;
         }
 
-        internal TimelineController(NAudioCore nAudioCore)
+        internal TimelineController(NAudioPlayerEq nAudioCore)
         {
-            this.nAudioCore = nAudioCore;
+            this.NAudioPlayer = nAudioCore;
             InitializeTimers();
         }
         public TimeSpan Current
         {
             get
             {
-                if (nAudioCore.Reader != null)
+                if (NAudioPlayer.Reader != null)
                 {
-                    return nAudioCore.Reader.CurrentTime;
+                    return NAudioPlayer.Reader.CurrentTime;
                 }
                 else
                 {
@@ -45,9 +46,9 @@ namespace PlayerLibrary.Shell
         {
             get
             {
-                if (nAudioCore.Reader != null)
+                if (NAudioPlayer.Reader != null)
                 {
-                    return nAudioCore.Reader.TotalTime;
+                    return NAudioPlayer.Reader.TotalTime;
                 }
                 else
                 {
@@ -63,14 +64,14 @@ namespace PlayerLibrary.Shell
                 if (time < TimeSpan.Zero || time > Total)
                 { return; }
 
-                nAudioCore.Reader.CurrentTime = time;
-                InvokeCurrentTime(time);
+                NAudioPlayer.Reader.CurrentTime = time;
+                Task.Run(async () => await InvokeCurrentTime(Current));
                 Log.WriteLine($"Seeking (async) to {time.ToString("mm\\:ss")}");
 
             });
         }
 
-        private readonly DispatcherTimer CurrentTimeWatcher = new();
+        public readonly DispatcherTimer CurrentTimeWatcher = new();
         private void InitializeTimers()
         {
             CurrentTimeWatcher.Interval = TimeSpan.FromSeconds(0.5);
@@ -82,22 +83,25 @@ namespace PlayerLibrary.Shell
         {
             if (playbackState == PlaybackState.Playing)
             {
+                Log.WriteLine("timeline timer started");
                 CurrentTimeWatcher.Start();
             }
             else
             {
+                Log.WriteLine("timeline timer stoped");
                 CurrentTimeWatcher.Stop();
             }
         }
 
         private void CurrentTimeWatcher_Tick(object sender, EventArgs e)
         {
-            InvokeCurrentTime(Current);
+            Task.Run(async () => await InvokeCurrentTime(Current));
         }
 
         public event EventHandlerTimeSpan TimePositionChanged;
-        internal async void InvokeCurrentTime(TimeSpan timespan)
+        internal async Task InvokeCurrentTime(TimeSpan timespan)
         {
+
             await Task.Run(() => TimePositionChanged?.Invoke(timespan));
 
         }

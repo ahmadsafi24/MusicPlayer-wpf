@@ -1,12 +1,19 @@
 ﻿using Helper.ViewModelBase;
+using PlayerLibrary;
 using System;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
+using System.Xml;
 
 namespace PlayerUI.ViewModel
 {
     public class MenuViewModel : ViewModelBase
     {
+        private static Player Player => App.Player;
+
+
         public ICommand TestCommand { get; }
         public ICommand OpenCommand { get; }
         public ICommand ToggleDarkModeCommand { get; }
@@ -22,15 +29,27 @@ namespace PlayerUI.ViewModel
             SwitchToBlurWindowCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToBlurWindow());
             SwitchToNormalWindowCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToNormalWindow());
         }
-        private void TestMethod()
+
+        // Enable Disable Equalizer
+        private static void TestMethod()
         {
-            Random rnd = new Random();
+            if (Player.PlaybackSession.NAudioPlayerType == typeof(PlayerLibrary.Core.NAudioPlayer.NAudioPlayerEq))
+            {
+                Player.DisableEqualizerController();
+            }
+            else
+            {
+                Player.EnableEqualizerController();
+            }
+
+
+            /*Random rnd = new Random();
             Color randomColor = Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
 
-            ChangeResource("Color.Background.Static", randomColor);
+            ChangeResource("Color.Background.Static", randomColor);*/
 
         }
-        private void ChangeResource(string key, Color color)
+        private static void ChangeResource(string key, Color color)
         {
             object obj = App.Current.TryFindResource(key);
 
@@ -39,12 +58,14 @@ namespace PlayerUI.ViewModel
                 App.Current.Resources[key] = color;
             }
         }
-private void AddKeyValue(object key, object value)
+
+        private static void AddKeyValue(object key, object value)
         {
             // load the resource dictionary
-            var rd = new System.Windows.ResourceDictionary();
-            rd.Source = new System.Uri("pack://application:,,,/YOURAssemblyName;component/EnglishResources.xaml", System.UriKind.RelativeOrAbsolute);
-
+            ResourceDictionary rd = new()
+            {
+                Source = new Uri("pack://application:,,,/YOURAssemblyName;component/EnglishResources.xaml", UriKind.RelativeOrAbsolute)
+            };
             // add the new key with value
             //rd.Add(key, value);
             if (rd.Contains(key))
@@ -57,10 +78,12 @@ private void AddKeyValue(object key, object value)
             }
 
             // now you can save the changed resource dictionary
-            var settings = new System.Xml.XmlWriterSettings();
-            settings.Indent = true;
-            var writer = System.Xml.XmlWriter.Create(@"EnglishResources.xaml", settings);
-            System.Windows.Markup.XamlWriter.Save(rd, writer);
+            XmlWriterSettings settings = new()
+            {
+                Indent = true
+            };
+            XmlWriter writer = XmlWriter.Create(@"EnglishResources.xaml", settings);
+            XamlWriter.Save(rd, writer);
         }
     }
 }

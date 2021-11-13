@@ -161,7 +161,7 @@ namespace PlayerLibrary.Core
 
             InstalEqualizer(equalizerMode, nAudioPlayerEq);
 
-            if (!string.IsNullOrEmpty(playbackSession.TrackFilePath))
+            if (!string.IsNullOrEmpty(playbackSession.CurrentTrackFile))
             {
                 PlaybackState _state = playbackSession.PlaybackState;
 
@@ -171,7 +171,7 @@ namespace PlayerLibrary.Core
                     lastvolume = playbackSession.NAudioPlayer.VolumeSampleProvider.Volume;
                 }
 
-                string file = playbackSession.TrackFilePath;
+                string file = playbackSession.CurrentTrackFile;
                 playbackSession?.Open(file, nAudioPlayerEq.Reader.CurrentTime);
                 switch (_state)
                 {
@@ -185,7 +185,7 @@ namespace PlayerLibrary.Core
                         playbackSession.Stop();
                         break;
                     case PlaybackState.Opened:
-                        playbackSession.Open(playbackSession.TrackFilePath);
+                        playbackSession.Open(playbackSession.CurrentTrackFile);
                         break;
                     default:
                         break;

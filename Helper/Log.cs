@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Helper
@@ -7,12 +8,12 @@ namespace Helper
     {
         public static void WriteLine(object message)
         {
-            System.Console.WriteLine($"Log: {message} ");
+            Console.WriteLine($"{DateTime.Now.ToLongTimeString()}| Log: {message}");
         }
 
         public static void WriteLine(string message,object value)
         {
-            System.Console.WriteLine($"Log: {message}: < {value} >");
+            Console.WriteLine($"Log: {message}: < {value} >");
         }
         public static async Task ShowMessage(string message)
         {

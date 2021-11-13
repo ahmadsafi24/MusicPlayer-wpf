@@ -1,8 +1,8 @@
 ﻿using Helper.ViewModelBase;
 using PlayerLibrary;
+using PlayerLibrary.Core;
 using PlayerLibrary.FileInfo;
 using PlayerLibrary.Model;
-using PlayerLibrary.Core;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -62,9 +62,13 @@ namespace PlayerUI.ViewModel
 
         private void OpenCoverFile()
         {
-            if (Cover == null) return;
+            if (Cover == null)
+            {
+                return;
+            }
+
             string ImageFilePath = AppContext.BaseDirectory + @"\temp_cover.png";
-            Helper.File.SaveBitmapImageToPng(Cover, ImageFilePath);
+            //Helper.File.SaveImageToPng(Cover, ImageFilePath);
             Helper.File.OpenFileWithDefaultApp(ImageFilePath);
         }
 
@@ -74,8 +78,16 @@ namespace PlayerUI.ViewModel
             IsMuted = !IsMuted;
         }
 
-        private void UpdateTotalTime() => NotifyPropertyChanged(nameof(TotalTime));
-        private void UpdateCurrentTime() => NotifyPropertyChanged(nameof(CurrentTime));
+        private void UpdateTotalTime()
+        {
+            NotifyPropertyChanged(nameof(TotalTime));
+        }
+
+        private void UpdateCurrentTime()
+        {
+            NotifyPropertyChanged(nameof(CurrentTime));
+        }
+
         private async void Player_PlaybackStateChanged(PlaybackState playbackState)
         {
             NotifyPropertyChanged(nameof(CurrentPlaybackState));
@@ -109,6 +121,9 @@ namespace PlayerUI.ViewModel
                 case PlaybackState.Ended:
                     break;
                 case PlaybackState.Closed:
+                    UpdateAll();
+                    break;
+                case PlaybackState.None:
                     UpdateAll();
                     break;
                 default:
@@ -200,9 +215,13 @@ namespace PlayerUI.ViewModel
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(playbackSession.TrackFilePath))
+                    if (!string.IsNullOrEmpty(playbackSession.CurrentTrackFile))
                     {
-                        if (playbackSession.AudioInfo == null) return "empty";
+                        if (playbackSession.AudioInfo == null)
+                        {
+                            return "empty";
+                        }
+
                         AudioInfo audioInfo = playbackSession.AudioInfo;
                         return $"{audioInfo.Format} {audioInfo.BitrateString} {audioInfo.SampleRate / 1000}kHz {audioInfo.Channels}ch";
                     }

@@ -25,7 +25,7 @@
     <StackPanel  VerticalAlignment="Top" Background="Transparent">
         <Grid x:Name="grid" Margin="12">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="62"/>
+                <ColumnDefinition Width="Auto" MaxWidth="62"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
                 <RowDefinition Height="19"/>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
-            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="0" BorderBrush="{DynamicResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5">
+            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="0" BorderBrush="{DynamicResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5" Visibility="{Binding TagFile.AlbumArtAsync.Result,IsAsync=True,Converter={StaticResource NullToVisibility}}">
                 <Border.Effect>
                     <DropShadowEffect Color="{DynamicResource Color.Main}" ShadowDepth="0" Opacity="1" BlurRadius="8" />
                 </Border.Effect>

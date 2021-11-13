@@ -1,4 +1,5 @@
-﻿using System.Windows.Media.Imaging;
+﻿using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace Helper
 {
@@ -11,6 +12,14 @@ namespace Helper
             using System.IO.FileStream filestream = new(destinationFilePath, System.IO.FileMode.Create);
             encoder.Save(filestream);
         }
+
+        /*public static void SaveImageToPng(Image image, string destinationFilePath)
+        {
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            using System.IO.FileStream filestream = new(destinationFilePath, System.IO.FileMode.Create);
+            encoder.Save(filestream);
+        }*/
 
         public static void OpenFileWithDefaultApp(string filepath)
         {

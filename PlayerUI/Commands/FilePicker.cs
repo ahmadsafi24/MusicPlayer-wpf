@@ -2,7 +2,6 @@
 {
     public static class FilePicker
     {
-
         internal static async void OpenFilePicker(PlayerLibrary.Player player)
         {
             string[] files = await Helper.FileOpenPicker.GetFileAsync();

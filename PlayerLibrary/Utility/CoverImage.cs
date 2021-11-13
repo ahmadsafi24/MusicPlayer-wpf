@@ -1,4 +1,6 @@
 ﻿using ATL;
+using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -42,13 +44,17 @@ namespace PlayerLibrary.Utility
             if (filePath != null)
             {
                 Track tagfile = new(filePath);
-                if (tagfile.PictureTokens.Count >= 1)
+                if (tagfile.EmbeddedPictures.Count > 0)
                 {
-                    if (tagfile.EmbeddedPictures.Count >= 1)
+                    if (tagfile.PictureTokens?.Count > 0 &&
+                        tagfile.EmbeddedPictures?.Count >= 1 &&
+                        tagfile.EmbeddedPictures[0]?.PictureData.Length > 3)
                     {
+                        Helper.Log.WriteLine("cover reading");
+                        
                         byte[] pic = tagfile.EmbeddedPictures[0]?.PictureData;
-                        System.IO.MemoryStream ms = new(pic);
-                        _ = ms.Seek(0, System.IO.SeekOrigin.Begin);
+                        MemoryStream ms = new(pic);
+                        _ = ms.Seek(0, SeekOrigin.Begin);
 
                         bitmap = new();
                         bitmap.BeginInit();
@@ -59,6 +65,7 @@ namespace PlayerLibrary.Utility
                         bitmap.EndInit();
                         bitmap.Freeze();
                         ms.Flush();
+                        ms.Dispose();
                     }
                 }
             }
@@ -68,7 +75,7 @@ namespace PlayerLibrary.Utility
 
         public static async Task<BitmapImage> AlbumArtAsync(string filePath)
         {
-            return await Task.Run<BitmapImage>(() => ExtractCover(filePath));
+            return await Task.Run(() => ExtractCover(filePath));
         }
     }
 

@@ -31,9 +31,11 @@ namespace PlayerLibrary.FileInfo
 
                 if (string.IsNullOrEmpty(filePath))
                 {
-                    Task.Run(async () => await Log.ShowMessage("empty in audioinfo"));
+                    // Task.Run(async () => await Log.ShowMessage("empty in audioinfo"));
                     return;
                 }
+                else
+                {
 
                 Mp3FileReader fileReader = new(filePath);
                 Mp3WaveFormat mp3WaveFormat = fileReader.Mp3WaveFormat;
@@ -62,6 +64,8 @@ namespace PlayerLibrary.FileInfo
                 { bitrateString = $"{bitrate}bps"; }
 
                 BitrateString = bitrateString;
+            }
+
             }
             catch (System.Exception ex)
             {

@@ -27,6 +27,17 @@ namespace PlayerLibrary.Core.NAudioPlayer
         public void Init()
         {
             Log.WriteLine("Init: with eq");
+
+            if (VolumeSampleProvider != null)
+            {
+                float vol = VolumeSampleProvider.Volume;
+                VolumeSampleProvider = new(Reader.ToSampleProvider());
+                VolumeSampleProvider.Volume = vol;
+            }
+            else
+            {
+                VolumeSampleProvider = new(Reader.ToSampleProvider());
+            }
             VolumeSampleProvider = new(Reader.ToSampleProvider());
             EqualizerCore = new(VolumeSampleProvider, EqualizerBand);
             OutputDevice.Init(EqualizerCore);

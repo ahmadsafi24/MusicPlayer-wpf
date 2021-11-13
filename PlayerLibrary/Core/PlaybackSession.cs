@@ -10,7 +10,7 @@ namespace PlayerLibrary.Core
 {
     public class PlaybackSession
     {
-        public string TrackFilePath { get; set; }
+        public string CurrentTrackFile {get; set;}
 
         public bool RepeatCurrentTrack = false;
         public event EventHandlerType NAudioPlayerChanged;
@@ -89,9 +89,9 @@ namespace PlayerLibrary.Core
                 }
                 else if (IsFileOpen == false)
                 {
-                    if (!string.IsNullOrEmpty(TrackFilePath))
+                    if (!string.IsNullOrEmpty(CurrentTrackFile))
                     {
-                        CoreOpen(TrackFilePath);
+                        CoreOpen(CurrentTrackFile);
                         NAudioPlayer.OutputDevice.Play();
                         TriggerStatePlaying();
                     }
@@ -122,7 +122,7 @@ namespace PlayerLibrary.Core
             Stop();
             NAudioPlayer.OutputDevice.Dispose();
             NAudioPlayer.Reader.Close();
-            TrackFilePath = null;
+            CurrentTrackFile = null;
             NAudioPlayer.Reader.Dispose();
             NAudioPlayer.Reader = null;
             Log.WriteLine("Close: done");
@@ -179,7 +179,7 @@ namespace PlayerLibrary.Core
         internal void ToggleEventsOn() => IsEventsOn = true;
 
 
-        public FileInfo.AudioInfo AudioInfo;
+        public FileInfo.AudioInfo AudioInfo => new(CurrentTrackFile);
 
 
         public bool IsFileOpen = false;
@@ -222,13 +222,10 @@ namespace PlayerLibrary.Core
             {
                 CloseIfOpen();
                 if (CheckFile(filePath) == false) return;
-                TrackFilePath = filePath;
+                CurrentTrackFile = filePath;
 
                 NAudioPlayer.Reader = new MediaFoundationReader(filePath);
-
                 NAudioPlayer.Init();
-
-                AudioInfo = new(filePath);
 
                 if (NAudioPlayer.Reader.TotalTime.TotalSeconds <= 0)
                 {
@@ -293,7 +290,7 @@ namespace PlayerLibrary.Core
             PlaybackState = PlaybackState.Ended;
             if (RepeatCurrentTrack == true)
             {
-                CoreOpen(TrackFilePath);
+                CoreOpen(CurrentTrackFile);
             }
         }
         #endregion

@@ -42,7 +42,7 @@ namespace PlayerLibrary
             PlaybackSession.ToggleEventsOff();
             PlaybackState _state = PlaybackSession.PlaybackState;
             float lastvolume = PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume;
-            string file = PlaybackSession.TrackFilePath;
+            string file = PlaybackSession.CurrentTrackFile;
             PlaybackSession.Open(file, _nAudioPlayer.Reader.CurrentTime);
             switch (_state)
             {
@@ -70,7 +70,7 @@ namespace PlayerLibrary
             StringBuilder stringBuilder = new();
 
             stringBuilder.AppendLine($"PlaybackSession: < {PlaybackSession} >");
-            stringBuilder.AppendLine($"Audiofilepath: < {PlaybackSession?.TrackFilePath} >");
+            stringBuilder.AppendLine($"Audiofilepath: < {PlaybackSession?.CurrentTrackFile} >");
             stringBuilder.AppendLine($"TimelineCurrent: < {PlaybackSession.TimelineController.Current.ToString()} >");
 
             return stringBuilder.ToString();

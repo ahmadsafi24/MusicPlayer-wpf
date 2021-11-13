@@ -1,4 +1,5 @@
 ﻿using ATL;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -44,8 +45,9 @@ namespace PlayerLibrary.Model
         }
 
         public string AlbumArtist => string.IsNullOrEmpty(Tag.AlbumArtist) ? null : Tag.AlbumArtist;
-
-
+        public string Bitrate => $"{Tag.Bitrate}kbps";
+        public string SampleRate => $"{Tag.SampleRate}Hz";
+        public string AudioFormatName => Tag.AudioFormat.Name;
 
         private BitmapImage _albumArt;
         public BitmapImage AlbumArt
@@ -77,5 +79,4 @@ namespace PlayerLibrary.Model
             }
         }
     }
-
 }

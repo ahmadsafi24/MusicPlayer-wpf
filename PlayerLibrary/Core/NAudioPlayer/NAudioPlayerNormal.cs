@@ -23,7 +23,16 @@ namespace PlayerLibrary.Core.NAudioPlayer
         public void Init()
         {
             Log.WriteLine("Init: normal");
-            VolumeSampleProvider = new(Reader.ToSampleProvider());
+            if (VolumeSampleProvider != null)
+            {
+                float vol = VolumeSampleProvider.Volume;
+                VolumeSampleProvider = new(Reader.ToSampleProvider());
+                VolumeSampleProvider.Volume = vol;
+            }
+            else
+            {
+                VolumeSampleProvider = new(Reader.ToSampleProvider());
+            }
             OutputDevice.Init(VolumeSampleProvider);
         }
         #endregion

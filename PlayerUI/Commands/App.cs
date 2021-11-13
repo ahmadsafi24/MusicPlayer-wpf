@@ -37,7 +37,7 @@
                        string file = Config.AppConfig.CurrentConfig.LastFile;
                        if (!string.IsNullOrEmpty(file))
                        {
-                           PlayerUI.App.Player.PlaybackSession.TrackFilePath = file;
+                           PlayerUI.App.Player.PlaybackSession.CurrentTrackFile = file;
                        };
                    }
                });

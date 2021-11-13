@@ -38,6 +38,7 @@
             <converter:TimeSpanToDouble x:Key="TimeSpanToDouble"/>
             <converter:TimeSpanToString x:Key="TimeSpanToString"/>
             <converter:TotalSecondsToString x:Key="TotalSecondsToString"/>
+            <converter:VolumeCoverter x:Key="VolumeCoverter"/>
             <converter:NullToVisibility x:Key="NullToVisibility"/>
 
             <ContextMenu x:Key="MainContextMenu" DataContext="{StaticResource MainView_ViewModel}">

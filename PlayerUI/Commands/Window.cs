@@ -1,6 +1,8 @@
 ﻿using PlayerLibrary.Preset;
 using PlayerLibrary.Core;
 using System.Windows;
+using System.Windows.Input;
+using System;
 
 namespace PlayerUI.Commands
 {
@@ -29,19 +31,18 @@ namespace PlayerUI.Commands
 
         public static void AttachMouseWheel(System.Windows.Window window)
         {
-            window.MouseWheel += (_, e) => MouseWheelChanged(e);
+            window.MouseWheel += MouseWheelChanged;
         }
-        private static void MouseWheelChanged(System.Windows.Input.MouseWheelEventArgs e)
-        {
 
-            switch (e.Delta)
+        private static void MouseWheelChanged(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
             {
-                case > 0:
-                    volumeController.VolumeUp(5);
-                    break;
-                default:
-                    volumeController.VolumeDown(5);
-                    break;
+                volumeController.VolumeUp((float)0.05);
+            }
+            else
+            {
+                volumeController.VolumeDown((float)0.05);
             }
         }
     }

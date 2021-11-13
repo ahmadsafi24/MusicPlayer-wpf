@@ -1,9 +1,9 @@
-﻿using PlayerLibrary.Core;
-using System;
-using System.Text;
-using Helper;
+﻿using Helper;
+using PlayerLibrary.Core;
 using PlayerLibrary.Core.NAudioPlayer;
 using PlayerLibrary.Core.NAudioPlayer.Interface;
+using System;
+using System.Text;
 using static PlayerLibrary.Events;
 
 namespace PlayerLibrary
@@ -16,11 +16,12 @@ namespace PlayerLibrary
         public Player(INAudioPlayer nAudioPlayer)
         {
             Log.WriteLine("new player with type: " + nAudioPlayer.GetType());
-            this.PlaybackSession = new(nAudioPlayer);
+            PlaybackSession = new(nAudioPlayer);
         }
         public Player()
         {
-
+            INAudioPlayer nAudioPlayer = new NAudioPlayerNormal();
+            PlaybackSession = new(nAudioPlayer);
         }
 
         public void EnableEqualizerController()

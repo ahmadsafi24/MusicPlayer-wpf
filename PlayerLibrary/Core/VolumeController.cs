@@ -35,32 +35,33 @@ namespace PlayerLibrary.Core
         }
         #region Volume
         public event EventHandlerVolume VolumeChanged;
-        internal void InvokeVolumeChanged(int newVolume)
+        internal void InvokeVolumeChanged(float newVolume)
         {
             VolumeChanged?.Invoke(newVolume);
         }
 
-        public void VolumeUp(int value)
+        public void VolumeUp(float value)
         {
             if (value > 0)
             {
                 ChangeVolume(Volume += value);
             }
         }
-        public void VolumeDown(int value)
+        public void VolumeDown(float value)
         {
             if (value > 0)
             {
                 ChangeVolume(Volume -= value);
             }
         }
-        public void ChangeVolume(int newVolume)
+        public void ChangeVolume(float newVolume)
         {
             try
             {
-                if (newVolume is >= 0 and <= 100)
+                if (newVolume is >= 0 and <= 1)
                 {
                     Volume = newVolume;
+                    Log.WriteLine("ChangingVolume to", newVolume);
                 }
             }
             catch (Exception ex)
@@ -72,37 +73,53 @@ namespace PlayerLibrary.Core
 
         #endregion
 
-        public int Volume
+        public float Volume
         {
             get
             {
                 if (NAudioPlayer.VolumeSampleProvider == null)
                 {
-                    return 0;
+                    return 1;
                 }
-                return (int)(ToDouble(NAudioPlayer.VolumeSampleProvider.Volume) * 100);
+                return NAudioPlayer.VolumeSampleProvider.Volume;
             }
             set
             {
                 try
                 {
                     if (NAudioPlayer.VolumeSampleProvider == null) return;
+                    if (value == NAudioPlayer.VolumeSampleProvider.Volume) return;
 
                     if (IsMuted)
                     {
                         ismute = false;
                     }
-                    int iv = value < 0 ? 0 : value > 100 ? 100 : value;
-                    double V = (double)iv / 100;
-                    //V = V < 0 ? 0 : V > 1 ? 1 : V;
-                    NAudioPlayer.VolumeSampleProvider.Volume = (float)V;
+                    switch (value)
+                    {
+                        case >= 0 and <= 1:
+                            NAudioPlayer.VolumeSampleProvider.Volume = value;
+                            break;
+                        default:
+                            switch (value)
+                            {
+                                case > 1:
+                                    if (NAudioPlayer.VolumeSampleProvider.Volume == 1) return;
+                                    NAudioPlayer.VolumeSampleProvider.Volume = 1;
+                                    break;
+                                case < 0:
+                                    if (NAudioPlayer.VolumeSampleProvider.Volume == 0) return;
+                                    NAudioPlayer.VolumeSampleProvider.Volume = 0;
+                                    break;
+                            }
+                            break;
+                    }
 
-                    if (iv == 0)
+                    if (value == 0)
                     {
                         ismute = true;
                     }
-                    InvokeVolumeChanged(iv);
-                    Log.WriteLine("volume: " + iv);
+                    InvokeVolumeChanged(value);
+                    Log.WriteLine("volume: " + NAudioPlayer.VolumeSampleProvider.Volume);
                 }
                 catch (Exception ex)
                 {
@@ -111,16 +128,8 @@ namespace PlayerLibrary.Core
                 }
             }
         }
-        internal static float ToSingle(double value)
-        {
-            return (float)value;
-        }
-        internal static double ToDouble(float value)
-        {
-            return value;
-        }
 
-        private int volBeforeMute;
+        private float volBeforeMute;
         private bool ismute;
         public bool IsMuted
         {

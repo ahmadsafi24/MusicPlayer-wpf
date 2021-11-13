@@ -124,10 +124,6 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}" Margin="5,0" d:Text="0:00"/>
 
-            <Slider Visibility="Hidden" Grid.Column="2" VerticalAlignment="Center" TickPlacement="None" Minimum="0" IsSelectionRangeEnabled="True" IsMoveToPointEnabled="True" SelectionStart="0" SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}" Foreground="#FFA77825" BorderBrush="{x:Null}" Background="#FF6B6B6B" ToolTip="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}"
-                       Value="{Binding CurrentTime,Converter={StaticResource TimeSpanToDouble},Mode=TwoWay}"
-                       Maximum="{Binding TotalTime,Converter={StaticResource TimeSpanToDouble}}"/>
-
             <Slider Grid.Column="3" VerticalAlignment="Center" Margin="10,0"
                     IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True"
                     SelectionStart="{Binding Minimum, RelativeSource={RelativeSource Self}}"
@@ -146,7 +142,8 @@
                     AutoToolTipPlacement="TopLeft"
                     SelectionStart="{Binding Minimum, RelativeSource={RelativeSource Self}}"
                     SelectionEnd="{Binding Value, RelativeSource={RelativeSource Self}}"
-                    Maximum="100" Minimum="0" Value="{Binding Volume,Mode=TwoWay}"
+                    Maximum="100" Minimum="0" Value="{Binding Volume,Mode=TwoWay,Converter={StaticResource VolumeCoverter}}"
+                    SmallChange="10" LargeChange="20"
                     Foreground="{DynamicResource MediaSlider.Foreground}"
                     Background="{DynamicResource MediaSlider.Background.Active}"/>
             

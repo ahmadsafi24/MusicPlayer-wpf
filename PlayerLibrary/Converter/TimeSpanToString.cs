@@ -34,5 +34,10 @@ namespace PlayerLibrary.Converter
         {
             return TimeSpan.Zero;
         }
+
+        public static string FromTimespan(TimeSpan timeSpan)
+        {
+            return timeSpan.ToString("mm\\:ss");
+        }
     }
 }

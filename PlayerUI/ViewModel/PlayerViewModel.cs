@@ -165,7 +165,7 @@ namespace PlayerUI.ViewModel
             }
         }
 
-        private async void AudioPlayer_VolumeChanged(int newVolume)
+        private async void AudioPlayer_VolumeChanged(float newVolume)
         {
             await Task.Run(() => { _volume = newVolume; NotifyPropertyChanged(nameof(Volume)); NotifyPropertyChanged(nameof(IsMuted)); });
         }
@@ -189,11 +189,11 @@ namespace PlayerUI.ViewModel
             set => Task.Run(async () => await timelineController.SeekAsync(value));
         }
 
-        private double _volume = App.Player.PlaybackSession.VolumeController.Volume;
-        public double Volume
+        private float _volume = App.Player.PlaybackSession.VolumeController.Volume;
+        public float Volume
         {
             get => _volume;
-            set => volumeController.ChangeVolume((int)value);
+            set => volumeController.ChangeVolume(value);
         }
 
         public bool IsPlaying => playbackSession.IsPlaying;

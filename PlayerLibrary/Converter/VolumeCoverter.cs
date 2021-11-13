@@ -8,13 +8,12 @@ namespace PlayerLibrary.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int result = 0;
+            double result = 0;
             if (value is float Volume)
             {
                 try
                 {
-                    float fval = (float)value;
-                    result = (int)(ToDouble(fval) * 100);
+                    result = ToDouble(Volume) * 100;
                 }
                 catch (System.Exception)
                 {
@@ -28,21 +27,19 @@ namespace PlayerLibrary.Converter
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             float result = 0;
-            if (value is int Volume)
+            if (value is double Volume)
             {
                 try
                 {
-                    int ival = (int)value;
-                    double V = (double)ival / 100;
-                    V = V < 0 ? 0 : V > 1 ? 1 : V;
+                    double V = (Volume) / 100;
                     result = (float)V;
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    Helper.Log.WriteLine(ex.Message);
                     return 0;
                 }
             }
-
             return result;
         }
         private float ToSingle(double value)

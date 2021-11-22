@@ -21,6 +21,7 @@
         }
         private void MainWindow_Closed(object sender, EventArgs e)
         {
+            AppStatics.IsWindowStateMaximized = (WindowState == WindowState.Maximized);
             if (WindowState == WindowState.Normal)
             {
                 AppStatics.WindowsLeft = Left;
@@ -32,10 +33,17 @@
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Left = AppStatics.WindowsLeft;
-            Top = AppStatics.WindowsTop;
-            Width = AppStatics.WindowsWidth;
-            Height = AppStatics.WindowsHeight;
+            if (AppStatics.IsWindowStateMaximized == false)
+            {
+                Left = AppStatics.WindowsLeft;
+                Top = AppStatics.WindowsTop;
+                Width = AppStatics.WindowsWidth;
+                Height = AppStatics.WindowsHeight;
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
+            }
             _ = App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
                 Content = App.Current.FindResource("MainPage");

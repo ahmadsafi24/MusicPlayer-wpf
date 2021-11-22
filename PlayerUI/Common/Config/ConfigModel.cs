@@ -13,7 +13,7 @@
         public double WindowsHeight { get; set; }
         public double WindowsLeft { get; set; }
         public double WindowsTop { get; set; }
-
+        public bool IsWindowStateMaximized { get; set; }
         public int[] EqBandsGain { get; set; }
     }
 }

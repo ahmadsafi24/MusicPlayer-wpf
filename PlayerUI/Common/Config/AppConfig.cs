@@ -17,6 +17,7 @@
                 WindowsHeight = 600,
                 WindowsLeft = Application.Current.MainWindow.Left,
                 WindowsTop = Application.Current.MainWindow.Top,
+                IsWindowStateMaximized = false,
                 EqBandsGain = Array.Empty<int>()
             };
             return config;
@@ -51,6 +52,7 @@
             writer.WriteNumber(nameof(ConfigModel.WindowsHeight), (int)CurrentConfig.WindowsHeight);
             writer.WriteNumber(nameof(ConfigModel.WindowsLeft), (int)CurrentConfig.WindowsLeft);
             writer.WriteNumber(nameof(ConfigModel.WindowsTop), (int)CurrentConfig.WindowsTop);
+            writer.WriteBoolean(nameof(ConfigModel.IsWindowStateMaximized), CurrentConfig.IsWindowStateMaximized);
             writer.WriteStartArray(nameof(ConfigModel.EqBandsGain));
             foreach (var item in CurrentConfig.EqBandsGain)
             {
@@ -78,7 +80,7 @@
                 }
                 else
                 {
-                    Helper.Log.WriteLine("Config Not Found\nOk To Create Default Config");
+                    _ = Helper.Log.ShowMessage("Config Not Found\nOk To Create Default Config");
                     CurrentConfig = DefaultConfig;
                 }
 
@@ -101,7 +103,7 @@
             AppStatics.WindowsTop = CurrentConfig.WindowsTop;
             AppStatics.WindowsWidth = CurrentConfig.WindowsWidth;
             AppStatics.WindowsHeight = CurrentConfig.WindowsHeight;
-
+            AppStatics.IsWindowStateMaximized = CurrentConfig.IsWindowStateMaximized;
             // bad coding
             EqualizerMode newEqMode = new();
             if (CurrentConfig.EqBandsGain.Length == 8)
@@ -130,7 +132,7 @@
                     WindowsHeight = AppStatics.WindowsHeight,
                     WindowsLeft = AppStatics.WindowsLeft,
                     WindowsTop = AppStatics.WindowsTop,
-
+                    IsWindowStateMaximized = AppStatics.IsWindowStateMaximized
                 };
                 if (App.Player.EqualizerController != null)
                 {

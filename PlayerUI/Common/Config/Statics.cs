@@ -8,5 +8,7 @@
         public static double WindowsHeight { get; set; }
         public static double WindowsLeft { get; set; }
         public static double WindowsTop { get; set; }
+
+        public static bool IsWindowStateMaximized { get; set; }
     }
 }

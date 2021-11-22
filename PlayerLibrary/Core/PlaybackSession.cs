@@ -10,7 +10,7 @@ namespace PlayerLibrary.Core
 {
     public class PlaybackSession
     {
-        public string CurrentTrackFile {get; set;}
+        public string CurrentTrackFile { get; private set; }
 
         public bool RepeatCurrentTrack = false;
         public event EventHandlerType NAudioPlayerChanged;
@@ -29,13 +29,13 @@ namespace PlayerLibrary.Core
 
                 _nAudioPlayer = value;
                 Intialize();
-                InvokeNAudioPlayerChanged(value.GetType());
+                RaiseNAudioPlayerChanged(value.GetType());
             }
         }
         public Type NAudioPlayerType => NAudioPlayer.GetType();
         public bool IsEqualizerEnabled => NAudioPlayer.GetType() == typeof(NAudioPlayer.NAudioPlayerEq);
 
-        internal void InvokeNAudioPlayerChanged(Type type)
+        internal void RaiseNAudioPlayerChanged(Type type)
         {
             NAudioPlayerChanged?.Invoke(type);
         }
@@ -85,7 +85,7 @@ namespace PlayerLibrary.Core
                 if (PlaybackState != PlaybackState.Playing && IsFileOpen == true)
                 {
                     NAudioPlayer.OutputDevice.Play();
-                    TriggerStatePlaying();
+                    RaisePlaybackStatePlaying();
                 }
                 else if (IsFileOpen == false)
                 {
@@ -93,7 +93,7 @@ namespace PlayerLibrary.Core
                     {
                         CoreOpen(CurrentTrackFile);
                         NAudioPlayer.OutputDevice.Play();
-                        TriggerStatePlaying();
+                        RaisePlaybackStatePlaying();
                     }
                 }
             }
@@ -107,26 +107,34 @@ namespace PlayerLibrary.Core
         {
             Log.WriteLine("Pause");
             NAudioPlayer.OutputDevice.Pause();
-            TriggerStatePaused();
+            RaisePlaybackStatePaused();
         }
         public void Stop()
         {
             Log.WriteLine("Stop");
             NAudioPlayer.OutputDevice.Stop();
             NAudioPlayer.Reader.CurrentTime = TimeSpan.Zero;
-            TriggerStateStopped();
+            RaisePlaybackStateStopped();
         }
 
         public void Close()
         {
             Stop();
-            NAudioPlayer.OutputDevice.Dispose();
-            NAudioPlayer.Reader.Close();
-            CurrentTrackFile = null;
-            NAudioPlayer.Reader.Dispose();
-            NAudioPlayer.Reader = null;
-            Log.WriteLine("Close: done");
-            TriggerStateClosed();
+            try
+            {
+                NAudioPlayer.OutputDevice.Dispose();
+                NAudioPlayer.Reader.Close();
+                CurrentTrackFile = null;
+                NAudioPlayer.Reader.Dispose();
+                NAudioPlayer.Reader = null;
+                Log.WriteLine("Close: done");
+
+            }
+            catch (System.Exception ex)
+            {
+                Helper.Log.WriteLine("close: ", ex.Message);
+            }
+            RaisePlaybackStateClosed();
         }
         private PlaybackState _playbackState = PlaybackState.None;
         public PlaybackState PlaybackState
@@ -135,7 +143,7 @@ namespace PlayerLibrary.Core
             private set
             {
                 _playbackState = value;
-                InvokePlaybackStateChanged(value);
+                RaisePlaybackStateChanged(value);
             }
         }
 
@@ -145,25 +153,25 @@ namespace PlayerLibrary.Core
             {
                 if ((int)NAudioPlayer.Reader.CurrentTime.TotalSeconds >= (int)NAudioPlayer.Reader.TotalTime.TotalSeconds - 1)
                 {
-                    TriggerStateEnded();
+                    RaisePlaybackStateEnded();
                 }
             }
             else if (string.IsNullOrEmpty(e.Exception?.Message))
             {
                 Log.WriteLine("WaveOutEvent_PlaybackStopped With No Exception");
-                TriggerStateStopped();
+                RaisePlaybackStateStopped();
             }
             else
             {
                 Log.WriteLine(e.Exception.Message + "WaveOutEvent_PlaybackStopped");
-                TriggerStateFailed();
+                RaisePlaybackStateFailed();
             }
         }
 
         #region Events
         public event EventHandlerPlaybackState PlaybackStateChanged;
 
-        internal void InvokePlaybackStateChanged(PlaybackState value)
+        internal void RaisePlaybackStateChanged(PlaybackState value)
         {
             if (IsEventsOn)
             {
@@ -229,12 +237,12 @@ namespace PlayerLibrary.Core
 
                 if (NAudioPlayer.Reader.TotalTime.TotalSeconds <= 0)
                 {
-                    TriggerStateFailed();
+                    RaisePlaybackStateFailed();
                     return;
                 }
                 else
                 {
-                    TriggerStateOpened();
+                    RaisePlaybackStateOpened();
                 }
             }
             catch (Exception ex)
@@ -245,46 +253,46 @@ namespace PlayerLibrary.Core
 
         #region FirePaybackState
 
-        private void TriggerStateFailed()
+        private void RaisePlaybackStateFailed()
         {
             IsFileOpen = false;
             IsPlaying = false;
             PlaybackState = PlaybackState.Failed;
         }
 
-        private void TriggerStateOpened()
+        private void RaisePlaybackStateOpened()
         {
             IsFileOpen = true;
             IsPlaying = false;
             PlaybackState = PlaybackState.Opened;
         }
 
-        private void TriggerStatePlaying()
+        private void RaisePlaybackStatePlaying()
         {
             IsPlaying = true;
             PlaybackState = PlaybackState.Playing;
         }
 
-        private void TriggerStatePaused()
+        private void RaisePlaybackStatePaused()
         {
             IsPlaying = false;
             PlaybackState = PlaybackState.Paused;
         }
 
-        private void TriggerStateStopped()
+        private void RaisePlaybackStateStopped()
         {
             IsPlaying = false;
             PlaybackState = PlaybackState.Stopped;
         }
 
-        private void TriggerStateClosed()
+        private void RaisePlaybackStateClosed()
         {
             IsPlaying = false;
             IsFileOpen = false;
             PlaybackState = PlaybackState.Closed;
         }
 
-        private void TriggerStateEnded()
+        private void RaisePlaybackStateEnded()
         {
             IsPlaying = false;
             PlaybackState = PlaybackState.Ended;

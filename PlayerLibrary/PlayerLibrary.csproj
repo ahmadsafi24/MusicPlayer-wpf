@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x86;x64</Platforms>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

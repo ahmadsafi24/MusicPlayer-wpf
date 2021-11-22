@@ -1,7 +1,4 @@
-﻿using Helper.ViewModelBase;
-using System.Windows.Input;
-
-namespace PlayerUI.ViewModel
+﻿namespace PlayerUI.ViewModel
 {
     public class MiniView_ViewModel : ViewModelBase
     {
@@ -12,10 +9,10 @@ namespace PlayerUI.ViewModel
 
         public MiniView_ViewModel()
         {
-            Open = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker(App.Player));
+            Open = new DelegateCommand(() => FilePicker.OpenFilePicker(App.Player));
             OpenFileLocation = new DelegateCommand(() => Helper.OpenFileLocation.Open(App.Player.PlaybackSession.CurrentTrackFile));
-            SwitchToMainView = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToMainView());
-            Exit = new DelegateCommand(() => Commands.App.CloseMainWindow());
+            SwitchToMainView = new DelegateCommand(() => ViewSwitcher.SwitchToMainView());
+            Exit = new DelegateCommand(() => AppCommands.CloseMainWindow());
         }
     }
 }

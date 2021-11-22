@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Threading;
+using System;
 
 namespace Helper.ViewModelBase
 {
@@ -8,7 +11,10 @@ namespace Helper.ViewModelBase
 
         protected void NotifyPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }));
         }
     }
 }

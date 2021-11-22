@@ -61,14 +61,18 @@ namespace PlayerLibrary.Core
         {
             await Task.Run(() =>
             {
-                if (time < TimeSpan.Zero || time > Total)
-                { return; }
-
-                NAudioPlayer.Reader.CurrentTime = time;
-                Task.Run(async () => await InvokeCurrentTime(Current));
-                Log.WriteLine($"Seeking (async) to {time.ToString("mm\\:ss")}");
-
+                Seek(time);
             });
+        }
+
+        public void Seek(TimeSpan time)
+        {
+            if (time < TimeSpan.Zero || time > Total || time == Current)
+            { return; }
+
+            NAudioPlayer.Reader.CurrentTime = time;
+            Task.Run(async () => await RaiseCurrentTime(Current));
+            Log.WriteLine($"Seeking (async) to {time.ToString("mm\\:ss")}");
         }
 
         public readonly DispatcherTimer CurrentTimeWatcher = new();
@@ -95,13 +99,12 @@ namespace PlayerLibrary.Core
 
         private void CurrentTimeWatcher_Tick(object sender, EventArgs e)
         {
-            Task.Run(async () => await InvokeCurrentTime(Current));
+            Task.Run(async () => await RaiseCurrentTime(Current));
         }
 
         public event EventHandlerTimeSpan TimePositionChanged;
-        internal async Task InvokeCurrentTime(TimeSpan timespan)
+        internal async Task RaiseCurrentTime(TimeSpan timespan)
         {
-
             await Task.Run(() => TimePositionChanged?.Invoke(timespan));
 
         }

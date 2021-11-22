@@ -1,27 +1,20 @@
-﻿using PlayerLibrary;
-using PlayerUI.Commands;
-using PlayerUI.Config;
-using System;
-using System.Windows;
-using PlayerLibrary.Core.NAudioPlayer;
-
-namespace PlayerUI
+﻿namespace PlayerUI
 {
     public partial class App : Application
     {
-        [System.Runtime.InteropServices.DllImport("Kernel32")]
-        private static extern void AllocConsole();
+        /*[System.Runtime.InteropServices.DllImport("Kernel32")]
+        private static extern void AllocConsole();*/
 
         internal static Player Player = new(new NAudioPlayerNormal());
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            AllocConsole();
+            //AllocConsole();
 
             base.OnStartup(e);
-                Commands.App.LoadStartupConfigs();
-                MainWindow.Show();
-                Commands.App.LoadStartupArgs(e.Args);
+            Common.Commands.AppCommands.LoadStartupConfigs();
+            MainWindow.Show();
+            Common.Commands.AppCommands.LoadStartupArgs(e.Args);
             EnableSystemThemeWatcher();
             try
             {
@@ -39,7 +32,7 @@ namespace PlayerUI
             if (e.ApplicationExitCode != 0)
             { MessageBox.Show(e.ApplicationExitCode.ToString()); }
 
-            Commands.App.SaveStartupConf();
+            Common.Commands.AppCommands.SaveStartupConf();
         }
 
         void EnableSystemThemeWatcher()

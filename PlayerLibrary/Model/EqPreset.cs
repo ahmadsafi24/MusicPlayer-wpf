@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace PlayerLibrary.Model
 {
-    public class EqPreset
+    public record EqPreset
     {
+        [JsonConstructor]
         public EqPreset(string equalizerMode, int[] bandsGain)
         {
             EqualizerMode = equalizerMode;

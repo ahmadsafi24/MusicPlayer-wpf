@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:PlayerUI"
              xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel"
-             xmlns:Windows="clr-namespace:PlayerUI.Windows"
+             xmlns:Windows="clr-namespace:PlayerUI.View"
              xmlns:converter="clr-namespace:PlayerLibrary.Converter;assembly=PlayerLibrary"
-             xmlns:control="clr-namespace:PlayerUI.Control"
-             xmlns:view="clr-namespace:PlayerUI.View"
+             xmlns:control="clr-namespace:PlayerUI.UserControls"
+             xmlns:Pages="clr-namespace:PlayerUI.Pages"
              x:Class="PlayerUI.App">
 
     <Application.Resources>
@@ -25,10 +25,12 @@
                 <ResourceDictionary Source="pack://application:,,,/PlayerStyles;component/Resource/Style/ContextMenu.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/PlayerStyles;component/Resource/Style/Tooltip.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/PlayerStyles;component/Resource/Style/Other.xaml"/>
-
-
+                
+                
+                <ResourceDictionary Source="/UserControls/ContextMenu.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+                
             <ViewModel:MainView_ViewModel x:Key="MainView_ViewModel"/>
             <ViewModel:MiniView_ViewModel x:Key="MiniView_ViewModel"/>
             <ViewModel:PlayerViewModel x:Key="PlayerViewModel"/>
@@ -41,21 +43,17 @@
             <converter:VolumeCoverter x:Key="VolumeCoverter"/>
             <converter:NullToVisibility x:Key="NullToVisibility"/>
 
-            <ContextMenu x:Key="MainContextMenu" DataContext="{StaticResource MainView_ViewModel}">
-                <MenuItem Header="Open" Command="{Binding Open}"/>
-                <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
-                <MenuItem Header="ControlbarWindow" Command="{Binding SwitchToMainView}"/>
-                <MenuItem Header="Exit" Command="{Binding Exit}"/>
-            </ContextMenu>
+
             
             <control:EqualizerControl x:Key="EqualizerControl"/>
             <control:MediaInfoCard x:Key="MediaInfoCard"/>
             <control:Menubar x:Key="Menubar"/>
             <control:PlayerControl x:Key="PlayerControl"/>
             <control:Titlebar x:Key="Titlebar"/>
-            
-            <view:MainView x:Key="MainView"/>
-            <view:MiniView x:Key="MiniView"/>
+
+            <Pages:MiniView x:Key="MiniView"/>
+
+            <Pages:MainPage x:Key="MainPage"/>
 
         </ResourceDictionary>
     </Application.Resources>

@@ -60,7 +60,7 @@ namespace PlayerLibrary
                     break;
             }
             PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume = lastvolume;
-            PlaybackSession.InvokeNAudioPlayerChanged(_nAudioPlayer.GetType());
+            PlaybackSession.RaiseNAudioPlayerChanged(_nAudioPlayer.GetType());
         }
 
 

@@ -30,22 +30,6 @@ namespace PlayerLibrary.Preset
             {
                 var json = File.ReadAllBytes(filePath);
                 preset = System.Text.Json.JsonSerializer.Deserialize<EqPreset>(json);
-
-                /*bad coding
-                if (preset.BandsGain.Length == 8)
-                {
-                    preset.EqualizerMode = EqualizerMode.Normal;
-                }
-                else if (preset.BandsGain.Length == 11)
-                {
-                    preset.EqualizerMode = EqualizerMode.Super;
-                }
-                else
-                {
-                    preset.EqualizerMode = EqualizerMode.Disabled;
-                }
-
-                */
             }
             return preset;
         }

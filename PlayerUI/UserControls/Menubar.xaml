@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="PlayerUI.UserControls.Menubar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewmodel="clr-namespace:PlayerUI.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignWidth="800" Background="{DynamicResource Menubar.Background}"
+             DataContext="{StaticResource MenuViewModel}"
+             >
+    <StackPanel Orientation="Horizontal">
+        <Button Content="Open" Command="{Binding OpenCommand}" Height="28" />
+        <Button Content="ToggleDarkMode" Command="{Binding ToggleDarkModeCommand}" Height="28"/>
+        <Button Content="MiniView" Command="{Binding SwitchToMiniViewCommand}" Height="28"/>
+        <Button Content="BlurWindow" Command="{Binding SwitchToBlurWindowCommand}" Height="28"/>
+        <Button Content="NormalWindow" Command="{Binding SwitchToNormalWindowCommand}" Height="28"/>
+        <Button Content="TestCommand" Command="{Binding TestCommand}" Height="28"/>
+</StackPanel>
+</UserControl>

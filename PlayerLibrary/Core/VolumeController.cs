@@ -23,19 +23,19 @@ namespace PlayerLibrary.Core
             Log.WriteLine("new VolumeController");
             this.NAudioPlayer = playbackSession.NAudioPlayer;
             playbackSession.PlaybackStateChanged += PlaybackStateChanged;
-            InvokeVolumeChanged(Volume);
+            RaiseVolumeChanged(Volume);
 
         }
         private void PlaybackStateChanged(PlaybackState state)
         {
             if (state == PlaybackState.Opened)
             {
-                InvokeVolumeChanged(Volume);
+                RaiseVolumeChanged(Volume);
             }
         }
         #region Volume
         public event EventHandlerVolume VolumeChanged;
-        internal void InvokeVolumeChanged(float newVolume)
+        internal void RaiseVolumeChanged(float newVolume)
         {
             VolumeChanged?.Invoke(newVolume);
         }
@@ -61,7 +61,7 @@ namespace PlayerLibrary.Core
                 if (newVolume is >= 0 and <= 1)
                 {
                     Volume = newVolume;
-                    Log.WriteLine("ChangingVolume to", newVolume);
+                    //Log.WriteLine("ChangingVolume to", newVolume);
                 }
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace PlayerLibrary.Core
                     {
                         ismute = true;
                     }
-                    InvokeVolumeChanged(value);
+                    RaiseVolumeChanged(value);
                     Log.WriteLine("volume: " + NAudioPlayer.VolumeSampleProvider.Volume);
                 }
                 catch (Exception ex)

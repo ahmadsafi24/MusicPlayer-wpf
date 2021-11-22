@@ -1,21 +1,11 @@
-﻿using Helper.ViewModelBase;
-using PlayerLibrary;
-using PlayerLibrary.Core;
-using PlayerLibrary.FileInfo;
-using PlayerLibrary.Model;
-using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-
-namespace PlayerUI.ViewModel
+﻿namespace PlayerUI.ViewModel
 {
     public class PlayerViewModel : ViewModelBase
     {
-        private Player player => App.Player;
-        private PlaybackSession playbackSession => App.Player.PlaybackSession;
-        private TimelineController timelineController => App.Player.PlaybackSession.TimelineController;
-        private VolumeController volumeController => App.Player.PlaybackSession.VolumeController;
+        public Player Player => App.Player;
+        private PlaybackSession PlaybackSession => App.Player.PlaybackSession;
+        private TimelineController TimelineController => App.Player.PlaybackSession.TimelineController;
+        private VolumeController VolumeController => App.Player.PlaybackSession.VolumeController;
 
         #region Commands
         public ICommand PlayPauseCommand { get; }
@@ -23,19 +13,6 @@ namespace PlayerUI.ViewModel
         public ICommand OpenCoverFileCommand { get; }
         public ICommand NextAudioCommand { get; }
         public ICommand PreviousAudioCommand { get; }
-
-        #endregion
-
-        #region Bindable Property
-        public bool IsMuted
-        {
-            get => volumeController.IsMuted;
-            set => volumeController.IsMuted = value;
-        }
-        public string CurrentPlaybackState => playbackSession.PlaybackState.ToString();
-        public BitmapImage Cover => TagFile.AlbumArt;
-        public AudioTag TagFile => playbackSession.AudioInfo?.AudioTag;
-        public TimeSpan TotalTime => timelineController.Total;
 
         #endregion
 
@@ -48,16 +25,15 @@ namespace PlayerUI.ViewModel
             NextAudioCommand = new DelegateCommand(NextAudio);
             PreviousAudioCommand = new DelegateCommand(PreviousAudio);
 
-            timelineController.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
-            playbackSession.PlaybackStateChanged += Player_PlaybackStateChanged;
-            player.PlaybackSession.NAudioPlayerChanged += PlaybackSession_NAudioPlayerChanged;
-            NotifyPropertyChanged(null);
-            volumeController.VolumeChanged += AudioPlayer_VolumeChanged;
+            TimelineController.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
+            PlaybackSession.PlaybackStateChanged += Player_PlaybackStateChanged;
+            Player.PlaybackSession.NAudioPlayerChanged += PlaybackSession_NAudioPlayerChanged;
+            VolumeController.VolumeChanged += AudioPlayer_VolumeChanged;
         }
 
         private void PlaybackSession_NAudioPlayerChanged(Type type)
         {
-            //volumeController.VolumeChanged += AudioPlayer_VolumeChanged;
+
         }
 
         private void OpenCoverFile()
@@ -68,8 +44,8 @@ namespace PlayerUI.ViewModel
             }
 
             string ImageFilePath = AppContext.BaseDirectory + @"\temp_cover.png";
-            //Helper.File.SaveImageToPng(Cover, ImageFilePath);
-            Helper.File.OpenFileWithDefaultApp(ImageFilePath);
+            FileHelper.SaveBitmapImageToPng(Cover, ImageFilePath);
+            FileHelper.OpenFileWithDefaultApp(ImageFilePath);
         }
 
 
@@ -78,25 +54,10 @@ namespace PlayerUI.ViewModel
             IsMuted = !IsMuted;
         }
 
-        private void UpdateTotalTime()
+        private void Player_PlaybackStateChanged(PlaybackState playbackState)
         {
-            NotifyPropertyChanged(nameof(TotalTime));
-        }
 
-        private void UpdateCurrentTime()
-        {
-            NotifyPropertyChanged(nameof(CurrentTime));
-        }
 
-        private async void Player_PlaybackStateChanged(PlaybackState playbackState)
-        {
-            NotifyPropertyChanged(nameof(CurrentPlaybackState));
-            NotifyPropertyChanged(nameof(IsPlaying));
-            await Task.Run(() =>
-            {
-                UpdateTotalTime();
-                UpdateCurrentTime();
-            });
             switch (playbackState)
             {
                 case PlaybackState.Unknown:
@@ -104,103 +65,94 @@ namespace PlayerUI.ViewModel
                 case PlaybackState.Failed:
                     break;
                 case PlaybackState.Opened:
-                    //Cover =  await CoverImage.AlbumArtAsync(Player.Controller.AudioFilePath);
-                    UpdateAll();
-                    playbackSession.Play();
-                    break;
-                //if
+                    NotifyPropertyChanged(nameof(TagFile));
+                    NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
+                    PlaybackSession.Play();
+                    return;
                 case PlaybackState.Paused:
-                    Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Paused);
+                    Taskbar.SetTaskbarState(ProgressState.Paused);
+                    NotifyPropertyChanged(nameof(CurrentPlaybackState));
+                    NotifyPropertyChanged(nameof(IsPlaying));
                     return;
                 case PlaybackState.Playing:
-                    Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Normal);
                     break;
                 case PlaybackState.Stopped:
-                    Commands.Taskbar.SetTaskbarState(Helper.Taskbar.ProgressState.Normal);
                     break;
                 case PlaybackState.Ended:
                     break;
                 case PlaybackState.Closed:
-                    UpdateAll();
                     break;
                 case PlaybackState.None:
-                    UpdateAll();
                     break;
                 default:
                     break;
             }
-
-            //else
-
+            Taskbar.SetTaskbarState(ProgressState.Normal);
+            NotifyPropertyChanged(nameof(CurrentPlaybackState));
+            NotifyPropertyChanged(nameof(IsPlaying));
+            NotifyPropertyChanged(nameof(TotalTime));
+            NotifyPropertyChanged(nameof(CurrentTime));
         }
 
-        private void UpdateAll()
+        private void PlayPause()
         {
-            NotifyPropertyChanged(nameof(Cover));
-            NotifyPropertyChanged(nameof(TagFile));
-            UpdateTotalTime();
-            UpdateCurrentTime();
-            AudioPlayer_CurrentTimeChanged(TimeSpan.Zero);
-
-            NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
-        }
-
-        private async void PlayPause()
-        {
-            switch (player.PlaybackSession.PlaybackState)
+            switch (Player.PlaybackSession.PlaybackState)
             {
                 case PlaybackState.Playing:
-                    player.PlaybackSession.Pause();
+                    Player.PlaybackSession.Pause();
                     break;
                 case PlaybackState.Ended:
-                    await timelineController.SeekAsync(TimeSpan.Zero);
-                    player.PlaybackSession.Play();
+                    TimelineController.Seek(TimeSpan.Zero);
+                    Player.PlaybackSession.Play();
                     break;
                 case PlaybackState.Closed:
-                    Commands.FilePicker.OpenFilePicker(player);
+                    FilePicker.OpenFilePicker(Player);
                     break;
                 default:
-                    player.PlaybackSession.Play();
+                    Player.PlaybackSession.Play();
                     break;
             }
         }
 
-        private async void AudioPlayer_VolumeChanged(float newVolume)
+        private void AudioPlayer_VolumeChanged(float newVolume)
         {
-            await Task.Run(() => { _volume = newVolume; NotifyPropertyChanged(nameof(Volume)); NotifyPropertyChanged(nameof(IsMuted)); });
+            NotifyPropertyChanged(nameof(Volume));
+            NotifyPropertyChanged(nameof(IsMuted));
         }
 
-        private async void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
+        private void AudioPlayer_CurrentTimeChanged(TimeSpan Time)
         {
-            await Task.Run(() =>
-            {
-                _currentTime = Time;
-                UpdateCurrentTime();
-                Commands.Taskbar.SetTaskbarProgressValue(Time, TotalTime);
-            });
+            NotifyPropertyChanged(nameof(CurrentTime));
+            Taskbar.SetTaskbarProgressValue(Time, TotalTime);
         }
 
 
-
-        private TimeSpan _currentTime;
         public TimeSpan CurrentTime
         {
-            get => timelineController.Current;
-            set => Task.Run(async () => await timelineController.SeekAsync(value));
+            get => TimelineController.Current;
+            set => Task.Run(async () => await TimelineController.SeekAsync(value));
         }
 
-        private float _volume = App.Player.PlaybackSession.VolumeController.Volume;
+        public bool IsPlaying => PlaybackSession.IsPlaying;
         public float Volume
         {
-            get => _volume;
-            set => volumeController.ChangeVolume(value);
+            get => VolumeController.Volume;
+            set => VolumeController.ChangeVolume(value);
         }
 
-        public bool IsPlaying => playbackSession.IsPlaying;
+        public bool IsMuted
+        {
+            get => VolumeController.IsMuted;
+            set => VolumeController.IsMuted = value;
+        }
+        public string CurrentPlaybackState => PlaybackSession.PlaybackState.ToString();
+        private BitmapImage Cover => TagFile.AlbumArt;
+        public AudioTag TagFile => PlaybackSession.AudioInfo?.AudioTag;
+        public TimeSpan TotalTime => TimelineController.Total;
 
         private void NextAudio()
         {
-            //Player.PlaylistManager.PlayNext();
+
         }
 
         private void PreviousAudio()
@@ -215,17 +167,23 @@ namespace PlayerUI.ViewModel
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(playbackSession.CurrentTrackFile))
+                    if (!string.IsNullOrEmpty(PlaybackSession.CurrentTrackFile))
                     {
-                        if (playbackSession.AudioInfo == null)
+                        if (PlaybackSession.AudioInfo == null)
                         {
                             return "empty";
                         }
 
-                        AudioInfo audioInfo = playbackSession.AudioInfo;
+                        AudioInfo audioInfo = PlaybackSession.AudioInfo;
                         return $"{audioInfo.Format} {audioInfo.BitrateString} {audioInfo.SampleRate / 1000}kHz {audioInfo.Channels}ch";
+
+                        // not working return $"{TagFile.AudioFormatName} {TagFile.Bitrate} {TagFile.SampleRate} {TagFile.Channels}";
+
                     }
-                    return "";
+                    else
+                    {
+                        return "";
+                    }
                 }
                 catch (Exception)
                 {
@@ -233,8 +191,5 @@ namespace PlayerUI.ViewModel
                 }
             }
         }
-
-
-
     }
 }

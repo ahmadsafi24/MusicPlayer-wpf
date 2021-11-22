@@ -1,0 +1,66 @@
+﻿<UserControl x:Name="userControl" x:Class="PlayerUI.UserControls.MediaInfoCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignWidth="800" d:Foreground="White" DataContext="{StaticResource PlayerViewModel}"
+             Background="{DynamicResource MediaInfoCard.Background}" Foreground="{DynamicResource MainView.Foreground}"
+             >
+
+    <UserControl.Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type UserControl}">
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Style>
+    <StackPanel  VerticalAlignment="Top" Background="Transparent">
+        <Grid x:Name="grid" Margin="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MaxWidth="62"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="19"/>
+                <RowDefinition Height="19"/>
+                <RowDefinition Height="19"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,5,0" CornerRadius="0" BorderBrush="{DynamicResource MediaCover.Background}" SnapsToDevicePixels="True" BorderThickness="0.5" Padding="0.5" Visibility="{Binding TagFile.AlbumArtAsync.Result,IsAsync=True,Converter={StaticResource NullToVisibility}}">
+                <Border.Effect>
+                    <DropShadowEffect Color="{DynamicResource Color.Main}" ShadowDepth="0" Opacity="1" BlurRadius="8" />
+                </Border.Effect>
+                <Border.Background>
+                    <SolidColorBrush Color="{DynamicResource Color.Main}" Opacity="0.5"/>
+                </Border.Background>
+                <Image Source="{Binding TagFile.AlbumArtAsync.Result,IsAsync=True}" RenderOptions.BitmapScalingMode="HighQuality" Cursor="Hand">
+                    <Image.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCoverFileCommand}"/>
+                    </Image.InputBindings>
+                </Image>
+            </Border>
+            <TextBlock Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding TagFile.Title,FallbackValue=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="DemiBold"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding TagFile.Artist,FallbackValue=Artist}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Margin="3" Text="{Binding TagFile.Album,FallbackValue=Album}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="Light"/>
+            <StackPanel Grid.Row="2" Grid.Column="2" Margin="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Text="{Binding CoreCurrentFileInfo}"
+                           ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"
+                           Opacity="0.5"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="2" Margin="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Text="{Binding CurrentTime,Converter={StaticResource TimeSpanToString}}" d:Text="00:00"/>
+                <TextBlock Text=" / " Opacity="0.5"/>
+                <TextBlock Text="{Binding TotalTime,Converter={StaticResource TimeSpanToString}}" Opacity="0.8" d:Text="00:00"/>
+            </StackPanel>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding CurrentPlaybackState}" Opacity="0.5" HorizontalAlignment="Right" d:Text="Playing"/>
+        </Grid>
+    </StackPanel>
+</UserControl>

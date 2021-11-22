@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 namespace PlayerLibrary.Model
 {
     //TODO: Make all Property {get; set;}
-    public class AudioTag
+    public record AudioTag
     {
         public string FilePath { get; set; } = "FilePath";
 
@@ -19,7 +19,7 @@ namespace PlayerLibrary.Model
 
         private Track Tag => tag ??= new(FilePath);
 
-        public string FileName { get => System.IO.Path.GetFileName(FilePath); }// = "";
+        public string FileName => System.IO.Path.GetFileName(FilePath); // = "";
         public string Title => string.IsNullOrEmpty(Tag.Title) ? FileName : Tag.Title;
         public string Artist => string.IsNullOrEmpty(Tag.Artist) ? AlbumArtist : Tag.Artist;
         public string Album
@@ -48,7 +48,7 @@ namespace PlayerLibrary.Model
         public string Bitrate => $"{Tag.Bitrate}kbps";
         public string SampleRate => $"{Tag.SampleRate}Hz";
         public string AudioFormatName => Tag.AudioFormat.Name;
-
+        public string Channels => tag.ChannelsArrangement.NbChannels.ToString();
         private BitmapImage _albumArt;
         public BitmapImage AlbumArt
         {
@@ -56,7 +56,7 @@ namespace PlayerLibrary.Model
             {
                 if (_albumArt == null)
                 {
-                    BitmapImage img = Utility.CoverImage.ExtractCover(FilePath);
+                    BitmapImage img = Utility.AlbumArt.ExtractCover(FilePath);
                     _albumArt = img;
                     return img;
                 }
@@ -67,15 +67,21 @@ namespace PlayerLibrary.Model
             }
         }
 
+        private Task<BitmapImage> _albumArtAsync;
         public Task<BitmapImage> AlbumArtAsync
         {
             get
             {
-                if (_albumArt == null)
+                if (_albumArtAsync == null)
                 {
-                    _albumArt = Utility.CoverImage.ExtractCover(FilePath);
+                    var temp = Utility.AlbumArt.AlbumArtAsync(FilePath);
+                    _albumArtAsync = temp;
+                    return temp;
                 }
-                return Utility.CoverImage.AlbumArtAsync(FilePath);
+                else
+                {
+                    return _albumArtAsync;
+                }
             }
         }
     }

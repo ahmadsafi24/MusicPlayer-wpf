@@ -1,0 +1,63 @@
+﻿<Window x:Class="PlayerUI.View.CustomWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:control="clr-namespace:PlayerUI.UserControls"
+        mc:Ignorable="d"
+        x:Name="Window"
+        Title="MainWindowChromeless" Width="700" Height="500" 
+        d:Content="{StaticResource MainPage}">
+
+    <Window.Style>
+        <Style TargetType="{x:Type Window}">
+            <Style.Setters>
+                <Setter Property="Background" Value="{StaticResource MainWindow.Background}"/>
+                <Setter Property="WindowChrome.WindowChrome">
+                    <Setter.Value>
+                        <WindowChrome GlassFrameThickness="-1" ResizeBorderThickness="5" CaptionHeight="0" CornerRadius="0" UseAeroCaptionButtons="False" NonClientFrameEdges="Bottom"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Window}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{DynamicResource MainWindow.Background}">
+                                <DockPanel LastChildFill="True" Background="Transparent">
+                                    <control:Titlebar DockPanel.Dock="Top" Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" CaptionString="{TemplateBinding Title}"/>
+                                    <ContentPresenter x:Name="ContentPresenter"/>
+                                </DockPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" FillBehavior="Stop"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="WindowState" Value="Normal">
+                    <Setter Property="BorderThickness" Value="1"/>
+                </Trigger>
+                <Trigger Property="WindowState" Value="Maximized">
+                    <Setter Property="BorderThickness" Value="5"/>
+                </Trigger>
+                <Trigger Property="IsActive" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource Titlebar.Background.Deactive}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource Window.BorderBrush.Deactivated}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Titlebar.Foreground.Deactive}"/>
+                </Trigger>
+                <Trigger Property="IsActive" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Titlebar.Background.Active}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource Window.BorderBrush.Activated}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Titlebar.Foreground.Active}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Style>
+</Window>

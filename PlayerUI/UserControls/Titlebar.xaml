@@ -1,0 +1,302 @@
+﻿<UserControl x:Class="PlayerUI.UserControls.Titlebar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PlayerUI.UserControls" xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel" 
+             mc:Ignorable="d" 
+             x:Name="usercontrol" 
+             Height="30" d:DesignWidth="800" d:Foreground="White" >
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <Path x:Key="RestorePath" x:Shared="False" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" Data="{StaticResource RestoreGeometry}" Stretch="Uniform" Height="10" Width="10" SnapsToDevicePixels="True"/>
+
+            <Path x:Key="ClosePath" x:Shared="False" Stretch="Uniform" Height="10" Width="10" Data="{StaticResource CloseGeometry}" SnapsToDevicePixels="True"/>
+
+            <Path x:Key="MinimizePath" x:Shared="False" Stretch="Uniform" Height="10" Width="10" Data="{StaticResource MinimizeGeometry}" SnapsToDevicePixels="True"/>
+
+            <Path x:Key="MaximizePath" x:Shared="False" Data="{StaticResource MaximizeGeometry}" Stretch="Uniform" Height="10" Width="10" SnapsToDevicePixels="True"/>
+
+            <Style x:Key="TitlebarControl.Button" TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="MaxHeight" Value="32"/>
+                <Setter Property="Width" Value="51"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                                <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsDefaulted" Value="true">
+                                    <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#30FFFFFF" Duration="0:0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="true">
+                                    <Setter Property="Background" TargetName="border" Value="#33FFFFFF"/>
+                                    <Setter Property="BorderBrush" TargetName="border" Value="Black"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                    <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                    <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                </Style.Triggers>
+            </Style>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="Transparent">
+        <Grid.InputBindings>
+            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding MaximizeRestoreCommand}"/>
+            <MouseBinding MouseAction="LeftClick" Command="{Binding DragMoveCommand}"/>
+            <MouseBinding MouseAction="RightClick" Command="{Binding ContextMenuCommand}"/>
+        </Grid.InputBindings>
+        <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" Text="{Binding CaptionString, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Titlebar}}}" d:Text="App Title" VerticalAlignment="Center" Foreground="{Binding Foreground, ElementName=usercontrol}"/>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" >
+            <Button x:Name="CloseButton" BorderThickness="0" Command="{Binding CloseCommand}" Focusable="False" ToolTip="Close" Foreground="{Binding Foreground, ElementName=usercontrol}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TitlebarControl.Button}">
+                        <Setter Property="Background" Value="#00CF1C1C"/>
+                        <Setter Property="Template" >
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                                        <Path x:Name="content" Stretch="Uniform" Height="10" Width="10" Data="{StaticResource CloseGeometry}" SnapsToDevicePixels="True" Fill="{TemplateBinding Foreground}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsDefaulted" Value="true">
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter Property="BorderBrush" TargetName="border" Value="#FFCF1C1C"/>
+                                            <Setter TargetName="content" Property="Path.Fill" Value="White"/>
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FFCF1C1C" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#00CF1C1C" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="#FF8D2D2D"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="#FF8D2D2D"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="MaximizeButton" BorderThickness="0" Command="{Binding MaximizeRestoreCommand}" Focusable="False" Foreground="{Binding Foreground, ElementName=usercontrol}" d:Content="{StaticResource MaximizePath}" FlowDirection="LeftToRight">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TitlebarControl.Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                                        <Path x:Name="content" Stretch="Uniform" Height="10" Width="10" Data="{StaticResource MaximizeGeometry}" SnapsToDevicePixels="True" Fill="{TemplateBinding Foreground}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsDefaulted" Value="true">
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter TargetName="content" Property="Path.Fill" Value="White"/>
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#30FFFFFF" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="#33FFFFFF"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Black"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                        </Trigger>
+
+                                        <DataTrigger Binding="{Binding Window.WindowState}" Value="2">
+                                            <Setter Property="ToolTip" Value="Restore Down"/>
+                                            <Setter TargetName="content" Property="Path.Data" Value="{StaticResource RestoreGeometry}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Window.WindowState}" Value="0">
+                                            <Setter Property="ToolTip" Value="Maximize"/>
+                                            <Setter TargetName="content" Property="Path.Data" Value="{StaticResource MaximizeGeometry}"/>
+                                        </DataTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="MinimizeButton" BorderThickness="0" Command="{Binding MinimizeCommand}" Focusable="False" ToolTip="Minimize" Foreground="{Binding Foreground, ElementName=usercontrol}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TitlebarControl.Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                                        <Path x:Name="content" Stretch="Uniform" Height="10" Width="10" Data="{StaticResource MinimizeGeometry}" SnapsToDevicePixels="True" Fill="{TemplateBinding Foreground}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsDefaulted" Value="true">
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter TargetName="content" Property="Path.Fill" Value="White"/>
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#30FFFFFF" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="#33FFFFFF"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Black"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button HorizontalAlignment="Stretch" Content=". . ." Foreground="{Binding Foreground,ElementName=usercontrol}" Height="26" Width="37" SnapsToDevicePixels="True">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TitlebarControl.Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="2">
+                                        <ContentPresenter x:Name="contentPresenter" TextBlock.Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-6,0,0"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsDefaulted" Value="true">
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#30FFFFFF" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:0:0.2"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="#33FFFFFF"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Black"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="Click">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="ContextMenu.IsOpen">
+                                                <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True"/>
+                                            </BooleanAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.ContextMenu>
+                    <ContextMenu >
+                        <ContextMenu.DataContext>
+                            <ViewModel:MenuViewModel/>
+                        </ContextMenu.DataContext>
+                        <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

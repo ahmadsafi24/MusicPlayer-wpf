@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel">
+    
+    <ContextMenu x:Key="MainContextMenu" >
+        <ContextMenu.DataContext>
+            <ViewModel:MainView_ViewModel/>
+        </ContextMenu.DataContext>
+        <MenuItem Header="Open" Command="{Binding Open}"/>
+        <MenuItem Header="Media/Stop" Command="{Binding Media_Stop}"/>
+        <MenuItem Header="OpenFileLoacation" Command="{Binding OpenFileLocation}"/>
+        <MenuItem Header="ControlbarWindow" Command="{Binding SwitchToMainView}"/>
+        <MenuItem Header="Exit" Command="{Binding Exit}"/>
+    </ContextMenu>
+</ResourceDictionary>

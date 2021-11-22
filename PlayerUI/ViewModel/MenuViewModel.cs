@@ -1,13 +1,4 @@
-﻿using Helper.ViewModelBase;
-using PlayerLibrary;
-using System;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Xml;
-
-namespace PlayerUI.ViewModel
+﻿namespace PlayerUI.ViewModel
 {
     public class MenuViewModel : ViewModelBase
     {
@@ -23,11 +14,11 @@ namespace PlayerUI.ViewModel
         public MenuViewModel()
         {
             TestCommand = new DelegateCommand(() => TestMethod());
-            OpenCommand = new DelegateCommand(() => Commands.FilePicker.OpenFilePicker(App.Player));
-            ToggleDarkModeCommand = new DelegateCommand(() => Commands.WindowTheme.DarkThemeToggle());
-            SwitchToMiniViewCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToMiniView());
-            SwitchToBlurWindowCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToBlurWindow());
-            SwitchToNormalWindowCommand = new DelegateCommand(() => Commands.ViewSwitcher.SwitchToNormalWindow());
+            OpenCommand = new DelegateCommand(() => FilePicker.OpenFilePicker(App.Player));
+            ToggleDarkModeCommand = new DelegateCommand(() => WindowTheme.DarkThemeToggle());
+            SwitchToMiniViewCommand = new DelegateCommand(() => ViewSwitcher.SwitchToMiniView());
+            SwitchToBlurWindowCommand = new DelegateCommand(() => ViewSwitcher.SwitchToBlurWindow());
+            SwitchToNormalWindowCommand = new DelegateCommand(() => ViewSwitcher.SwitchToNormalWindow());
         }
 
         // Enable Disable Equalizer

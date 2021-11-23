@@ -1,10 +1,11 @@
-﻿namespace PlayerUI.ViewModel
+﻿using PlayerLibrary.Plugin;
+
+namespace PlayerUI.ViewModel
 {
     public class EqualizerViewModel : ViewModelBase
     {
         private Player Player => App.Player;
         private EqualizerController EqualizerController => App.Player.EqualizerController;
-
         public DelegateCommand ResetEqCommand { get; }
         public DelegateCommand LoadEqCommand { get; }
         public DelegateCommand SaveEqCommand { get; }

@@ -1,18 +1,19 @@
 using Helper;
 using NAudio.Extras;
+using PlayerLibrary.Core;
 using PlayerLibrary.Core.NAudioPlayer;
 using PlayerLibrary.Model;
 using System;
 using System.Collections.Generic;
 using static PlayerLibrary.Events;
 
-namespace PlayerLibrary.Core
+namespace PlayerLibrary.Plugin
 {
-    public class EqualizerController
+    public class EqualizerController : IPlugin
     {
         #region fields
         private NAudioPlayerEq nAudioPlayerEq = new();
-        private readonly PlaybackSession playbackSession;
+        private PlaybackSession PlaybackSession;
 
         #endregion
 
@@ -36,10 +37,11 @@ namespace PlayerLibrary.Core
         /// </summary>
         /// <value></value>
         public int[] AllBandsGain { get => GetBandsGain(nAudioPlayerEq.EqualizerBand); }
+
         #endregion
         public EqualizerController(PlaybackSession playbackSession, EqualizerMode equalizerMode)
         {
-            this.playbackSession = playbackSession;
+            this.PlaybackSession = playbackSession;
             EqualizerMode = equalizerMode;
             ResetEqController(equalizerMode, playbackSession, nAudioPlayerEq);
             FireEqUpdated();
@@ -51,7 +53,7 @@ namespace PlayerLibrary.Core
             if (mode != EqualizerMode)
             {
                 EqualizerMode = mode;
-                ResetEqController(mode, playbackSession, nAudioPlayerEq);
+                ResetEqController(mode, PlaybackSession, nAudioPlayerEq);
             }
             SetAllBands(preset.BandsGain);
         }
@@ -154,7 +156,7 @@ namespace PlayerLibrary.Core
             }
         }
 
-        public void RequestResetEqController() { ResetEqController(EqualizerMode, playbackSession, nAudioPlayerEq); }
+        public void RequestResetEqController() { ResetEqController(EqualizerMode, PlaybackSession, nAudioPlayerEq); }
         public void ResetEqController(EqualizerMode equalizerMode, PlaybackSession playbackSession, NAudioPlayerEq core)
         {
             playbackSession.ToggleEventsOff();
@@ -205,12 +207,12 @@ namespace PlayerLibrary.Core
 
         private void InstalEqualizer(EqualizerMode equalizerMode, NAudioPlayerEq _nAudioPlayer)
         {
-            if (playbackSession.NAudioPlayerType != typeof(NAudioPlayerEq))
+            if (PlaybackSession.NAudioPlayerType != typeof(NAudioPlayerEq))
             {
-                _nAudioPlayer.Reader = playbackSession.NAudioPlayer.Reader;
-                _nAudioPlayer.VolumeSampleProvider = playbackSession.NAudioPlayer.VolumeSampleProvider;
-                _nAudioPlayer.OutputDevice = playbackSession.NAudioPlayer.OutputDevice;
-                playbackSession.NAudioPlayer = _nAudioPlayer;
+                _nAudioPlayer.Reader = PlaybackSession.NAudioPlayer.Reader;
+                _nAudioPlayer.VolumeSampleProvider = PlaybackSession.NAudioPlayer.VolumeSampleProvider;
+                _nAudioPlayer.OutputDevice = PlaybackSession.NAudioPlayer.OutputDevice;
+                PlaybackSession.NAudioPlayer = _nAudioPlayer;
             }
             Log.WriteLine($"creating equalizer bands for: {equalizerMode}");
             switch (equalizerMode)
@@ -281,5 +283,46 @@ namespace PlayerLibrary.Core
              };
         }
 
+
+        #region Interface
+        public void Enable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Disable()
+        {
+            //this = null;
+            NAudioPlayerNormal _nAudioPlayer = new NAudioPlayerNormal();
+
+            _nAudioPlayer.Reader = PlaybackSession.NAudioPlayer.Reader;
+            _nAudioPlayer.VolumeSampleProvider = PlaybackSession.NAudioPlayer.VolumeSampleProvider;
+            _nAudioPlayer.OutputDevice = PlaybackSession.NAudioPlayer.OutputDevice;
+            PlaybackSession.NAudioPlayer = _nAudioPlayer;
+
+            PlaybackSession.ToggleEventsOff();
+            PlaybackState _state = PlaybackSession.PlaybackState;
+            float lastvolume = PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume;
+            string file = PlaybackSession.CurrentTrackFile;
+            PlaybackSession.Open(file, _nAudioPlayer.Reader.CurrentTime);
+            switch (_state)
+            {
+                case PlaybackState.Paused:
+                    PlaybackSession.Pause();
+                    break;
+                case PlaybackState.Playing:
+                    PlaybackSession.Play();
+                    break;
+                case PlaybackState.Stopped:
+                    PlaybackSession.Stop();
+                    break;
+                default:
+                    break;
+            }
+            PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume = lastvolume;
+            PlaybackSession.RaiseNAudioPlayerChanged(_nAudioPlayer.GetType());
+        }
+        public bool IsEnabled => throw new NotImplementedException();
     }
+    #endregion
 }

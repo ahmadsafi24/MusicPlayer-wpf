@@ -2,6 +2,7 @@
 using PlayerLibrary.Core;
 using PlayerLibrary.Core.NAudioPlayer;
 using PlayerLibrary.Core.NAudioPlayer.Interface;
+using PlayerLibrary.Plugin;
 using System;
 using System.Text;
 using static PlayerLibrary.Events;
@@ -32,37 +33,9 @@ namespace PlayerLibrary
 
         public void DisableEqualizerController()
         {
+            EqualizerController.Disable();
             EqualizerController = null;
-            NAudioPlayerNormal _nAudioPlayer = new NAudioPlayerNormal();
-
-            _nAudioPlayer.Reader = PlaybackSession.NAudioPlayer.Reader;
-            _nAudioPlayer.VolumeSampleProvider = PlaybackSession.NAudioPlayer.VolumeSampleProvider;
-            _nAudioPlayer.OutputDevice = PlaybackSession.NAudioPlayer.OutputDevice;
-            PlaybackSession.NAudioPlayer = _nAudioPlayer;
-
-            PlaybackSession.ToggleEventsOff();
-            PlaybackState _state = PlaybackSession.PlaybackState;
-            float lastvolume = PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume;
-            string file = PlaybackSession.CurrentTrackFile;
-            PlaybackSession.Open(file, _nAudioPlayer.Reader.CurrentTime);
-            switch (_state)
-            {
-                case PlaybackState.Paused:
-                    PlaybackSession.Pause();
-                    break;
-                case PlaybackState.Playing:
-                    PlaybackSession.Play();
-                    break;
-                case PlaybackState.Stopped:
-                    PlaybackSession.Stop();
-                    break;
-                default:
-                    break;
-            }
-            PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume = lastvolume;
-            PlaybackSession.RaiseNAudioPlayerChanged(_nAudioPlayer.GetType());
         }
-
 
         public EventHandlerEmpty PropertyChanged;
 

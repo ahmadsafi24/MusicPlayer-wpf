@@ -1,7 +1,7 @@
 using Helper;
 using NAudio.Extras;
+using NAudio.Wave;
 using PlayerLibrary.Core;
-using PlayerLibrary.Core.NAudioPlayer;
 using PlayerLibrary.Model;
 using System;
 using System.Collections.Generic;
@@ -12,23 +12,23 @@ namespace PlayerLibrary.Plugin
     public class EqualizerController : IPlugin
     {
         #region fields
-        private NAudioPlayerEq nAudioPlayerEq = new();
-        private PlaybackSession PlaybackSession;
+        private readonly PlaybackSession PlaybackSession;
 
         #endregion
+        EqualizerBand[] bands = Create8Band();
+        Equalizer EqualizerCore;
+        private void InitEqualizerSamleProvider()
+        {
+            EqualizerCore = new(PlaybackSession.audioPlayer.Reader.ToSampleProvider(), bands);
+            PlaybackSession.audioPlayer.SampleProvider = EqualizerCore;
 
+        }
         #region property
         private EqualizerMode _equalizerMode;
         public EqualizerMode EqualizerMode
         {
-            get
-            {
-                return _equalizerMode;
-            }
-            set
-            {
-                _equalizerMode = value;
-            }
+            get => _equalizerMode;
+            set => _equalizerMode = value;
 
         }
 
@@ -36,24 +36,18 @@ namespace PlayerLibrary.Plugin
         /// get all bands gain in single array: array length = bands count ,int array[index] = int Allbands[index]
         /// </summary>
         /// <value></value>
-        public int[] AllBandsGain { get => GetBandsGain(nAudioPlayerEq.EqualizerBand); }
+        public int[] AllBandsGain => GetBandsGain(bands);
 
         #endregion
-        public EqualizerController(PlaybackSession playbackSession, EqualizerMode equalizerMode)
-        {
-            this.PlaybackSession = playbackSession;
-            EqualizerMode = equalizerMode;
-            ResetEqController(equalizerMode, playbackSession, nAudioPlayerEq);
-            FireEqUpdated();
-        }
+
 
         public void SetEqPreset(EqPreset preset)
         {
-            EqualizerMode mode = (EqualizerMode)Enum.Parse(typeof(PlayerLibrary.EqualizerMode), preset.EqualizerMode);
+            EqualizerMode mode = (EqualizerMode)Enum.Parse(typeof(EqualizerMode), preset.EqualizerMode);
             if (mode != EqualizerMode)
             {
                 EqualizerMode = mode;
-                ResetEqController(mode, PlaybackSession, nAudioPlayerEq);
+                ResetEqController(mode, PlaybackSession);
             }
             SetAllBands(preset.BandsGain);
         }
@@ -80,7 +74,7 @@ namespace PlayerLibrary.Plugin
         /// <param name="gain"> band gain</param>
         internal void SetBandGain(int bandIndex, float gain)
         {
-            if (bandIndex > nAudioPlayerEq.EqualizerBand.Length)
+            if (bandIndex > bands.Length)
             {
                 Helper.Log.WriteLine("band index bigger then equalizerband length");
                 return;
@@ -88,43 +82,47 @@ namespace PlayerLibrary.Plugin
             else
             {
                 Log.WriteLine("changing band index:" + bandIndex.ToString());
-                nAudioPlayerEq.EqualizerBand[bandIndex].Gain = gain;
-                nAudioPlayerEq.EqualizerCore?.Update();
+                bands[bandIndex].Gain = gain;
+                EqualizerCore?.Update();
             }
         }
 
         public double GetBandGain(int bandindex)
         {
-            if (nAudioPlayerEq.EqualizerBand == null)
+            if (bands == null)
             {
                 return 0;
             }
-            if (nAudioPlayerEq.EqualizerBand.Length <= bandindex)
+            if (bands.Length <= bandindex)
             {
                 return 0;
             }
             else
             {
-                return nAudioPlayerEq.EqualizerBand[bandindex].Gain;
+                return bands[bandindex].Gain;
             }
         }
 
         internal void SetBand(int bandIndex, float Gain, float Bandwidth, float Frequency)
         {
-            if (nAudioPlayerEq.EqualizerBand == null) return;
-            if (Gain != 0) { nAudioPlayerEq.EqualizerBand[bandIndex].Gain = Gain; }
-            if (Bandwidth != 0) { nAudioPlayerEq.EqualizerBand[bandIndex].Bandwidth = Bandwidth; }
-            if (Frequency != 0) { nAudioPlayerEq.EqualizerBand[bandIndex].Frequency = Frequency; }
-            nAudioPlayerEq.EqualizerCore?.Update();
+            if (bands == null)
+            {
+                return;
+            }
+
+            if (Gain != 0) { bands[bandIndex].Gain = Gain; }
+            if (Bandwidth != 0) { bands[bandIndex].Bandwidth = Bandwidth; }
+            if (Frequency != 0) { bands[bandIndex].Frequency = Frequency; }
+            EqualizerCore?.Update();
         }
 
         public void SetAllBandsGain(int gain)
         {
-            foreach (var item in nAudioPlayerEq.EqualizerBand)
+            foreach (var item in bands)
             {
                 item.Gain = 0;
             }
-            nAudioPlayerEq.EqualizerCore?.Update();
+            EqualizerCore?.Update();
             FireEqUpdated();
         }
 
@@ -156,25 +154,18 @@ namespace PlayerLibrary.Plugin
             }
         }
 
-        public void RequestResetEqController() { ResetEqController(EqualizerMode, PlaybackSession, nAudioPlayerEq); }
-        public void ResetEqController(EqualizerMode equalizerMode, PlaybackSession playbackSession, NAudioPlayerEq core)
+        public void RequestResetEqController() { ResetEqController(EqualizerMode, PlaybackSession); }
+        public void ResetEqController(EqualizerMode equalizerMode, PlaybackSession playbackSession)
         {
             playbackSession.ToggleEventsOff();
-
-            InstalEqualizer(equalizerMode, nAudioPlayerEq);
 
             if (!string.IsNullOrEmpty(playbackSession.CurrentTrackFile))
             {
                 PlaybackState _state = playbackSession.PlaybackState;
 
-                float lastvolume = 0;
-                if (playbackSession.NAudioPlayer.VolumeSampleProvider != null)
-                {
-                    lastvolume = playbackSession.NAudioPlayer.VolumeSampleProvider.Volume;
-                }
-
                 string file = playbackSession.CurrentTrackFile;
-                playbackSession?.Open(file, nAudioPlayerEq.Reader.CurrentTime);
+                playbackSession?.Open(file, playbackSession.audioPlayer.Reader.CurrentTime);
+
                 switch (_state)
                 {
                     case PlaybackState.Paused:
@@ -193,7 +184,6 @@ namespace PlayerLibrary.Plugin
                         break;
                 }
                 SetAllBandsGain(0);
-                playbackSession.NAudioPlayer.VolumeSampleProvider.Volume = lastvolume;
             }
             else
             {
@@ -203,29 +193,6 @@ namespace PlayerLibrary.Plugin
             FireEqUpdated();
             playbackSession.ToggleEventsOn();
 
-        }
-
-        private void InstalEqualizer(EqualizerMode equalizerMode, NAudioPlayerEq _nAudioPlayer)
-        {
-            if (PlaybackSession.NAudioPlayerType != typeof(NAudioPlayerEq))
-            {
-                _nAudioPlayer.Reader = PlaybackSession.NAudioPlayer.Reader;
-                _nAudioPlayer.VolumeSampleProvider = PlaybackSession.NAudioPlayer.VolumeSampleProvider;
-                _nAudioPlayer.OutputDevice = PlaybackSession.NAudioPlayer.OutputDevice;
-                PlaybackSession.NAudioPlayer = _nAudioPlayer;
-            }
-            Log.WriteLine($"creating equalizer bands for: {equalizerMode}");
-            switch (equalizerMode)
-            {
-                case EqualizerMode.Normal:
-                    Create8Band(_nAudioPlayer);
-                    break;
-                case EqualizerMode.Super:
-                    Create11Band(_nAudioPlayer);
-                    break;
-                default:
-                    break;
-            }
         }
 
         // index: band position
@@ -249,9 +216,9 @@ namespace PlayerLibrary.Plugin
 
         }
 
-        internal static void Create8Band(NAudioPlayerEq nAudioCore)
+        internal static EqualizerBand[] Create8Band()
         {
-            nAudioCore.EqualizerBand = new EqualizerBand[]
+            return new EqualizerBand[]
             {
                 new EqualizerBand { Bandwidth = 0.8f, Frequency = 100, Gain = 0 },
                 new EqualizerBand { Bandwidth = 0.8f, Frequency = 200, Gain = 0 },
@@ -264,9 +231,9 @@ namespace PlayerLibrary.Plugin
             };
         }
 
-        internal static void Create11Band(NAudioPlayerEq nAudioCore)
+        internal static EqualizerBand[] Create11Band()
         {
-            nAudioCore.EqualizerBand = new EqualizerBand[]
+            return new EqualizerBand[]
              {
                 new EqualizerBand { Bandwidth = 0.4f, Frequency = 30, Gain = 0 },
                 new EqualizerBand { Bandwidth = 0.4f, Frequency = 50, Gain = 0 },
@@ -292,19 +259,11 @@ namespace PlayerLibrary.Plugin
 
         public void Disable()
         {
-            //this = null;
-            NAudioPlayerNormal _nAudioPlayer = new NAudioPlayerNormal();
-
-            _nAudioPlayer.Reader = PlaybackSession.NAudioPlayer.Reader;
-            _nAudioPlayer.VolumeSampleProvider = PlaybackSession.NAudioPlayer.VolumeSampleProvider;
-            _nAudioPlayer.OutputDevice = PlaybackSession.NAudioPlayer.OutputDevice;
-            PlaybackSession.NAudioPlayer = _nAudioPlayer;
 
             PlaybackSession.ToggleEventsOff();
             PlaybackState _state = PlaybackSession.PlaybackState;
-            float lastvolume = PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume;
             string file = PlaybackSession.CurrentTrackFile;
-            PlaybackSession.Open(file, _nAudioPlayer.Reader.CurrentTime);
+            PlaybackSession.Open(file, PlaybackSession.audioPlayer.Reader.CurrentTime);
             switch (_state)
             {
                 case PlaybackState.Paused:
@@ -319,10 +278,13 @@ namespace PlayerLibrary.Plugin
                 default:
                     break;
             }
-            PlaybackSession.NAudioPlayer.VolumeSampleProvider.Volume = lastvolume;
-            PlaybackSession.RaiseNAudioPlayerChanged(_nAudioPlayer.GetType());
+            PlaybackSession.ToggleEventsOn();
         }
         public bool IsEnabled => throw new NotImplementedException();
+
+        public ISampleProvider InputSampleProvider { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public ISampleProvider OutputSampleProvider => throw new NotImplementedException();
     }
     #endregion
 }

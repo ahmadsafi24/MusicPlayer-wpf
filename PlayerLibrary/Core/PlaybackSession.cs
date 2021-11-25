@@ -1,7 +1,6 @@
 using Helper;
 using NAudio.Wave;
 using PlayerLibrary.Core;
-using PlayerLibrary.Core.NAudioPlayer.Interface;
 using System;
 using System.Threading.Tasks;
 using static PlayerLibrary.Events;
@@ -10,73 +9,39 @@ namespace PlayerLibrary.Core
 {
     public class PlaybackSession
     {
+        public NAudioPlayer audioPlayer = new();
         public string CurrentTrackFile { get; private set; }
 
         public bool RepeatCurrentTrack = false;
-        public event EventHandlerType NAudioPlayerChanged;
-        private INAudioPlayer _nAudioPlayer;
-        internal INAudioPlayer NAudioPlayer
-        {
-            get => _nAudioPlayer;
-            set
-            {
-                Log.WriteLine("playbacksession.naudioplayer changed to type: " + value.GetType());
-
-                if (_nAudioPlayer != null)
-                {
-                    _nAudioPlayer.Dispose();
-                }
-
-                _nAudioPlayer = value;
-                Intialize();
-                RaiseNAudioPlayerChanged(value.GetType());
-            }
-        }
-        public Type NAudioPlayerType => NAudioPlayer.GetType();
-        public bool IsEqualizerEnabled => NAudioPlayer.GetType() == typeof(NAudioPlayer.NAudioPlayerEq);
-
-        internal void RaiseNAudioPlayerChanged(Type type)
-        {
-            NAudioPlayerChanged?.Invoke(type);
-        }
 
         public TimelineController TimelineController;
 
-        public VolumeController VolumeController;
+        public VolumeController VolumeController = new();
+        public SampleProviderBridge sampleProviderBridge = new();
 
-        internal PlaybackSession(INAudioPlayer nAudioPlayer)
+        internal PlaybackSession()
         {
-            Log.WriteLine("new PlaybackSession with type: " + nAudioPlayer.GetType());
-            this.NAudioPlayer = nAudioPlayer;
             TimelineController = new(this);
-            VolumeController = new(this);
-        }
-
-        private void Intialize()
-        {
-            if (TimelineController != null)
-            {
-                TimelineController.NAudioPlayer = NAudioPlayer;
-            }
-
-            if (VolumeController != null)
-            {
-                VolumeController.NAudioPlayer = NAudioPlayer;
-            }
-
-            NAudioPlayer.OutputDevice.PlaybackStopped += WaveOutEvent_PlaybackStopped;
             Log.WriteLine("PlaybackSession Initialized");
         }
-        public async Task OpenAsync(string filePath) => await Task.Run(() => { CoreOpen(filePath); });
+
+        public async Task OpenAsync(string filePath)
+        {
+            await Task.Run(() => { CoreOpen(filePath); });
+        }
 
         public void Open(string filePath, TimeSpan timePosition)
         {
             Log.WriteLine("open with time", filePath);
             CoreOpen(filePath);
-            NAudioPlayer.Reader.CurrentTime = timePosition;
+            audioPlayer.Reader.CurrentTime = timePosition;
         }
 
-        public void Open(string filePath) => CoreOpen(filePath);
+        public void Open(string filePath)
+        {
+            CoreOpen(filePath);
+        }
+
         public void Play()
         {
             Log.WriteLine("Play");
@@ -84,7 +49,7 @@ namespace PlayerLibrary.Core
             {
                 if (PlaybackState != PlaybackState.Playing && IsFileOpen == true)
                 {
-                    NAudioPlayer.OutputDevice.Play();
+                    audioPlayer.OutputDevice.Play();
                     RaisePlaybackStatePlaying();
                 }
                 else if (IsFileOpen == false)
@@ -92,7 +57,7 @@ namespace PlayerLibrary.Core
                     if (!string.IsNullOrEmpty(CurrentTrackFile))
                     {
                         CoreOpen(CurrentTrackFile);
-                        NAudioPlayer.OutputDevice.Play();
+                        audioPlayer.OutputDevice.Play();
                         RaisePlaybackStatePlaying();
                     }
                 }
@@ -106,14 +71,14 @@ namespace PlayerLibrary.Core
         public void Pause()
         {
             Log.WriteLine("Pause");
-            NAudioPlayer.OutputDevice.Pause();
+            audioPlayer.OutputDevice.Pause();
             RaisePlaybackStatePaused();
         }
         public void Stop()
         {
             Log.WriteLine("Stop");
-            NAudioPlayer.OutputDevice.Stop();
-            NAudioPlayer.Reader.CurrentTime = TimeSpan.Zero;
+            audioPlayer.OutputDevice.Stop();
+            audioPlayer.Reader.CurrentTime = TimeSpan.Zero;
             RaisePlaybackStateStopped();
         }
 
@@ -122,11 +87,9 @@ namespace PlayerLibrary.Core
             Stop();
             try
             {
-                NAudioPlayer.OutputDevice.Dispose();
-                NAudioPlayer.Reader.Close();
+                audioPlayer.OutputDevice.Dispose();
+                audioPlayer.Reader.Dispose();
                 CurrentTrackFile = null;
-                NAudioPlayer.Reader.Dispose();
-                NAudioPlayer.Reader = null;
                 Log.WriteLine("Close: done");
 
             }
@@ -151,7 +114,7 @@ namespace PlayerLibrary.Core
         {
             if (string.IsNullOrEmpty(e.Exception?.Message))
             {
-                if ((int)NAudioPlayer.Reader.CurrentTime.TotalSeconds >= (int)NAudioPlayer.Reader.TotalTime.TotalSeconds - 1)
+                if ((int)audioPlayer.Reader.CurrentTime.TotalSeconds >= (int)audioPlayer.Reader.TotalTime.TotalSeconds - 1)
                 {
                     RaisePlaybackStateEnded();
                 }
@@ -183,9 +146,15 @@ namespace PlayerLibrary.Core
         #endregion
 
         private bool IsEventsOn { get; set; } = true;
-        internal void ToggleEventsOff() => IsEventsOn = false;
-        internal void ToggleEventsOn() => IsEventsOn = true;
+        internal void ToggleEventsOff()
+        {
+            IsEventsOn = false;
+        }
 
+        internal void ToggleEventsOn()
+        {
+            IsEventsOn = true;
+        }
 
         public FileInfo.AudioInfo AudioInfo => new(CurrentTrackFile);
 
@@ -229,13 +198,25 @@ namespace PlayerLibrary.Core
             try
             {
                 CloseIfOpen();
-                if (CheckFile(filePath) == false) return;
+                if (CheckFile(filePath) == false)
+                {
+                    return;
+                }
+
                 CurrentTrackFile = filePath;
 
-                NAudioPlayer.Reader = new MediaFoundationReader(filePath);
-                NAudioPlayer.Init();
+                audioPlayer.Reader = new MediaFoundationReader(filePath);
 
-                if (NAudioPlayer.Reader.TotalTime.TotalSeconds <= 0)
+                VolumeController.InputSampleProvider = audioPlayer.Reader.ToSampleProvider();
+
+                audioPlayer.SampleProvider = VolumeController.OutputSampleProvider;
+
+                audioPlayer.OutputDevice = new WaveOutEvent();
+
+
+                audioPlayer.OutputDevice.PlaybackStopped += WaveOutEvent_PlaybackStopped;
+                audioPlayer.Init(filePath);
+                if (audioPlayer.Reader.TotalTime.TotalSeconds <= 0)
                 {
                     RaisePlaybackStateFailed();
                     return;
@@ -248,6 +229,7 @@ namespace PlayerLibrary.Core
             catch (Exception ex)
             {
                 Log.WriteLine("CoreOpen", ex.Message);
+                throw;
             }
         }
 

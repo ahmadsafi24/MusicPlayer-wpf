@@ -2,14 +2,14 @@
 {
     public partial class App : Application
     {
-        /*[System.Runtime.InteropServices.DllImport("Kernel32")]
-        private static extern void AllocConsole();*/
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        private static extern void AllocConsole();
 
-        internal static Player Player = new(new NAudioPlayerNormal());
+        internal static Player Player = new();
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //AllocConsole();
+            AllocConsole();
 
             base.OnStartup(e);
             Common.Commands.AppCommands.LoadStartupConfigs();

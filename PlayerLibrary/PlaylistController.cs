@@ -14,12 +14,6 @@ namespace PlayerLibrary
         {
             playlist = new();
             playbackSession = _playbackSession;
-            _playbackSession.NAudioPlayerChanged += NAudioPlayerChanged;
-        }
-
-        private void NAudioPlayerChanged(Type type)
-        {
-            playbackSession.PlaybackStateChanged += PlaybackStateChanged;
         }
 
         private void PlaybackStateChanged(PlaybackState state)

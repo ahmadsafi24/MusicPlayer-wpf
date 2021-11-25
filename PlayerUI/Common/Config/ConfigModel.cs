@@ -14,6 +14,8 @@
         public double WindowsLeft { get; set; }
         public double WindowsTop { get; set; }
         public bool IsWindowStateMaximized { get; set; }
+
+        public double AudioVolume { get; set; }
         public int[] EqBandsGain { get; set; }
     }
 }

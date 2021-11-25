@@ -1,7 +1,5 @@
 using Helper;
 using PlayerLibrary.Core;
-using PlayerLibrary.Core.NAudioPlayer;
-using PlayerLibrary.Core.NAudioPlayer.Interface;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -11,28 +9,23 @@ namespace PlayerLibrary.Core
 {
     public class TimelineController
     {
-        internal INAudioPlayer NAudioPlayer { get; set; }
+        internal PlaybackSession PlaybackSession { get; set; }
 
         internal TimelineController(PlaybackSession playbackSession)
         {
             Log.WriteLine("new TimelineController");
-            this.NAudioPlayer = playbackSession.NAudioPlayer;
+            this.PlaybackSession = playbackSession;
             InitializeTimers();
             playbackSession.PlaybackStateChanged += PlaybackStateChanged;
         }
 
-        internal TimelineController(NAudioPlayerEq nAudioCore)
-        {
-            this.NAudioPlayer = nAudioCore;
-            InitializeTimers();
-        }
         public TimeSpan Current
         {
             get
             {
-                if (NAudioPlayer.Reader != null)
+                if (PlaybackSession.audioPlayer.Reader != null)
                 {
-                    return NAudioPlayer.Reader.CurrentTime;
+                    return PlaybackSession.audioPlayer.Reader.CurrentTime;
                 }
                 else
                 {
@@ -46,9 +39,9 @@ namespace PlayerLibrary.Core
         {
             get
             {
-                if (NAudioPlayer.Reader != null)
+                if (PlaybackSession.audioPlayer.Reader != null)
                 {
-                    return NAudioPlayer.Reader.TotalTime;
+                    return PlaybackSession.audioPlayer.Reader.TotalTime;
                 }
                 else
                 {
@@ -70,7 +63,7 @@ namespace PlayerLibrary.Core
             if (time < TimeSpan.Zero || time > Total || time == Current)
             { return; }
 
-            NAudioPlayer.Reader.CurrentTime = time;
+            PlaybackSession.audioPlayer.Reader.CurrentTime = time;
             Task.Run(async () => await RaiseCurrentTime(Current));
             Log.WriteLine($"Seeking (async) to {time.ToString("mm\\:ss")}");
         }

@@ -18,30 +18,6 @@ namespace PlayerUI.ViewModel
             ResetBandCommand = new RelayCommand(ResetBand);
 
             NotifyPropertyChanged(null);
-            Player.PlaybackSession.NAudioPlayerChanged += PlaybackSession_NAudioPlayerChanged;
-            Player.PropertyChanged += EqControllerCreated;
-        }
-
-        private void PlaybackSession_NAudioPlayerChanged(Type type)
-        {
-            Log.WriteLine(type.ToString());
-            NotifyPropertyChanged(null);
-            if (type == typeof(PlayerLibrary.Core.NAudioPlayer.NAudioPlayerEq))
-            {
-                if (EqualizerController != null)
-                {
-
-                }
-            }
-        }
-        private void EqControllerCreated()
-        {
-            EqualizerController.EqUpdated += EqControllerUpdated;
-        }
-
-        private void EqControllerUpdated()
-        {
-            NotifyPropertyChanged(null);
         }
 
         private void LoadEq()
@@ -96,70 +72,70 @@ namespace PlayerUI.ViewModel
             }
         }
 
-        public double Band0
+        public double? Band0
         {
-            get => (double)(EqualizerController?.GetBandGain(0));
+            get => EqualizerController?.GetBandGain(0);
             set => EqualizerController?.SetBandGain(0, (float)value, true);
         }
 
-        public double Band1
+        public double? Band1
         {
-            get => (double)(EqualizerController?.GetBandGain(1));
+            get => EqualizerController?.GetBandGain(1);
             set => EqualizerController?.SetBandGain(1, (float)value, true);
         }
 
-        public double Band2
+        public double? Band2
         {
-            get => (double)(EqualizerController?.GetBandGain(2));
+            get => EqualizerController?.GetBandGain(2);
             set => EqualizerController?.SetBandGain(2, (float)value, true);
         }
 
-        public double Band3
+        public double? Band3
         {
-            get => (double)(EqualizerController?.GetBandGain(3));
+            get => EqualizerController?.GetBandGain(3);
             set => EqualizerController?.SetBandGain(3, (float)value, true);
         }
 
-        public double Band4
+        public double? Band4
         {
-            get => (double)(EqualizerController?.GetBandGain(4));
+            get => EqualizerController?.GetBandGain(4);
             set => EqualizerController?.SetBandGain(4, (float)value, true);
         }
 
-        public double Band5
+        public double? Band5
         {
-            get => (double)(EqualizerController?.GetBandGain(5));
+            get => EqualizerController?.GetBandGain(5);
             set => EqualizerController?.SetBandGain(5, (float)value, true);
         }
-        public double Band6
+        public double? Band6
         {
-            get => (double)(EqualizerController?.GetBandGain(6));
-            set { EqualizerController?.SetBandGain(6, (float)value, true); }
+            get => EqualizerController?.GetBandGain(6);
+            set => EqualizerController?.SetBandGain(6, (float)value, true);
         }
-        public double Band7
+        public double? Band7
         {
-            get => (double)(EqualizerController?.GetBandGain(7));
-            set { EqualizerController?.SetBandGain(7, (float)value, true); }
+            get => EqualizerController?.GetBandGain(7);
+            set => EqualizerController?.SetBandGain(7, (float)value, true);
         }
-        public double Band8
+        public double? Band8
         {
-            get => (double)(EqualizerController?.GetBandGain(8));
-            set { EqualizerController?.SetBandGain(8, (float)value, true); }
+            get => EqualizerController?.GetBandGain(8);
+            set => EqualizerController?.SetBandGain(8, (float)value, true);
         }
-        public double Band9
+        public double? Band9
         {
-            get => (double)(EqualizerController?.GetBandGain(9));
-            set { EqualizerController?.SetBandGain(9, (float)value, true); }
+            get => EqualizerController?.GetBandGain(9);
+            set => EqualizerController?.SetBandGain(9, (float)value, true);
         }
-        public double Band10
+        public double? Band10
         {
-            get => (double)(EqualizerController?.GetBandGain(10));
-            set { EqualizerController?.SetBandGain(10, (float)value, true); }
+            get => EqualizerController?.GetBandGain(10);
+            set => EqualizerController?.SetBandGain(10, (float)value, true);
         }
-        public double Band11
+        public double? Band11
         {
-            get => (double)(EqualizerController?.GetBandGain(11));
-            set { EqualizerController?.SetBandGain(11, (float)value, true); }
+            get => EqualizerController?.GetBandGain(11);
+            set => EqualizerController?.SetBandGain(11, (float)value, true);
         }
 
 

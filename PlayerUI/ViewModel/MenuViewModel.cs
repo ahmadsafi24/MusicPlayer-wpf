@@ -24,14 +24,14 @@
         // Enable Disable Equalizer
         private static void TestMethod()
         {
-            if (Player.PlaybackSession.NAudioPlayerType == typeof(PlayerLibrary.Core.NAudioPlayer.NAudioPlayerEq))
+            /*if (Player.PlaybackSession.NAudioPlayerType == typeof(PlayerLibrary.Core.NAudioPlayer.NAudioPlayerEq))
             {
                 Player.DisableEqualizerController();
             }
             else
             {
                 Player.EnableEqualizerController();
-            }
+            }*/
 
 
             /*Random rnd = new Random();

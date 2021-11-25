@@ -228,3 +228,6 @@ FakesAssemblies/
 *.dll
 *.v2
 *.pubxml
+
+.fake
+.ionide

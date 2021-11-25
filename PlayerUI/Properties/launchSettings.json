@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PlayerUI": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

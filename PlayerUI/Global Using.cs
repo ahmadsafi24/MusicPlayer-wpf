@@ -3,7 +3,6 @@ global using Helper.ViewModelBase;
 global using Helper.DarkUi;
 global using PlayerLibrary;
 global using PlayerLibrary.Core;
-global using PlayerLibrary.Core.NAudioPlayer;
 global using PlayerLibrary.Preset;
 global using PlayerUI.Common;
 global using PlayerUI.Common.Commands;

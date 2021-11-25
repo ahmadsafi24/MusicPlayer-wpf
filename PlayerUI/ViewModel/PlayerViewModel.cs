@@ -27,13 +27,7 @@
 
             TimelineController.TimePositionChanged += AudioPlayer_CurrentTimeChanged;
             PlaybackSession.PlaybackStateChanged += Player_PlaybackStateChanged;
-            Player.PlaybackSession.NAudioPlayerChanged += PlaybackSession_NAudioPlayerChanged;
             VolumeController.VolumeChanged += AudioPlayer_VolumeChanged;
-        }
-
-        private void PlaybackSession_NAudioPlayerChanged(Type type)
-        {
-
         }
 
         private void OpenCoverFile()
@@ -136,7 +130,7 @@
         public bool IsPlaying => PlaybackSession.IsPlaying;
         public float Volume
         {
-            get => VolumeController.Volume;
+            get => (float)(VolumeController?.Volume);
             set => VolumeController.ChangeVolume(value);
         }
 

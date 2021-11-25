@@ -1,38 +1,44 @@
+using Helper;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using PlayerLibrary;
 using PlayerLibrary.Core;
-using PlayerLibrary.Model;
 using PlayerLibrary.FileInfo;
+using PlayerLibrary.Model;
+using PlayerLibrary.Plugin;
 using System;
-using Helper;
-using PlayerLibrary.Core.NAudioPlayer.Interface;
-using PlayerLibrary.Core.NAudioPlayer;
 using static PlayerLibrary.Events;
 
 namespace PlayerLibrary.Core
 {
-    public class VolumeController
+    public class VolumeController : IPlugin
     {
-        internal INAudioPlayer NAudioPlayer { get; set; }
+        public VolumeSampleProvider volumeProvider = new(null);
 
-        public VolumeController(NAudioPlayerEq nAudioCore)
-        {
-            this.NAudioPlayer = nAudioCore;
-        }
-        public VolumeController(PlaybackSession playbackSession)
-        {
-            Log.WriteLine("new VolumeController");
-            this.NAudioPlayer = playbackSession.NAudioPlayer;
-            playbackSession.PlaybackStateChanged += PlaybackStateChanged;
-            RaiseVolumeChanged(Volume);
+        public ISampleProvider InputSampleProvider { get; set; }
 
-        }
-        private void PlaybackStateChanged(PlaybackState state)
+        public ISampleProvider OutputSampleProvider
         {
-            if (state == PlaybackState.Opened)
+            get
             {
-                RaiseVolumeChanged(Volume);
+
+                volumeProvider = new(InputSampleProvider) { Volume = InitVol() };
+                return volumeProvider;
             }
         }
+
+        private float InitVol()
+        {
+            if (volumeProvider != null)
+            {
+                return volumeProvider.Volume;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
         #region Volume
         public event EventHandlerVolume VolumeChanged;
         internal void RaiseVolumeChanged(float newVolume)
@@ -71,24 +77,34 @@ namespace PlayerLibrary.Core
             }
         }
 
+
+
+
         #endregion
 
         public float Volume
         {
             get
             {
-                if (NAudioPlayer.VolumeSampleProvider == null)
+                if (volumeProvider == null)
                 {
                     return 1;
                 }
-                return NAudioPlayer.VolumeSampleProvider.Volume;
+                return volumeProvider.Volume;
             }
             set
             {
                 try
                 {
-                    if (NAudioPlayer.VolumeSampleProvider == null) return;
-                    if (value == NAudioPlayer.VolumeSampleProvider.Volume) return;
+                    if (volumeProvider == null)
+                    {
+                        return;
+                    }
+
+                    if (value == volumeProvider.Volume)
+                    {
+                        return;
+                    }
 
                     if (IsMuted)
                     {
@@ -97,18 +113,26 @@ namespace PlayerLibrary.Core
                     switch (value)
                     {
                         case >= 0 and <= 1:
-                            NAudioPlayer.VolumeSampleProvider.Volume = value;
+                            volumeProvider.Volume = value;
                             break;
                         default:
                             switch (value)
                             {
                                 case > 1:
-                                    if (NAudioPlayer.VolumeSampleProvider.Volume == 1) return;
-                                    NAudioPlayer.VolumeSampleProvider.Volume = 1;
+                                    if (volumeProvider.Volume == 1)
+                                    {
+                                        return;
+                                    }
+
+                                    volumeProvider.Volume = 1;
                                     break;
                                 case < 0:
-                                    if (NAudioPlayer.VolumeSampleProvider.Volume == 0) return;
-                                    NAudioPlayer.VolumeSampleProvider.Volume = 0;
+                                    if (volumeProvider.Volume == 0)
+                                    {
+                                        return;
+                                    }
+
+                                    volumeProvider.Volume = 0;
                                     break;
                             }
                             break;
@@ -119,7 +143,7 @@ namespace PlayerLibrary.Core
                         ismute = true;
                     }
                     RaiseVolumeChanged(value);
-                    Log.WriteLine("volume: " + NAudioPlayer.VolumeSampleProvider.Volume);
+                    Log.WriteLine("volume: " + volumeProvider.Volume);
                 }
                 catch (Exception ex)
                 {
@@ -148,5 +172,17 @@ namespace PlayerLibrary.Core
                 ismute = value;
             }
         }
+
+
+        public void Enable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Disable()
+        {
+            throw new NotImplementedException();
+        }
+        public bool IsEnabled => throw new NotImplementedException();
     }
 }

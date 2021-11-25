@@ -53,6 +53,7 @@
             writer.WriteNumber(nameof(ConfigModel.WindowsLeft), (int)CurrentConfig.WindowsLeft);
             writer.WriteNumber(nameof(ConfigModel.WindowsTop), (int)CurrentConfig.WindowsTop);
             writer.WriteBoolean(nameof(ConfigModel.IsWindowStateMaximized), CurrentConfig.IsWindowStateMaximized);
+            writer.WriteNumber(nameof(ConfigModel.AudioVolume), CurrentConfig.AudioVolume);
             writer.WriteStartArray(nameof(ConfigModel.EqBandsGain));
             foreach (var item in CurrentConfig.EqBandsGain)
             {
@@ -104,6 +105,7 @@
             AppStatics.WindowsWidth = CurrentConfig.WindowsWidth;
             AppStatics.WindowsHeight = CurrentConfig.WindowsHeight;
             AppStatics.IsWindowStateMaximized = CurrentConfig.IsWindowStateMaximized;
+            App.Player.PlaybackSession.VolumeController.Volume = (float)CurrentConfig.AudioVolume;
             // bad coding
             EqualizerMode newEqMode = new();
             if (CurrentConfig.EqBandsGain.Length == 8)
@@ -132,7 +134,8 @@
                     WindowsHeight = AppStatics.WindowsHeight,
                     WindowsLeft = AppStatics.WindowsLeft,
                     WindowsTop = AppStatics.WindowsTop,
-                    IsWindowStateMaximized = AppStatics.IsWindowStateMaximized
+                    IsWindowStateMaximized = AppStatics.IsWindowStateMaximized,
+                    AudioVolume = (double)App.Player.PlaybackSession.VolumeController.Volume
                 };
                 if (App.Player.EqualizerController != null)
                 {

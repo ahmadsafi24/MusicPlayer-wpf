@@ -6,18 +6,16 @@ namespace PlayerUI.ViewModel
 {
     public class EqualizerViewModel : ViewModelBase
     {
-        private Player Player => App.Player;
-        private EqualizerController EqualizerController => App.Player.PlaybackSession.EffectContainer.EqualizerController;
+        private static Player Player => App.Player;
+        private static EqualizerController EqualizerController => App.Player.PlaybackSession.EffectContainer.EqualizerController;
         public DelegateCommand ResetEqCommand { get; }
         public DelegateCommand LoadEqCommand { get; }
         public DelegateCommand SaveEqCommand { get; }
-        public ICommand ResetBandCommand;
         public EqualizerViewModel()
         {
             ResetEqCommand = new DelegateCommand(ResetEq);
             LoadEqCommand = new DelegateCommand(LoadEq);
             SaveEqCommand = new DelegateCommand(SaveEq);
-            ResetBandCommand = new RelayCommand(ResetBand);
             EqualizerController.EqUpdated += EqualizerController_EqUpdated;
             NotifyPropertyChanged(null);
 
@@ -145,16 +143,6 @@ namespace PlayerUI.ViewModel
             get => EqualizerController?.GetBandGain(11);
             set => EqualizerController?.SetBandGain(11, (float)value, true);
         }
-
-
-        private void ResetBand(object parameter)
-        {
-            int bandnumber = int.Parse(parameter.ToString());
-
-            EqualizerController?.SetBandGain(bandnumber, 0, true);
-            NotifyPropertyChanged($"Band{bandnumber}");
-        }
-
 
         public double PitchFactor
         {

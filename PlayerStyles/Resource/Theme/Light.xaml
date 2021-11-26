@@ -190,4 +190,15 @@
     <SolidColorBrush x:Key="ComboBoxItemContainer.Background" Color="{DynamicResource Light1}"/>
     <SolidColorBrush x:Key="UserControl.DefaultBackground" Color="{DynamicResource Light4}"/>
     <SolidColorBrush x:Key="UserControl.DefaultBorder" Color="{DynamicResource Light9}"/>
+
+
+    <Color x:Key="AppWindow.Active.Background" >White</Color>
+    <Color x:Key="AppWindow.Active.Foreground" >Black</Color>
+
+    <Color x:Key="AppWindow.InActive.Background" >#FFF7F7F7</Color>
+    <Color x:Key="AppWindow.InActive.Foreground" >#FF4E4E4E</Color>
+
+    <Color x:Key="AppWindow.Hover.Background" >#FFD4D4D4</Color>
+    <Color x:Key="AppWindow.Hover.Foreground" >#FF252525</Color>
+    <SolidColorBrush x:Key="test" Color="#FF4E4E4E" />
 </ResourceDictionary>

@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow" Width="800" Height="480"
-        Background="{DynamicResource Windows.Background}"
-        d:Content="{StaticResource MainPage}">
+        Background="{DynamicResource Windows.Background}">
+        <!--Content="{StaticResource MainPage}"-->
     <Window.Style>
         <Style TargetType="Window">
             <Setter Property="Template">

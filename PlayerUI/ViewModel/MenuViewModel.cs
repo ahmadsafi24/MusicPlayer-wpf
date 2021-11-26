@@ -29,27 +29,7 @@ namespace PlayerUI.ViewModel
         }
 
 
-        public static void ShowNotification(string title,string message)
-        {
-            string Image = "";// = "path to image  url is working  filepath not tested";
 
-            string toastXmlString =
-            $@"<toast><visual>
-            <binding template='ToastGeneric'>
-            <text>{title}</text>
-            <text>{message}</text>
-            <image src='{Image}'/>
-            </binding>
-            </visual></toast>";
-
-            Windows.Data.Xml.Dom.XmlDocument xmlDoc = new();
-            xmlDoc.LoadXml(toastXmlString);
-
-            ToastNotification toastNotification = new(xmlDoc);
-
-            ToastNotifier toastNotifier = ToastNotificationManager.CreateToastNotifier();
-            toastNotifier.Show(toastNotification);
-        }
         // Enable Disable Equalizer **
         public bool? IsEqualizerEnabled
         {

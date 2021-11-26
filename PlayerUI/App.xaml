@@ -5,7 +5,7 @@
              xmlns:Windows="clr-namespace:PlayerUI.View"
              xmlns:converter="clr-namespace:PlayerLibrary.Converter;assembly=PlayerLibrary"
              xmlns:control="clr-namespace:PlayerUI.UserControls"
-             xmlns:Pages="clr-namespace:PlayerUI.Pages"
+             xmlns:Pages="clr-namespace:PlayerUI.Pages" xmlns:WinUI="clr-namespace:Microsoft.UI.Xaml.Controls;assembly=Microsoft.WinUI"
              x:Class="PlayerUI.App">
 
     <Application.Resources>
@@ -29,6 +29,7 @@
                 
                 <ResourceDictionary Source="/UserControls/ContextMenu.xaml" />
             </ResourceDictionary.MergedDictionaries>
+        <!--WinUI:XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" x:Key="12345" -->
 
                 
             <ViewModel:MainView_ViewModel x:Key="MainView_ViewModel"/>
@@ -54,7 +55,7 @@
             <Pages:MiniView x:Key="MiniView"/>
 
             <Pages:MainPage x:Key="MainPage"/>
-
+            
         </ResourceDictionary>
     </Application.Resources>
 

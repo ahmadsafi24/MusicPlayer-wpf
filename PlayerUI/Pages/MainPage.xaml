@@ -6,6 +6,9 @@
       xmlns:local="clr-namespace:PlayerUI" 
       xmlns:UserControl="clr-namespace:PlayerUI.UserControls" 
       xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel"
+      
+      xmlns:WinUI="clr-namespace:Microsoft.UI.Xaml.Controls;assembly=Microsoft.WinUI"
+      
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage"
@@ -19,7 +22,7 @@
         <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding SwitchToMainView}"/>
     </Page.InputBindings>
     <DockPanel LastChildFill="True">
-        <UserControl:Menubar DockPanel.Dock="Top" Style="{StaticResource UserControlDefaultStyle}"/>
+        <UserControl:Menubar DockPanel.Dock="Top" Style="{StaticResource UserControlDefaultStyle}" BorderThickness="0"/>
         <UserControl:PlayerControl DockPanel.Dock="Bottom" />
         <UserControl:MediaInfoCard DockPanel.Dock="Bottom" ContextMenu="{StaticResource MainContextMenu}"/>
         <Grid DockPanel.Dock="Top" >

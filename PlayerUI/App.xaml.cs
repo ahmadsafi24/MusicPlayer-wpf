@@ -1,9 +1,11 @@
-﻿namespace PlayerUI
+﻿using Microsoft.Windows.ApplicationModel.DynamicDependency;
+
+namespace PlayerUI
 {
     public partial class App : Application
     {
-        [System.Runtime.InteropServices.DllImport("Kernel32")]
-        private static extern void AllocConsole();
+        //[System.Runtime.InteropServices.DllImport("Kernel32")]
+        //private static extern void AllocConsole();
 
         internal static Player Player = new();
 
@@ -12,12 +14,14 @@
             //AllocConsole();
 
             base.OnStartup(e);
-            Common.Commands.AppCommands.LoadStartupConfigs();
-            MainWindow.Show();
-            Common.Commands.AppCommands.LoadStartupArgs(e.Args);
-            EnableSystemThemeWatcher();
+
             try
             {
+
+                AppCommands.LoadStartupConfigs();
+                MainWindow.Show();
+                AppCommands.LoadStartupArgs(e.Args);
+                EnableSystemThemeListener();
             }
             catch (Exception ex)
             {
@@ -35,11 +39,11 @@
             Common.Commands.AppCommands.SaveStartupConf();
         }
 
-        void EnableSystemThemeWatcher()
+        static void EnableSystemThemeListener()
         {
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += (_, _) =>
             {
-                AppStatics.IsDark = Helper.ThemeListener.RegistryisDark();
+                AppStatics.IsDark = ThemeListener.RegistryisDark();
                 WindowTheme.Refresh();
             };
         }

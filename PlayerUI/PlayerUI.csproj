@@ -3,17 +3,24 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
     <UseWPF>true</UseWPF>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>AnyCPU;x86;x64</Platforms>
-    <AnalysisLevel>6.0</AnalysisLevel>
-    <StartupObject>PlayerUI.App</StartupObject>
+    <UseWinUI>true</UseWinUI>
+	<AnalysisLevel>6.0</AnalysisLevel>
+    <DebugType>full</DebugType>
+    <Platforms>x86;x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+	<RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject>PlayerUI.App</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.UI.Xaml" Version="2.7.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Helper\Helper.csproj" />

@@ -25,15 +25,15 @@
         public static void ForceApplyDark()
         {
             AppStatics.IsDark = true;
-            FireThemeChangedForWindows();
             ResourceManager.LoadThemeResourceDark();
+            FireThemeChangedForWindows();
         }
 
         public static void ForceApplyLight()
         {
             AppStatics.IsDark = false;
-            FireThemeChangedForWindows();
             ResourceManager.LoadThemeResourceLight();
+            FireThemeChangedForWindows();
         }
 
         public static void Refresh()

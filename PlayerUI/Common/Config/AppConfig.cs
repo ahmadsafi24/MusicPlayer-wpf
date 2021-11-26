@@ -88,7 +88,7 @@
                 }
                 else
                 {
-                    _ = Helper.Log.ShowMessage("Config Not Found\nOk To Create Default Config");
+                    _ = Log.ShowMessage("Config Not Found\nOk To Create Default Config");
                     CurrentConfig = DefaultConfig;
                 }
 

@@ -10,5 +10,11 @@
         public static double WindowsTop { get; set; }
 
         public static bool IsWindowStateMaximized { get; set; }
+
+        // dont save in config.json
+
+
+
+        //
     }
 }

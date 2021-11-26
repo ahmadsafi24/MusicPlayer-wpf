@@ -1,4 +1,6 @@
-﻿namespace PlayerUI.ViewModel
+﻿using Windows.UI.Notifications;
+
+namespace PlayerUI.ViewModel
 {
     public class MenuViewModel : ViewModelBase
     {
@@ -19,20 +21,51 @@
             SwitchToMiniViewCommand = new DelegateCommand(() => ViewSwitcher.SwitchToMiniView());
             SwitchToBlurWindowCommand = new DelegateCommand(() => ViewSwitcher.SwitchToBlurWindow());
             SwitchToNormalWindowCommand = new DelegateCommand(() => ViewSwitcher.SwitchToNormalWindow());
+
+            Player.PlaybackSession.EffectContainer.OutSampleProviderChanged+=() =>
+            NotifyPropertyChanged(nameof(IsEqualizerEnabled));
+
+
         }
 
-        // Enable Disable Equalizer
-        private static void TestMethod()
+
+        public static void ShowNotification(string title,string message)
         {
-            Player.PlaybackSession.EffectContainer.EnableEqualizer = !Player.PlaybackSession.EffectContainer.EnableEqualizer;
-            /*if (Player.PlaybackSession.NAudioPlayerType == typeof(PlayerLibrary.Core.NAudioPlayer.NAudioPlayerEq))
+            string Image = "";// = "path to image  url is working  filepath not tested";
+
+            string toastXmlString =
+            $@"<toast><visual>
+            <binding template='ToastGeneric'>
+            <text>{title}</text>
+            <text>{message}</text>
+            <image src='{Image}'/>
+            </binding>
+            </visual></toast>";
+
+            Windows.Data.Xml.Dom.XmlDocument xmlDoc = new();
+            xmlDoc.LoadXml(toastXmlString);
+
+            ToastNotification toastNotification = new(xmlDoc);
+
+            ToastNotifier toastNotifier = ToastNotificationManager.CreateToastNotifier();
+            toastNotifier.Show(toastNotification);
+        }
+        // Enable Disable Equalizer **
+        public bool? IsEqualizerEnabled
+        {
+            get
             {
-                Player.DisableEqualizerController();
+                return Player?.PlaybackSession.EffectContainer.EnableEqualizer;
             }
-            else
-            {
-                Player.EnableEqualizerController();
-            }*/
+        }
+
+        private void TestMethod()
+        {
+            //ShowNotification("Notification Title","Test Message");
+
+            //Windows.UI.
+            //Toggle Equalizer Enable:
+            Player.PlaybackSession.EffectContainer.EnableEqualizer = !Player.PlaybackSession.EffectContainer.EnableEqualizer;
 
 
             /*Random rnd = new Random();

@@ -11,7 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Helper\Helper.csproj" />
     <ProjectReference Include="..\PlayerLibrary\PlayerLibrary.csproj" />
-    <ProjectReference Include="..\PlayerUI\PlayerUI.csproj" />
   </ItemGroup>
 
 </Project>

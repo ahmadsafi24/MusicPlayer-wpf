@@ -231,3 +231,4 @@ FakesAssemblies/
 
 .fake
 .ionide
+/PlayerUI.App/BundleArtifacts/neutral.txt

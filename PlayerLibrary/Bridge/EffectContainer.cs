@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PlayerLibrary.Events;
 
 namespace PlayerLibrary.Bridge
 {
@@ -51,6 +52,9 @@ namespace PlayerLibrary.Bridge
             {
                 ApplyPitchShifting();
             }
+
+
+            RaiseOutSampleProviderChanged();
         }
         //_________________________________________________
         public void ApplyNoEffect()
@@ -127,6 +131,10 @@ namespace PlayerLibrary.Bridge
             OutSample = PitchController;
         }
 
-
+        public void RaiseOutSampleProviderChanged()
+        {
+            OutSampleProviderChanged?.Invoke();
+        }
+        public event EventHandlerEmpty OutSampleProviderChanged;
     }
 }

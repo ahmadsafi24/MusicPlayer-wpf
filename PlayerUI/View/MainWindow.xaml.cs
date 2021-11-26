@@ -1,6 +1,6 @@
 ﻿namespace PlayerUI.View
 {
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
@@ -9,15 +9,17 @@
             InitializeComponent();
             MouseLeftButtonDown += (_, _) =>
             {
-                if (this.WindowState != WindowState.Maximized)
+                if (WindowState != WindowState.Maximized)
                 {
-                    Helper.WindowsManager.DragMove(this);
+                    WindowsManager.DragMove(this);
                 }
             };
 
             WindowTheme.ThemeChanged += WindowTheme_ThemeChanged;
-            Common.Commands.WindowCommands.AttachDrop(this);
-            Common.Commands.WindowCommands.AttachMouseWheel(this);
+            WindowCommands.AttachDrop(this);
+            WindowCommands.AttachMouseWheel(this);
+
+
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
@@ -45,15 +47,15 @@
             {
                 WindowState = WindowState.Maximized;
             }
-            _ = App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            _ = Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
-                Content = App.Current.FindResource("MainPage");
+                Content = FindResource("MainPage");
             }));
         }
 
         private void WindowTheme_ThemeChanged(bool isdark)
         {
-            if (this.IsLoaded)
+            if (IsLoaded)
             {
                 DwmApi.ToggleImmersiveDarkMode(this, isdark);
                 UpdateLayout();

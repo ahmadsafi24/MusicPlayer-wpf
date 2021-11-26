@@ -339,7 +339,7 @@
             <MenuItem Header="Mini View" Command="{Binding SwitchToMiniViewCommand}"/>
             <MenuItem Header="Blur Window" Command="{Binding SwitchToBlurWindowCommand}"/>
             <MenuItem Header="Normal Window" Command="{Binding SwitchToNormalWindowCommand}"/>
-            <MenuItem Header="Enable/Disable Equalizer" Command="{Binding TestCommand}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding IsEqualizerEnabled,Mode=OneWay}" Header="Enable/Disable Equalizer" Command="{Binding TestCommand}"/>
             <MenuItem Header="|" IsEnabled="False"/>
             <MenuItem Header="TopMenuHeader"/>
             <MenuItem Header="TopMenuItem">

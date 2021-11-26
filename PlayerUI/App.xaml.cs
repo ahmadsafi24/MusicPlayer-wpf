@@ -9,7 +9,7 @@
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            AllocConsole();
+            //AllocConsole();
 
             base.OnStartup(e);
             Common.Commands.AppCommands.LoadStartupConfigs();

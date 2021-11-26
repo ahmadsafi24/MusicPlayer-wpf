@@ -15,6 +15,9 @@
         public double WindowsTop { get; set; }
         public bool IsWindowStateMaximized { get; set; }
 
+
+        public bool IsEqualizerEnabled { get; set; }
+        public bool IsPitchShiftingEnabled { get; set; }
         public double AudioVolume { get; set; }
         public int[] EqBandsGain { get; set; }
     }

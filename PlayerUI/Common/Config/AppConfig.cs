@@ -17,6 +17,10 @@
                 WindowsHeight = 600,
                 WindowsLeft = Application.Current.MainWindow.Left,
                 WindowsTop = Application.Current.MainWindow.Top,
+
+                IsEqualizerEnabled = false,
+                IsPitchShiftingEnabled = false,
+                AudioVolume = 1,
                 IsWindowStateMaximized = false,
                 EqBandsGain = Array.Empty<int>()
             };
@@ -33,7 +37,7 @@
         {
             if (playbackState == PlaybackState.Opened)
             {
-                AppStatics.LastFile = App.Player.PlaybackSession.CurrentTrackFile;
+                AppStatics.LastFile = App.Player.PlaybackSession.CurrentTrackFile.OriginalString;
             }
         }
 
@@ -53,6 +57,9 @@
             writer.WriteNumber(nameof(ConfigModel.WindowsLeft), (int)CurrentConfig.WindowsLeft);
             writer.WriteNumber(nameof(ConfigModel.WindowsTop), (int)CurrentConfig.WindowsTop);
             writer.WriteBoolean(nameof(ConfigModel.IsWindowStateMaximized), CurrentConfig.IsWindowStateMaximized);
+
+            writer.WriteBoolean(nameof(ConfigModel.IsEqualizerEnabled), CurrentConfig.IsEqualizerEnabled);
+            writer.WriteBoolean(nameof(ConfigModel.IsPitchShiftingEnabled), CurrentConfig.IsPitchShiftingEnabled);
             writer.WriteNumber(nameof(ConfigModel.AudioVolume), CurrentConfig.AudioVolume);
             writer.WriteStartArray(nameof(ConfigModel.EqBandsGain));
             foreach (var item in CurrentConfig.EqBandsGain)
@@ -105,20 +112,23 @@
             AppStatics.WindowsWidth = CurrentConfig.WindowsWidth;
             AppStatics.WindowsHeight = CurrentConfig.WindowsHeight;
             AppStatics.IsWindowStateMaximized = CurrentConfig.IsWindowStateMaximized;
+
+            App.Player.PlaybackSession.EffectContainer.EnableEqualizer = CurrentConfig.IsEqualizerEnabled;
+            App.Player.PlaybackSession.EffectContainer.EnablePtchShifting = CurrentConfig.IsPitchShiftingEnabled;
             App.Player.PlaybackSession.VolumeController.Volume = (float)CurrentConfig.AudioVolume;
             // bad coding
             EqualizerMode newEqMode = new();
-            if (CurrentConfig.EqBandsGain.Length == 8)
+            if (CurrentConfig.EqBandsGain.Length <= 8)
             {
                 newEqMode = EqualizerMode.Normal;
             }
-            else if (CurrentConfig.EqBandsGain.Length == 12)
+            else if (CurrentConfig.EqBandsGain.Length >= 12)
             {
                 newEqMode = EqualizerMode.Super;
             }
             EqPreset preset = new(newEqMode.ToString(), CurrentConfig.EqBandsGain);
             //
-            App.Player.EqualizerController?.SetEqPreset(preset);
+            App.Player.PlaybackSession.EffectContainer.EqualizerController?.SetEqPreset(preset);
             WindowTheme.Refresh();
         }
 
@@ -135,11 +145,13 @@
                     WindowsLeft = AppStatics.WindowsLeft,
                     WindowsTop = AppStatics.WindowsTop,
                     IsWindowStateMaximized = AppStatics.IsWindowStateMaximized,
+                    IsEqualizerEnabled = App.Player.PlaybackSession.EffectContainer.EnableEqualizer,
+                    IsPitchShiftingEnabled = App.Player.PlaybackSession.EffectContainer.EnablePtchShifting,
                     AudioVolume = (double)App.Player.PlaybackSession.VolumeController.Volume
                 };
-                if (App.Player.EqualizerController != null)
+                if (App.Player.PlaybackSession.EffectContainer.EqualizerController != null)
                 {
-                    CurrentConfig.EqBandsGain = App.Player.EqualizerController?.AllBandsGain;
+                    CurrentConfig.EqBandsGain = App.Player.PlaybackSession.EffectContainer.EqualizerController?.AllBandsGain;
                 }
                 else
                 {

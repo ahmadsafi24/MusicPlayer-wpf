@@ -20,8 +20,8 @@
     </Page.InputBindings>
     <DockPanel LastChildFill="True">
         <UserControl:Menubar DockPanel.Dock="Top" Style="{StaticResource UserControlDefaultStyle}"/>
-        <UserControl:PlayerControl DockPanel.Dock="Bottom" Style="{StaticResource UserControlDefaultStyle}"/>
-        <UserControl:MediaInfoCard DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0" Style="{StaticResource UserControlDefaultStyle}" ContextMenu="{StaticResource MainContextMenu}"/>
+        <UserControl:PlayerControl DockPanel.Dock="Bottom" />
+        <UserControl:MediaInfoCard DockPanel.Dock="Bottom" ContextMenu="{StaticResource MainContextMenu}"/>
         <Grid DockPanel.Dock="Top" >
             <UserControl:EqualizerControl HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource UserControlDefaultStyle}"/>
         </Grid>

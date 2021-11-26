@@ -8,7 +8,7 @@
             if (files.Length > 0)
             {
                 string Source = files[0];
-                await player.PlaybackSession.OpenAsync(Source);
+                await player.PlaybackSession.OpenAsync(new Uri(Source));
             }
         }
     }

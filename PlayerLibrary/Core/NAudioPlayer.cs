@@ -18,14 +18,12 @@ namespace PlayerLibrary.Core
 
         internal IWavePlayer OutputDevice { get; set; } // = new // player engine WaveOutEvent | WasapiOut | DirectSoundOut
 
-        public void Init(string file)
+        public void Init()
         {
             OutputDevice.Dispose();
             Reader.Dispose();
-            
-            OutputDevice.Init(SampleProvider);
 
-            OutputDevice.Play();
+            OutputDevice.Init(SampleProvider);
         }
         #endregion
 

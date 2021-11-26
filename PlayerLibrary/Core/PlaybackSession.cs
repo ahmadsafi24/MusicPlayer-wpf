@@ -1,7 +1,9 @@
 using Helper;
+
 using NAudio.Wave;
-using PlayerLibrary.Core;
+using PlayerLibrary.Bridge;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using static PlayerLibrary.Events;
 
@@ -10,34 +12,40 @@ namespace PlayerLibrary.Core
     public class PlaybackSession
     {
         public NAudioPlayer audioPlayer = new();
-        public string CurrentTrackFile { get; private set; }
+        public Uri CurrentTrackFile { get; private set; }
 
         public bool RepeatCurrentTrack = false;
 
         public TimelineController TimelineController;
 
         public VolumeController VolumeController = new();
-        public SampleProviderBridge sampleProviderBridge = new();
 
+        public EffectContainer EffectContainer;
         internal PlaybackSession()
         {
             TimelineController = new(this);
+            EffectContainer = new(this.audioPlayer);
             Log.WriteLine("PlaybackSession Initialized");
         }
 
-        public async Task OpenAsync(string filePath)
+        public async Task OpenAsync(Uri filePath)
         {
             await Task.Run(() => { CoreOpen(filePath); });
         }
 
-        public void Open(string filePath, TimeSpan timePosition)
+        public void Open(Uri filePath, TimeSpan timePosition)
         {
             Log.WriteLine("open with time", filePath);
+            PlaybackState tempPlaybackState = PlaybackState;
             CoreOpen(filePath);
             audioPlayer.Reader.CurrentTime = timePosition;
+            if (tempPlaybackState== PlaybackState.Playing)
+            {
+                Play();
+            }
         }
 
-        public void Open(string filePath)
+        public void Open(Uri filePath)
         {
             CoreOpen(filePath);
         }
@@ -54,7 +62,7 @@ namespace PlayerLibrary.Core
                 }
                 else if (IsFileOpen == false)
                 {
-                    if (!string.IsNullOrEmpty(CurrentTrackFile))
+                    if (CurrentTrackFile != null)
                     {
                         CoreOpen(CurrentTrackFile);
                         audioPlayer.OutputDevice.Play();
@@ -163,17 +171,24 @@ namespace PlayerLibrary.Core
 
         public bool IsPlaying = false;
 
-        private bool CheckFile(string filePath)
+        private bool CheckFile(Uri filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (filePath == null)
             {
                 Log.WriteLine("CheckFile: filePath is null");
                 return false;
             }
-            else if (!System.IO.File.Exists(filePath))
+            else if (filePath.IsFile)
             {
-                Log.WriteLine("CheckFile: filePath not exists");
-                return false;
+                if (!File.Exists(filePath.OriginalString))
+                {
+                    Log.WriteLine("CheckFile: filePath not exists");
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
             else
             {
@@ -191,8 +206,7 @@ namespace PlayerLibrary.Core
                 Close();
             }
         }
-
-        private void CoreOpen(string filePath)
+        private void CoreOpen(Uri filePath)
         {
             Log.WriteLine("CoreOpen", filePath);
             try
@@ -205,17 +219,17 @@ namespace PlayerLibrary.Core
 
                 CurrentTrackFile = filePath;
 
-                audioPlayer.Reader = new MediaFoundationReader(filePath);
+                audioPlayer.Reader = new StreamMediaFoundationReader(new FileStream(filePath.OriginalString, FileMode.Open, FileAccess.Read));
 
-                VolumeController.InputSampleProvider = audioPlayer.Reader.ToSampleProvider();
-
+                EffectContainer.source = audioPlayer.Reader.ToSampleProvider();
+                EffectContainer.Init();
+                VolumeController.InputSampleProvider = EffectContainer;
                 audioPlayer.SampleProvider = VolumeController.OutputSampleProvider;
-
+            
                 audioPlayer.OutputDevice = new WaveOutEvent();
 
-
                 audioPlayer.OutputDevice.PlaybackStopped += WaveOutEvent_PlaybackStopped;
-                audioPlayer.Init(filePath);
+                audioPlayer.Init();
                 if (audioPlayer.Reader.TotalTime.TotalSeconds <= 0)
                 {
                     RaisePlaybackStateFailed();

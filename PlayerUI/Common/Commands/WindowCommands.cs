@@ -11,14 +11,22 @@
             window.DragEnter += (_, e) => e.Effects = DragDropEffects.All;
             window.Drop += async (_, e) =>
             {
-                string[] dropitems = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+                var data = e.Data.GetData(DataFormats.FileDrop, true);
+                if (data == null)
+                {
+                    data = e.Data.GetData(DataFormats.Html, true); //html for chrome
+                    MessageBox.Show(data.ToString());
+                    return;
+                }
+                Helper.Log.WriteLine(data.ToString());
+                string[] dropitems = (string[])data;
                 if (System.IO.Path.GetExtension(dropitems[0]) == ".EqPreset")
                 {
-                    Player.EqualizerController.SetEqPreset(Equalizer.FileToPreset(dropitems[0]));
+                    Player.PlaybackSession.EffectContainer.EqualizerController.SetEqPreset(Equalizer.FileToPreset(dropitems[0]));
                 }
                 else
                 {
-                    await Player.PlaybackSession.OpenAsync(dropitems[0]);
+                    await Player.PlaybackSession.OpenAsync(new Uri(dropitems[0]));
                 }
             };
         }

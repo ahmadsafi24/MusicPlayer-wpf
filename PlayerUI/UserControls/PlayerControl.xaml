@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              DataContext="{StaticResource PlayerViewModel}"
-             mc:Ignorable="d" x:Name="UserControl" Background="{DynamicResource PlayerControl.Background}" BorderBrush="{DynamicResource MediaInfoCard.BorderBrush}" BorderThickness="0,1,0,0"
+             mc:Ignorable="d" x:Name="UserControl" Style="{StaticResource UserControlDefaultStyle}"
              d:DesignWidth="800" d:Foreground="White" Height="48" Padding="5,0">
     <UserControl.Resources>
         <ControlTemplate x:Key="MediaPlayButtonTemplate" TargetType="{x:Type Button}">
@@ -99,19 +99,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <UserControl.Style>
-        <Style TargetType="{x:Type UserControl}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type UserControl}">
-                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
-                                Background="{TemplateBinding Background}">                            <ContentPresenter/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Style>
+
     <Border Padding="5">
         <Grid>
             <Grid.ColumnDefinitions>

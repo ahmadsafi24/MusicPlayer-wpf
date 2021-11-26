@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Test
 {
@@ -14,7 +15,7 @@ namespace Test
         {
             Player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             Player.PlaybackSession.TimelineController.TimePositionChanged += TimelineController_TimePositionChanged;
-            Player.PlaybackSession.Open(txt1.Text);
+            Player.PlaybackSession.Open(new Uri(txt1.Text));
             Player.PlaybackSession.Play();
         }
 

@@ -7,29 +7,46 @@ using System;
 using System.Collections.Generic;
 using static PlayerLibrary.Events;
 
-namespace PlayerLibrary.Plugin
+namespace PlayerLibrary.Bridge
 {
-    public class EqualizerController : IPlugin
+    public class EqualizerController
     {
         #region fields
-        private readonly PlaybackSession PlaybackSession;
-
+        private readonly EffectContainer EffectContainer;
+        public EqualizerController(EffectContainer EffectContainer)
+        {
+            this.EffectContainer = EffectContainer;
+        }
         #endregion
         EqualizerBand[] bands = Create8Band();
         Equalizer EqualizerCore;
-        private void InitEqualizerSamleProvider()
-        {
-            EqualizerCore = new(PlaybackSession.audioPlayer.Reader.ToSampleProvider(), bands);
-            PlaybackSession.audioPlayer.SampleProvider = EqualizerCore;
-
-        }
         #region property
         private EqualizerMode _equalizerMode;
         public EqualizerMode EqualizerMode
         {
             get => _equalizerMode;
-            set => _equalizerMode = value;
-
+            set
+            {
+                _equalizerMode = value;
+                SetAllBandsGain(0);
+                if (value == EqualizerMode.Normal)
+                {
+                    List<EqualizerBand> temp = new(Create8Band());
+                    bands = temp.ToArray();
+                }
+                else
+                {
+                    List<EqualizerBand> temp = new(Create11Band());
+                    bands = temp.ToArray();
+                }
+                if (IsEnabled)
+                {
+                    SetAllBandsGain(0);
+                    EffectContainer.EnableEqualizer=true;
+                }
+                EqualizerCore?.Update();
+                FireEqUpdated();
+            }
         }
 
         /// <summary>
@@ -47,9 +64,9 @@ namespace PlayerLibrary.Plugin
             if (mode != EqualizerMode)
             {
                 EqualizerMode = mode;
-                ResetEqController(mode, PlaybackSession);
             }
             SetAllBands(preset.BandsGain);
+
         }
 
         public EqPreset GetEqPreset()
@@ -59,7 +76,13 @@ namespace PlayerLibrary.Plugin
         }
 
         #region Event
-        public EventHandlerEmpty EqUpdated;
+        public event EventHandlerEmpty EqUpdated;
+
+        public EqualizerController()
+        {
+        }
+
+
         internal void FireEqUpdated()
         {
             EqUpdated?.Invoke();
@@ -154,47 +177,6 @@ namespace PlayerLibrary.Plugin
             }
         }
 
-        public void RequestResetEqController() { ResetEqController(EqualizerMode, PlaybackSession); }
-        public void ResetEqController(EqualizerMode equalizerMode, PlaybackSession playbackSession)
-        {
-            playbackSession.ToggleEventsOff();
-
-            if (!string.IsNullOrEmpty(playbackSession.CurrentTrackFile))
-            {
-                PlaybackState _state = playbackSession.PlaybackState;
-
-                string file = playbackSession.CurrentTrackFile;
-                playbackSession?.Open(file, playbackSession.audioPlayer.Reader.CurrentTime);
-
-                switch (_state)
-                {
-                    case PlaybackState.Paused:
-                        playbackSession.Pause();
-                        break;
-                    case PlaybackState.Playing:
-                        playbackSession.Play();
-                        break;
-                    case PlaybackState.Stopped:
-                        playbackSession.Stop();
-                        break;
-                    case PlaybackState.Opened:
-                        playbackSession.Open(playbackSession.CurrentTrackFile);
-                        break;
-                    default:
-                        break;
-                }
-                SetAllBandsGain(0);
-            }
-            else
-            {
-                Log.WriteLine("ResetEqController", "reInit failed");
-            }
-
-            FireEqUpdated();
-            playbackSession.ToggleEventsOn();
-
-        }
-
         // index: band position
         // double:gain
         public int[] GetBandsGain(EqualizerBand[] equalizerBand)
@@ -252,39 +234,16 @@ namespace PlayerLibrary.Plugin
 
 
         #region Interface
-        public void Enable()
+
+        public bool IsEnabled { get; private set; }
+        private ISampleProvider InputSP;
+        internal void Init(ISampleProvider InputSP)
         {
-            throw new NotImplementedException();
+            this.InputSP = InputSP;
+            EqualizerCore = new(InputSP, bands);
+            IsEnabled = true;
         }
-
-        public void Disable()
-        {
-
-            PlaybackSession.ToggleEventsOff();
-            PlaybackState _state = PlaybackSession.PlaybackState;
-            string file = PlaybackSession.CurrentTrackFile;
-            PlaybackSession.Open(file, PlaybackSession.audioPlayer.Reader.CurrentTime);
-            switch (_state)
-            {
-                case PlaybackState.Paused:
-                    PlaybackSession.Pause();
-                    break;
-                case PlaybackState.Playing:
-                    PlaybackSession.Play();
-                    break;
-                case PlaybackState.Stopped:
-                    PlaybackSession.Stop();
-                    break;
-                default:
-                    break;
-            }
-            PlaybackSession.ToggleEventsOn();
-        }
-        public bool IsEnabled => throw new NotImplementedException();
-
-        public ISampleProvider InputSampleProvider { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public ISampleProvider OutputSampleProvider => throw new NotImplementedException();
+        internal ISampleProvider OutSampleProvider => EqualizerCore;
     }
     #endregion
 }

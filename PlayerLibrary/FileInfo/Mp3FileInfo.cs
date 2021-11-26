@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using System.Threading.Tasks;
 using PlayerLibrary.Model;
+using System;
 
 namespace PlayerLibrary.FileInfo
 {
@@ -23,13 +24,14 @@ namespace PlayerLibrary.FileInfo
 
         public AudioTag AudioTag { get; set; }
 
-        public AudioInfo(string filePath)
+        public AudioInfo(Uri filePath)
         {
             try
             {
-                AudioTag = new(filePath);
+                if (filePath == null) return;
+                AudioTag = new(filePath.OriginalString);
 
-                if (string.IsNullOrEmpty(filePath))
+                if (string.IsNullOrEmpty(filePath.AbsolutePath))
                 {
                     // Task.Run(async () => await Log.ShowMessage("empty in audioinfo"));
                     return;
@@ -37,7 +39,7 @@ namespace PlayerLibrary.FileInfo
                 else
                 {
 
-                Mp3FileReader fileReader = new(filePath);
+                    Mp3FileReader fileReader = new(filePath.OriginalString);
                 Mp3WaveFormat mp3WaveFormat = fileReader.Mp3WaveFormat;
 
                 SampleRate = mp3WaveFormat.SampleRate;

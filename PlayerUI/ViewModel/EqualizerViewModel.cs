@@ -1,11 +1,13 @@
-﻿using PlayerLibrary.Plugin;
+﻿using PlayerLibrary.Bridge;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace PlayerUI.ViewModel
 {
     public class EqualizerViewModel : ViewModelBase
     {
         private Player Player => App.Player;
-        private EqualizerController EqualizerController => App.Player.EqualizerController;
+        private EqualizerController EqualizerController => App.Player.PlaybackSession.EffectContainer.EqualizerController;
         public DelegateCommand ResetEqCommand { get; }
         public DelegateCommand LoadEqCommand { get; }
         public DelegateCommand SaveEqCommand { get; }
@@ -16,8 +18,16 @@ namespace PlayerUI.ViewModel
             LoadEqCommand = new DelegateCommand(LoadEq);
             SaveEqCommand = new DelegateCommand(SaveEq);
             ResetBandCommand = new RelayCommand(ResetBand);
-
+            EqualizerController.EqUpdated += EqualizerController_EqUpdated;
             NotifyPropertyChanged(null);
+
+            //
+        }
+
+        private void EqualizerController_EqUpdated()
+        {
+            NotifyPropertyChanged(nameof(IsSuperEq));
+            NotifyPropertyChanged(string.Empty);
         }
 
         private void LoadEq()
@@ -44,8 +54,10 @@ namespace PlayerUI.ViewModel
         {
             if (EqualizerController != null)
             {
-
+                PitchFactor = 1;
+                NotifyPropertyChanged(nameof(PitchFactor));
                 EqualizerController.SetAllBandsGain(0);
+
                 NotifyPropertyChanged(null);
             }
         }
@@ -55,20 +67,16 @@ namespace PlayerUI.ViewModel
             get => EqualizerController?.EqualizerMode == EqualizerMode.Super;
             set
             {
-                if (EqualizerController != null)
+                if (value)
                 {
-                    if (value)
-                    {
-
-                        EqualizerController.EqualizerMode = EqualizerMode.Super;
-                    }
-                    else
-                    {
-                        EqualizerController.EqualizerMode = EqualizerMode.Normal;
-                    }
-                    EqualizerController.RequestResetEqController();
-                    NotifyPropertyChanged(nameof(IsSuperEq));
+                    EqualizerController.EqualizerMode = EqualizerMode.Super;
                 }
+                else
+                {
+                    EqualizerController.EqualizerMode = EqualizerMode.Normal;
+                }
+                NotifyPropertyChanged(nameof(IsSuperEq));
+
             }
         }
 
@@ -145,6 +153,16 @@ namespace PlayerUI.ViewModel
 
             EqualizerController?.SetBandGain(bandnumber, 0, true);
             NotifyPropertyChanged($"Band{bandnumber}");
+        }
+
+
+        public double PitchFactor
+        {
+            get => Player.PlaybackSession.EffectContainer.pitchfactor;
+            set
+            {
+                Player.PlaybackSession.EffectContainer.pitchfactor = (float)value;
+            }
         }
     }
 }

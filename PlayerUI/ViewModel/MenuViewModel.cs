@@ -24,6 +24,7 @@
         // Enable Disable Equalizer
         private static void TestMethod()
         {
+            Player.PlaybackSession.EffectContainer.EnableEqualizer = !Player.PlaybackSession.EffectContainer.EnableEqualizer;
             /*if (Player.PlaybackSession.NAudioPlayerType == typeof(PlayerLibrary.Core.NAudioPlayer.NAudioPlayerEq))
             {
                 Player.DisableEqualizerController();

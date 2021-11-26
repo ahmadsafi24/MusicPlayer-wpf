@@ -30,12 +30,12 @@ namespace PlayerLibrary
         }
         public async Task NextTrackAsync(PlaybackSession _playbackSession)
         {
-            await playbackSession.OpenAsync(playlist[0]);
+            await playbackSession.OpenAsync(new Uri(playlist[0]));
         }
 
         public async Task PreviosTrackAsync(PlaybackSession _playbackSession)
         {
-            await playbackSession.OpenAsync(playlist[0]);
+            await playbackSession.OpenAsync(new Uri(playlist[0]));
         }
 
         public void AddTrack(int key, string filePath)

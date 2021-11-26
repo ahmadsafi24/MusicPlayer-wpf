@@ -1,17 +1,12 @@
 using Helper;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using PlayerLibrary;
-using PlayerLibrary.Core;
-using PlayerLibrary.FileInfo;
-using PlayerLibrary.Model;
-using PlayerLibrary.Plugin;
 using System;
 using static PlayerLibrary.Events;
 
 namespace PlayerLibrary.Core
 {
-    public class VolumeController : IPlugin
+    public class VolumeController
     {
         public VolumeSampleProvider volumeProvider = new(null);
 
@@ -21,7 +16,6 @@ namespace PlayerLibrary.Core
         {
             get
             {
-
                 volumeProvider = new(InputSampleProvider) { Volume = InitVol() };
                 return volumeProvider;
             }
@@ -174,15 +168,5 @@ namespace PlayerLibrary.Core
         }
 
 
-        public void Enable()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Disable()
-        {
-            throw new NotImplementedException();
-        }
-        public bool IsEnabled => throw new NotImplementedException();
     }
 }

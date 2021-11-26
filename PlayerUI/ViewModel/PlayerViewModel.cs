@@ -161,7 +161,7 @@
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(PlaybackSession.CurrentTrackFile))
+                    if (PlaybackSession.CurrentTrackFile != null)
                     {
                         if (PlaybackSession.AudioInfo == null)
                         {

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="{DynamicResource EqControl.Background}" 
+             Style="{StaticResource UserControlDefaultStyle}"
              DataContext="{StaticResource EqualizerViewModel}"
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
     <UserControl.Resources>
@@ -447,7 +447,11 @@
                 <Button Command="{Binding LoadEqCommand}" Content="Import"/>
                 <Button Command="{Binding SaveEqCommand}" Content="Export"/>
             </StackPanel>
-
+            <StackPanel>
+                <Slider Value="{Binding PitchFactor}" Minimum="0.5" Maximum="2" 
+                    Foreground="{DynamicResource MediaSlider.Foreground}"
+                    Background="{DynamicResource MediaSlider.Background.Active}"/>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>

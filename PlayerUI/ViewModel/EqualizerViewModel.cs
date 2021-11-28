@@ -146,10 +146,26 @@ namespace PlayerUI.ViewModel
 
         public double PitchFactor
         {
-            get => Player.PlaybackSession.EffectContainer.pitchfactor;
+            get => Player.PlaybackSession.EffectContainer.PitchShiftingController.PitchFactor;
             set
             {
-                Player.PlaybackSession.EffectContainer.pitchfactor = (float)value;
+                Player.PlaybackSession.EffectContainer.PitchShiftingController.PitchFactor = (float)value;
+
+                if (value == 1)
+                {
+
+                    if (Player.PlaybackSession.EffectContainer.EnablePtchShifting == true)
+                    {
+                        Player.PlaybackSession.EffectContainer.EnablePtchShifting = false;
+                    }
+                }
+                else
+                {
+                    if (Player.PlaybackSession.EffectContainer.EnablePtchShifting == false)
+                    {
+                        Player.PlaybackSession.EffectContainer.EnablePtchShifting = true;
+                    }
+                }
             }
         }
     }

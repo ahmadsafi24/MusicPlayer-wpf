@@ -19,29 +19,5 @@
             Application.Current.MainWindow = MainWindow;
             lastwin.Close();
         }
-
-        public static void SwitchToBlurWindow()
-        {
-            if (Application.Current.MainWindow.GetType() != typeof(CustomWindow))
-            {
-                var lastwin = Application.Current.MainWindow;
-                CustomWindow CustomWindow = new();
-                Application.Current.MainWindow = CustomWindow;
-                lastwin.Close();
-                CustomWindow.Show();
-            }
-        }
-
-        public static void SwitchToNormalWindow()
-        {
-            if (Application.Current.MainWindow.GetType() != typeof(MainWindow))
-            {
-                var lastwin = Application.Current.MainWindow;
-                MainWindow win = new();
-                Application.Current.MainWindow = win;
-                lastwin.Close();
-                win.Show();
-            }
-        }
     }
 }

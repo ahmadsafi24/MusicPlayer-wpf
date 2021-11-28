@@ -24,7 +24,7 @@ namespace PlayerLibrary.Core
         internal PlaybackSession()
         {
             TimelineController = new(this);
-            EffectContainer = new(this.audioPlayer);
+            EffectContainer = new();
             Log.WriteLine("PlaybackSession Initialized");
         }
 
@@ -221,10 +221,13 @@ namespace PlayerLibrary.Core
 
                 audioPlayer.Reader = new StreamMediaFoundationReader(new FileStream(filePath.OriginalString, FileMode.Open, FileAccess.Read));
 
-                EffectContainer.source = audioPlayer.Reader.ToSampleProvider();
-                EffectContainer.Init();
-                VolumeController.InputSampleProvider = EffectContainer;
-                audioPlayer.SampleProvider = VolumeController.OutputSampleProvider;
+                VolumeController.Source = audioPlayer.Reader.ToSampleProvider();
+                
+
+                EffectContainer.Source = VolumeController;
+                EffectContainer.InitEffects();
+
+                audioPlayer.SampleProvider = EffectContainer;
             
                 audioPlayer.OutputDevice = new WaveOutEvent();
 

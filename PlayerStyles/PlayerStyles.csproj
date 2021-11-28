@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <DebugType>none</DebugType>
+    <Platforms>x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

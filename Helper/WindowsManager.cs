@@ -55,6 +55,7 @@ namespace Helper
 
             Point point = new(Mouse.GetPosition(window).X + posleft, Mouse.GetPosition(window).Y + postop);
             SystemCommands.ShowSystemMenu(window, point);
+            //MediaCommands.
         }
 
 

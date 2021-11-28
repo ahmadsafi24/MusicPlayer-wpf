@@ -15,23 +15,19 @@ namespace PlayerLibrary.Bridge
     /// </summary>
     public class EffectContainer : ISampleProvider
     {
-        private readonly NAudioPlayer AudioPlayer;
-        internal ISampleProvider source;
+        internal ISampleProvider Source { get; set; }
 
 
-
-        private SmbPitchShiftingSampleProvider PitchController;
 
         public EqualizerController EqualizerController;
 
         private ISampleProvider OutSample { get; set; }
 
-        public EffectContainer(NAudioPlayer audioPlayer)
+        public EffectContainer()
         {
-            AudioPlayer = audioPlayer;
             EqualizerController = new(this);
         }
-        public WaveFormat WaveFormat => source.WaveFormat;
+        public WaveFormat WaveFormat => Source.WaveFormat;
 
         public int Read(float[] buffer, int offset, int count)
         {
@@ -40,7 +36,7 @@ namespace PlayerLibrary.Bridge
         }
 
 
-        internal void Init()
+        internal void InitEffects()
         {
             ApplyNoEffect();
             if (EnableEqualizer)
@@ -59,7 +55,7 @@ namespace PlayerLibrary.Bridge
         //_________________________________________________
         public void ApplyNoEffect()
         {
-            OutSample = source;
+            OutSample = Source;
         }
         private bool enableEqualizer;
         public bool EnableEqualizer
@@ -68,7 +64,7 @@ namespace PlayerLibrary.Bridge
             set
             {
                 enableEqualizer = value;
-                Init();
+                InitEffects();
                 if (EqualizerController != null)
                 {
                     EqualizerController.FireEqUpdated();
@@ -77,7 +73,11 @@ namespace PlayerLibrary.Bridge
         }
         internal void ApplyEq()
         {
-            if (source == null) return;
+            if (Source == null)
+            {
+                return;
+            }
+
             ISampleProvider temp = OutSample;
 
             EqualizerController.Init(temp);
@@ -91,44 +91,22 @@ namespace PlayerLibrary.Bridge
             set
             {
                 enablePtchShifting = value;
-                Init();
+                InitEffects();
             }
         }
 
-        private float _pitchfactor = 1;
-        public float pitchfactor
-        {
-            get => _pitchfactor;
-            set
-            {
-                _pitchfactor = value;
-                if (value == 1)
-                {
-                    if (EnablePtchShifting == true)
-                    {
-                        EnablePtchShifting = false;
-                    }
-                }
-                else
-                {
-                    if (EnablePtchShifting == false)
-                    {
-                        EnablePtchShifting = true;
-                    }
-                }
-                if (PitchController != null)
-                {
-                    PitchController.PitchFactor = value;
-                }
-            }
-        }
+        public PitchShiftingController PitchShiftingController=new();
         private void ApplyPitchShifting()
         {
-            if (source == null) return;
+            if (Source == null)
+            {
+                return;
+            }
+
             ISampleProvider temp = OutSample;
 
-            PitchController = new(temp) { PitchFactor = pitchfactor };
-            OutSample = PitchController;
+            PitchShiftingController.Init(temp);
+            OutSample = PitchShiftingController;
         }
 
         public void RaiseOutSampleProviderChanged()
@@ -136,5 +114,36 @@ namespace PlayerLibrary.Bridge
             OutSampleProviderChanged?.Invoke();
         }
         public event EventHandlerEmpty OutSampleProviderChanged;
+    }
+
+    public class PitchShiftingController : ISampleProvider
+    {
+        private SmbPitchShiftingSampleProvider PitchProvider;
+        public void Init(ISampleProvider source)
+        {
+            PitchProvider = new(source);
+        }
+
+        int ISampleProvider.Read(float[] buffer, int offset, int count)
+        {
+            return PitchProvider.Read(buffer, offset, count);
+        }
+
+        private float _pitchfactor = 1;
+        public float PitchFactor
+        {
+            get => _pitchfactor;
+            set
+            {
+                _pitchfactor = value;
+                if (PitchProvider != null)
+                {
+                    PitchProvider.PitchFactor = value;
+                }
+            }
+        }
+
+        WaveFormat ISampleProvider.WaveFormat => PitchProvider.WaveFormat;
+
     }
 }

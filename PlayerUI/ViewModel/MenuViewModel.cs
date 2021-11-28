@@ -10,17 +10,11 @@ namespace PlayerUI.ViewModel
         public ICommand TestCommand { get; }
         public ICommand OpenCommand { get; }
         public ICommand ToggleDarkModeCommand { get; }
-        public ICommand SwitchToMiniViewCommand { get; }
-        public ICommand SwitchToNormalWindowCommand { get; }
-        public ICommand SwitchToBlurWindowCommand { get; }
         public MenuViewModel()
         {
             TestCommand = new DelegateCommand(() => TestMethod());
             OpenCommand = new DelegateCommand(() => FilePicker.OpenFilePicker(App.Player));
             ToggleDarkModeCommand = new DelegateCommand(() => WindowTheme.DarkThemeToggle());
-            SwitchToMiniViewCommand = new DelegateCommand(() => ViewSwitcher.SwitchToMiniView());
-            SwitchToBlurWindowCommand = new DelegateCommand(() => ViewSwitcher.SwitchToBlurWindow());
-            SwitchToNormalWindowCommand = new DelegateCommand(() => ViewSwitcher.SwitchToNormalWindow());
 
             Player.PlaybackSession.EffectContainer.OutSampleProviderChanged+=() =>
             NotifyPropertyChanged(nameof(IsEqualizerEnabled));

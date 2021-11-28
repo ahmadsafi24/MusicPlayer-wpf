@@ -26,7 +26,7 @@ namespace PlayerUI.UserControls
             set => SetValue(CaptionStringProperty, value);
         }
         public static readonly DependencyProperty CaptionStringProperty = DependencyProperty.Register(
-          "CaptionString", typeof(string), typeof(Titlebar), new PropertyMetadata("App"));
+          "CaptionString", typeof(string), typeof(Titlebar), new PropertyMetadata("App Title"));
     }
 
     public class TitlebarViewModel : ViewModelBase

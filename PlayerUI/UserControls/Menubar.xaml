@@ -322,7 +322,7 @@
         </Style>
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
-        <Menu ItemContainerStyle="{DynamicResource MenuItemContainerStyle1}" Style="{DynamicResource MenuStyle1}" Background="Transparent" Height="35" >
+        <Menu ItemContainerStyle="{DynamicResource MenuItemContainerStyle1}" Style="{DynamicResource MenuStyle1}" Background="Transparent" d:Height="35" >
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
             </MenuItem>
@@ -336,9 +336,6 @@
                 <MenuItem Header="Previous"/>
             </MenuItem>
             <MenuItem Header="Toggle Dark Mode" Command="{Binding ToggleDarkModeCommand}" Background="Transparent" BorderBrush="Transparent" />
-            <MenuItem Header="Mini View" Command="{Binding SwitchToMiniViewCommand}" Background="Transparent" BorderBrush="Transparent"/>
-            <MenuItem Header="Blur Window" Command="{Binding SwitchToBlurWindowCommand}" Background="Transparent" BorderBrush="Transparent"/>
-            <MenuItem Header="Normal Window" Command="{Binding SwitchToNormalWindowCommand}" Background="Transparent" BorderBrush="Transparent"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding IsEqualizerEnabled,Mode=OneWay}" Header="Enable/Disable Equalizer" Command="{Binding TestCommand}" Background="Transparent" BorderBrush="Transparent"/>
             <MenuItem Header="|" IsEnabled="False" Background="Transparent" BorderBrush="Transparent"/>
             <MenuItem Header="TopMenuHeader" Background="Transparent" BorderBrush="Transparent"/>

@@ -32,11 +32,11 @@
         <!--WinUI:XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" x:Key="12345" -->
 
                 
-            <ViewModel:MainView_ViewModel x:Key="MainView_ViewModel"/>
-            <ViewModel:MiniView_ViewModel x:Key="MiniView_ViewModel"/>
+            <ViewModel:MenuViewModel x:Key="MenuViewModel"/>
             <ViewModel:PlayerViewModel x:Key="PlayerViewModel"/>
             <ViewModel:EqualizerViewModel x:Key="EqualizerViewModel"/>
-            <ViewModel:MenuViewModel x:Key="MenuViewModel"/>
+            <ViewModel:MiniView_ViewModel x:Key="MiniView_ViewModel"/>
+            <ViewModel:MainView_ViewModel x:Key="MainView_ViewModel"/>
 
             <converter:TimeSpanToDouble x:Key="TimeSpanToDouble"/>
             <converter:TimeSpanToString x:Key="TimeSpanToString"/>

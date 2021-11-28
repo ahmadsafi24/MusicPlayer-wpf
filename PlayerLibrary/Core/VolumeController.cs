@@ -6,20 +6,46 @@ using static PlayerLibrary.Events;
 
 namespace PlayerLibrary.Core
 {
-    public class VolumeController
+    public class VolumeController : ISampleProvider
     {
+
+
         public VolumeSampleProvider volumeProvider = new(null);
 
-        public ISampleProvider InputSampleProvider { get; set; }
-
-        public ISampleProvider OutputSampleProvider
+        private ISampleProvider _source;
+        public ISampleProvider Source
         {
-            get
+            get => _source;
+            set
             {
-                volumeProvider = new(InputSampleProvider) { Volume = InitVol() };
-                return volumeProvider;
-            }
+                _source = value;
+
+                volumeProvider = new(value) { Volume=InitVol()};
+            } 
         }
+
+        public VolumeController(ISampleProvider source)
+        {
+            _source = source;
+            volumeProvider = new(Source);
+        }
+
+        public VolumeController() { }
+
+        int ISampleProvider.Read(float[] buffer, int offset, int count)
+        {
+            return volumeProvider.Read(buffer, offset, count);
+        }
+
+
+
+
+
+
+
+
+
+
 
         private float InitVol()
         {
@@ -70,6 +96,8 @@ namespace PlayerLibrary.Core
                 throw;
             }
         }
+
+
 
 
 
@@ -149,6 +177,8 @@ namespace PlayerLibrary.Core
 
         private float volBeforeMute;
         private bool ismute;
+
+
         public bool IsMuted
         {
             get => ismute;
@@ -167,6 +197,19 @@ namespace PlayerLibrary.Core
             }
         }
 
-
+        WaveFormat ISampleProvider.WaveFormat
+        {
+            get
+            {
+                if (Source == null)
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    return Source.WaveFormat;
+                }
+            }
+        }
     }
 }

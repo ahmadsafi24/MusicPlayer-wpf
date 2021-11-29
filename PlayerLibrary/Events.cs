@@ -9,5 +9,6 @@ namespace PlayerLibrary
         public delegate void EventHandlerEmpty();
         public delegate void EventHandlerVolume(float volume);
         public delegate void EventHandlerType(Type type);
+        public delegate void EventHandlerMessageLog(string message);
     }
 }

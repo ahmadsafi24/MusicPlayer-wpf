@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "PlayerUI-WinUI3": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

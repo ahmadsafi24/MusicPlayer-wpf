@@ -13,7 +13,7 @@ namespace PlayerLibrary.Core
     {
         public NAudioPlayer audioPlayer = new();
         public Uri CurrentTrackFile { get; private set; }
-
+        public bool AutoPlay { get; set; } = true;
         public bool RepeatCurrentTrack = false;
 
         public TimelineController TimelineController;
@@ -72,7 +72,7 @@ namespace PlayerLibrary.Core
             }
             catch (Exception ex)
             {
-                Log.WriteLine("play", ex.Message);
+                RaiseOnMessageLogged($"On Play():\n{ex.Message}");
             }
         }
 
@@ -103,7 +103,7 @@ namespace PlayerLibrary.Core
             }
             catch (System.Exception ex)
             {
-                Helper.Log.WriteLine("close: ", ex.Message);
+                RaiseOnMessageLogged($"On Close(): \n{ex.Message}");
             }
             RaisePlaybackStateClosed();
         }
@@ -134,7 +134,7 @@ namespace PlayerLibrary.Core
             }
             else
             {
-                Log.WriteLine(e.Exception.Message + "WaveOutEvent_PlaybackStopped");
+                RaiseOnMessageLogged("WaveOutEvent_PlaybackStopped: \n" + e.Exception.Message);
                 RaisePlaybackStateFailed();
             }
         }
@@ -175,14 +175,14 @@ namespace PlayerLibrary.Core
         {
             if (filePath == null)
             {
-                Log.WriteLine("CheckFile: filePath is null");
+                RaiseOnMessageLogged("CheckFile: filePath is null");
                 return false;
             }
             else if (filePath.IsFile)
             {
                 if (!File.Exists(filePath.OriginalString))
                 {
-                    Log.WriteLine("CheckFile: filePath not exists");
+                    RaiseOnMessageLogged("CheckFile: filePath not exists");
                     return false;
                 }
                 else
@@ -241,12 +241,16 @@ namespace PlayerLibrary.Core
                 else
                 {
                     RaisePlaybackStateOpened();
+                    if (AutoPlay==true)
+                    {
+                        Play();
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Log.WriteLine("CoreOpen", ex.Message);
-                throw;
+                RaiseOnMessageLogged("On CoreOpen(uri filePath): \n"+ex.Message);
+                //throw;
             }
         }
 
@@ -301,6 +305,12 @@ namespace PlayerLibrary.Core
             }
         }
         #endregion
+
+        public event EventHandlerMessageLog OnMessageLogged;
+        private void RaiseOnMessageLogged(string message)
+        {
+            OnMessageLogged?.Invoke(message);
+        }
 
     }
 }

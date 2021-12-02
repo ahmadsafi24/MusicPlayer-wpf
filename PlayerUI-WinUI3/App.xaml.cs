@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -15,6 +17,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinRT;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,14 +28,19 @@ namespace PlayerUI_WinUI3
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     public partial class App : Application
-    {
+    {       
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        private static extern void AllocConsole();
+
+
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
@@ -42,8 +50,39 @@ namespace PlayerUI_WinUI3
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            AllocConsole();
+
             m_window = new MainWindow();
             m_window.Activate();
+
+            WindowHelper.Hwnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+            _ = m_window.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.High, () =>
+              {
+                  //
+                  // Available only on titlebar Helper.DarkUi.MicaHelper.ToggleMica(WindowHelper.Hwnd, true);
+
+                  AppWindow appWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(WindowHelper.Hwnd));
+                  appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+                  /*Removes titlebar system contex menu
+                   * OverlappedPresenter overlappedPresenter = null;
+                  if (appWindow.Presenter.Kind == AppWindowPresenterKind.Overlapped)
+                  {
+                      overlappedPresenter = appWindow.Presenter.As<OverlappedPresenter>();
+                      overlappedPresenter.IsAlwaysOnTop = true;
+                  }
+                              appWindow.TitleBar.SetDragRectangles(new[] {
+                      new Windows.Graphics.RectInt32(0,0,
+                          (int)(0 ),
+                          (int)(0) )});
+                   */
+                  appWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;
+                  var transparent = Windows.UI.Color.FromArgb(0, 0, 0, 0);
+                  appWindow.TitleBar.BackgroundColor = transparent;
+                  appWindow.TitleBar.ButtonBackgroundColor = transparent;
+                  appWindow.TitleBar.InactiveBackgroundColor = transparent;
+                  appWindow.TitleBar.ButtonInactiveBackgroundColor = transparent;
+                  Helper.DarkUi.DwmApi.ToggleImmersiveDarkMode(WindowHelper.Hwnd, true);
+              });
         }
 
         private Window m_window;

@@ -1,9 +1,11 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.Windows.ApplicationModel.DynamicDependency;
-using PlayerUI.Common.Config;
+using PlayerUI.Pages;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Windows.Media.Animation;
+using System.Windows.Shell;
 
 namespace PlayerUI.View
 {
@@ -11,15 +13,63 @@ namespace PlayerUI.View
     {
         public MainWindow()
         {
+            Initialized += MainWindow_Initialized;
             InitializeComponent();
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             MouseLeftButtonDown += MainWindow_MouseLeftButtonDown;
 
             WindowTheme.ThemeChanged += WindowTheme_ThemeChanged;
             WindowCommands.AttachDrop(this);
             WindowCommands.AttachMouseWheel(this);
+
+        }
+
+        private  void MainWindow_Initialized(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private static async void AnimateBackgoundOpacity(Window window)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                SolidColorBrush winbackcolor = new(((SolidColorBrush)window.Background).Color);
+                Brush brush = winbackcolor;
+                window.Background = brush;
+
+                DoubleAnimation doubleanimation = new(0, new Duration(TimeSpan.FromSeconds(0.5)), FillBehavior.HoldEnd);
+                brush.BeginAnimation(SolidColorBrush.OpacityProperty, doubleanimation);
+
+                //ColorAnimation coloAnimotion = new(winbackcolor.Color, System.Windows.Media.Colors.Transparent, new Duration(TimeSpan.FromSeconds(8)), FillBehavior.HoldEnd);
+                //brush.BeginAnimation(SolidColorBrush.ColorProperty, coloAnimotion);
+
+            }));
+
+        }
+
+        private static async void ApplyWindowchrome(Window window)
+        {
+            await Task.Delay(10);
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                WindowChrome chrome = new()
+                {
+                    CaptionHeight = 35,
+                    ResizeBorderThickness = new Thickness(5),
+                    //CornerRadius = new CornerRadius(5),
+                    GlassFrameThickness = new Thickness(-1),
+                    UseAeroCaptionButtons = true,
+                    NonClientFrameEdges = NonClientFrameEdges.Right
+
+                };
+                WindowChrome.SetWindowChrome(window, chrome);
+                MainPage content = window.Content as MainPage;
+                content.Margin = new Thickness(0, 0, 4, 0);
+            }));
+
         }
 
         private void MainWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -45,7 +95,7 @@ namespace PlayerUI.View
 
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (AppStatics.IsWindowStateMaximized == false)
             {
@@ -59,11 +109,26 @@ namespace PlayerUI.View
                 WindowState = WindowState.Maximized;
             }
 
-            _ = Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            await Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
                 Content = FindResource("MainPage");
             }));
-            Dwm.DwmSetWindowAttribute(new WindowInteropHelper(this).Handle, Dwm.DwmWindowAttribute.DWMWA_MICA_EFFECT, ref Dwm.trueValue, Marshal.SizeOf(typeof(int)));
+            ApplyWindowchrome(this);
+            ApplyMica(this);
+
+            await Task.Delay(100);
+            AnimateBackgoundOpacity(this);
+
+        }
+
+        private static void ApplyMica(Window window)
+        {
+
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+             {
+                 IntPtr intPtr = new WindowInteropHelper(window).Handle;
+                 _ = Dwm.DwmSetWindowAttribute(intPtr, Dwm.DwmWindowAttribute.DWMWA_MICA_EFFECT, ref Dwm.trueValue, Marshal.SizeOf(typeof(int)));
+             }));
 
         }
 
@@ -76,8 +141,14 @@ namespace PlayerUI.View
             }
             if (appWindow != null)
             {
+                ApplyTitlebarColor(appWindow);
+            }
+            UpdateLayout();
 
+        }
 
+        private static void ApplyTitlebarColor(AppWindow appWindow)
+        {
                 //System.Drawing.Color BackgroundColor = System.Drawing.ColorTranslator.FromHtml(App.Current.FindResource("AppWindow.Active.Background").ToString());
                 System.Drawing.Color ForegroundColor = System.Drawing.ColorTranslator.FromHtml(App.Current.FindResource("AppWindow.Active.Foreground").ToString());
 
@@ -87,25 +158,19 @@ namespace PlayerUI.View
                 System.Drawing.Color HoverBackgroundColor = System.Drawing.ColorTranslator.FromHtml(App.Current.FindResource("AppWindow.Hover.Background").ToString());
                 System.Drawing.Color HoverForegroundColor = System.Drawing.ColorTranslator.FromHtml(App.Current.FindResource("AppWindow.Hover.Foreground").ToString());
 
-                appWindow.TitleBar.BackgroundColor = CustomUiColor.Transparent;//  BackgroundColor.ToUiColor();
+                appWindow.TitleBar.BackgroundColor = UiColorConverter.Transparent;//  BackgroundColor.ToUiColor();
                 appWindow.TitleBar.ForegroundColor = ForegroundColor.ToUiColor();
-                appWindow.TitleBar.InactiveBackgroundColor = CustomUiColor.Transparent;// InactiveBackgroundColor.ToUiColor();
+                appWindow.TitleBar.InactiveBackgroundColor = UiColorConverter.Transparent;// InactiveBackgroundColor.ToUiColor();
                 appWindow.TitleBar.InactiveForegroundColor = InactiveForegroundColor.ToUiColor();
 
-                appWindow.TitleBar.ButtonBackgroundColor = CustomUiColor.Transparent;// BackgroundColor.ToUiColor();
+                appWindow.TitleBar.ButtonBackgroundColor = UiColorConverter.Transparent;// BackgroundColor.ToUiColor();
                 appWindow.TitleBar.ButtonForegroundColor = ForegroundColor.ToUiColor();
-                appWindow.TitleBar.ButtonInactiveBackgroundColor = CustomUiColor.Transparent;// InactiveBackgroundColor.ToUiColor();
+                appWindow.TitleBar.ButtonInactiveBackgroundColor = UiColorConverter.Transparent;// InactiveBackgroundColor.ToUiColor();
                 appWindow.TitleBar.ButtonInactiveForegroundColor = InactiveForegroundColor.ToUiColor();
 
                 appWindow.TitleBar.ButtonHoverBackgroundColor = HoverBackgroundColor.ToUiColor();
                 appWindow.TitleBar.ButtonHoverForegroundColor = HoverForegroundColor.ToUiColor();
-
-
-            }
-            UpdateLayout();
-
         }
-
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
@@ -117,17 +182,14 @@ namespace PlayerUI.View
             WindowId winid = Win32Interop.GetWindowIdFromWindow(intptr.Handle);
             appWindow = AppWindow.GetFromWindowId(winid);
             appWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;
-            WindowTheme_ThemeChanged(AppStatics.IsDark);
+            ApplyTitlebarColor(appWindow);
 
             appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
 
-            appWindow.TitleBar.SetDragRectangles(new[] {
-                new Windows.Graphics.RectInt32(0,0,
-                    (int)(0 ),
-                    (int)(0) )});
-
-
-
+            appWindow.TitleBar.SetDragRectangles(new[]
+            {
+                new Windows.Graphics.RectInt32(0,0,0,0)
+            });
         }
 
         private static void SetDarkMode(Window window, bool isDark)
@@ -149,7 +211,7 @@ namespace PlayerUI.View
     }
 
 
-    public static class CustomUiColor
+    public static class UiColorConverter
     {
         public static Windows.UI.Color ToUiColor(this System.Drawing.Color color)
         {
@@ -166,7 +228,6 @@ namespace PlayerUI.View
 
     internal static class Dwm
     {
-
         [DllImport("dwmapi.dll")]
         internal static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
 

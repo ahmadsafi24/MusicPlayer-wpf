@@ -37,12 +37,11 @@ namespace PlayerUI_WinUI3
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        public static IntPtr Hwnd { get; set; }
         private readonly PlayerLibrary.Player player = new();
 
+        private bool isslidermouseover;
         public MainWindow()
         {
-            Hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             InitializeComponent();
             player.PlaybackSession.TimelineController.TimePositionChanged += TimelineController_TimePositionChanged;
             player.PlaybackSession.OnMessageLogged += PlaybackSession_OnMessageLogged;
@@ -60,6 +59,7 @@ namespace PlayerUI_WinUI3
                         break;
                     case PlayerLibrary.PlaybackState.Opened:
                         smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
+                        slidertime.Maximum = player.PlaybackSession.TimelineController.Total.TotalSeconds;
                         break;
                     case PlayerLibrary.PlaybackState.Paused:
                         smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
@@ -137,26 +137,8 @@ namespace PlayerUI_WinUI3
 
 
 
-            Helper.DarkUi.DwmApi.ToggleImmersiveDarkMode(Hwnd, true);
-            Helper.DarkUi.MicaHelper.ToggleMica(Hwnd, true);
 
-            AppWindow appWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(Hwnd));
 
-            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-            /*OverlappedPresenter overlappedPresenter = null;
-            if (appWindow.Presenter.Kind == AppWindowPresenterKind.Overlapped)
-            {
-                overlappedPresenter = appWindow.Presenter.As<OverlappedPresenter>();
-                overlappedPresenter.IsAlwaysOnTop = true;
-            }
-            appWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;
-            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-                        appWindow.TitleBar.SetDragRectangles(new[] {
-                new Windows.Graphics.RectInt32(0,0,
-                    (int)(0 ),
-                    (int)(0) )});
-             
-             */
         }
 
         private void Smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -192,15 +174,21 @@ namespace PlayerUI_WinUI3
         {
             DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
             {
-                slidertime.Value = timeSpan.TotalSeconds;
-                Title = timeSpan.ToString();
+                if (isslidermouseover == false)
+                {
+                    slidertime.Value = timeSpan.TotalSeconds;
+                    Title = timeSpan.ToString();
 
+                }
             });
         }
 
         private void slidertime_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            player.PlaybackSession.TimelineController.Seek(TimeSpan.FromSeconds(e.NewValue));
+            if (isslidermouseover)
+            {
+                player.PlaybackSession.TimelineController.Seek(TimeSpan.FromSeconds(e.NewValue));
+            }
         }
 
 
@@ -214,11 +202,30 @@ namespace PlayerUI_WinUI3
         public static async Task ShowMessageAsync(string message)
         {
             MessageDialog dialog = new(message);
-            WinRT.Interop.InitializeWithWindow.Initialize(dialog, Hwnd);
+            WinRT.Interop.InitializeWithWindow.Initialize(dialog, WindowHelper.Hwnd);
             await dialog.ShowAsync();
 
         }
 
+        private void volumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            var vc = new PlayerLibrary.Converter.VolumeCoverter();
+            player.PlaybackSession.VolumeController.Volume = (float)vc.ConvertBack(e.NewValue, null, null, null);
+        }
+
+        private void slidertime_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            Pointer ptr = e.Pointer;
+            if (ptr.IsInContact)
+            {
+                isslidermouseover = true;
+                player.PlaybackSession.TimelineController.Seek(TimeSpan.FromSeconds(slidertime.Value));
+            }
+            else
+            {
+                isslidermouseover = false;
+            }
+        }
     }
 
     public static class Config

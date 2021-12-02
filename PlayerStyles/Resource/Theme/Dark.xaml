@@ -30,7 +30,7 @@
     <Color x:Key="Color.Border.Pressed">#B08E49</Color>
     <Color x:Key="Color.Foreground.Pressed">#B08E49</Color>
 
-    <SolidColorBrush x:Key="Windows.Background" Color="#FF000000"/>
+    <SolidColorBrush x:Key="Windows.Background" Color="#FF191919"/>
     <!--#endregion-->
     
     <SolidColorBrush x:Key="SolidLight1" Color="{DynamicResource Light1}"/>
@@ -188,8 +188,8 @@
     <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Background" Color="{DynamicResource Light3}"/>
     <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Border" Color="{DynamicResource Color.Main}"/>
     <SolidColorBrush x:Key="ComboBoxItemContainer.Background" Color="{DynamicResource Light1}"/>
-    <SolidColorBrush x:Key="UserControl.DefaultBackground" Color="{DynamicResource Light4}"/>
-    <SolidColorBrush x:Key="UserControl.DefaultBorder" Color="{DynamicResource Light9}"/>
+    <SolidColorBrush x:Key="UserControl.DefaultBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="UserControl.DefaultBorder" Color="{DynamicResource Light3}"/>
 
     
     <SolidColorBrush x:Key="AppWindow.Active.Background" Color="#592F2F2F" />

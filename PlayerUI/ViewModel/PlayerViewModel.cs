@@ -61,7 +61,6 @@
                 case PlaybackState.Opened:
                     NotifyPropertyChanged(nameof(TagFile));
                     NotifyPropertyChanged(nameof(CoreCurrentFileInfo));
-                    PlaybackSession.Play();
                     return;
                 case PlaybackState.Paused:
                     Taskbar.SetTaskbarState(ProgressState.Paused);

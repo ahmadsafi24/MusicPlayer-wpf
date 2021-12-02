@@ -3,35 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
-        xmlns:ABI="clr-namespace:ABI.Microsoft.UI.Xaml.Controls;assembly=Microsoft.WinUI"
         mc:Ignorable="d" 
         Title="MainWindow" Width="800" Height="480"
-        d:Background="{DynamicResource Windows.Background}"
-        Background="Transparent"
-        d:Content="{StaticResource MainPage}"
-        >
-    
-        <!---->
-    <WindowChrome.WindowChrome>
-        <WindowChrome x:Name="winchrome"
-                CaptionHeight="20"
-                ResizeBorderThickness="5"
-                CornerRadius="5"
-                GlassFrameThickness="-1"
-                UseAeroCaptionButtons="True"
-                NonClientFrameEdges="Right"/>
-    </WindowChrome.WindowChrome>
-
-    <!---->
-            
-    
+        Background="{DynamicResource Windows.Background}"
+        d:Content="{StaticResource MainPage}">
     <Window.Style>
         <Style TargetType="Window">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Window">
-                        <Border Background="{TemplateBinding Background}">  <!--  -->
+                        <Border Background="{TemplateBinding Background}">
                             <ContentPresenter x:Name="ContentPresenter" />
                         </Border>
                         <ControlTemplate.Triggers>

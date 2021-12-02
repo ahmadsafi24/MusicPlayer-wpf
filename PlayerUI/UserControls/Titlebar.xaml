@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel" xmlns:UserControls="clr-namespace:PlayerUI.UserControls"
+             xmlns:ViewModel="clr-namespace:PlayerUI.ViewModel" xmlns:UserControls="clr-namespace:PlayerUI.UserControls" d:DataContext="{d:DesignInstance Type=UserControls:TitlebarViewModel}"
              mc:Ignorable="d" 
              x:Name="usercontrol" 
-             Height="32" d:DesignWidth="800" d:Foreground="White" >
+             Height="32" d:DesignWidth="800" d:Foreground="White" 
+             Style="{StaticResource UserControlDefaultStyle}">
     <UserControl.Resources>
         <ResourceDictionary>
 

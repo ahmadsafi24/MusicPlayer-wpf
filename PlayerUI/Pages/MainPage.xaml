@@ -13,16 +13,18 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage"
       DataContext="{StaticResource MainView_ViewModel}"
-      d:Background="{DynamicResource MainView.Background}"
+      
       Background="Transparent"
+      d:Background="WhiteSmoke"
       Foreground="{DynamicResource MainView.Foreground}">
+    <!--d:Background="{DynamicResource MainView.Background}"-->
     <Page.Resources>
     </Page.Resources>
     <Page.InputBindings>
         <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding SwitchToMainView}"/>
     </Page.InputBindings>
     <DockPanel LastChildFill="True">
-        <UserControl:Titlebar DockPanel.Dock="Top" Background="{DynamicResource AppWindow.Active.Background}"/>
+        <UserControl:Titlebar DockPanel.Dock="Top" />
         <UserControl:PlayerControl DockPanel.Dock="Bottom" />
         <UserControl:MediaInfoCard DockPanel.Dock="Bottom" ContextMenu="{StaticResource MainContextMenu}"/>
         <Grid DockPanel.Dock="Top" >

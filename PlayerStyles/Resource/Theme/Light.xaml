@@ -15,8 +15,10 @@
     <Color x:Key="Light8">#C4FFFFFF</Color>
     <Color x:Key="Light9">#F4FFFFFF</Color>
     <Color x:Key="Light10">#F6F6F6</Color>
-    
-    <SolidColorBrush x:Key="copy" Color="#FF1E587D"/>
+
+    <Color x:Key="Dark3">#19080808</Color>
+
+    <SolidColorBrush x:Key="copy" Color="#19080808"/>
     <Color x:Key="Color.Main">#FF1C89CE</Color>
     <Color x:Key="Color.Background.Static">#FF1C89CE</Color>
     <Color x:Key="Color.Border.Static">#FF1C89CE</Color>
@@ -188,8 +190,8 @@
     <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Background" Color="{DynamicResource Light3}"/>
     <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Border" Color="{DynamicResource Color.Main}"/>
     <SolidColorBrush x:Key="ComboBoxItemContainer.Background" Color="{DynamicResource Light1}"/>
-    <SolidColorBrush x:Key="UserControl.DefaultBackground" Color="{DynamicResource Light4}"/>
-    <SolidColorBrush x:Key="UserControl.DefaultBorder" Color="{DynamicResource Light9}"/>
+    <SolidColorBrush x:Key="UserControl.DefaultBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="UserControl.DefaultBorder" Color="{DynamicResource Dark3}"/>
 
 
     <SolidColorBrush x:Key="AppWindow.Active.Background" Color="#59FFFFFF" />

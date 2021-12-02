@@ -60,10 +60,7 @@ namespace PlayerLibrary.Core
 
         public void Seek(TimeSpan time)
         {
-            if (time < TimeSpan.Zero || time > Total || time == Current)
-            { return; }
-
-            PlaybackSession.audioPlayer.Reader.CurrentTime = time;
+            CoreSeek(time);
             Task.Run(async () => await RaiseCurrentTime(Current));
             Log.WriteLine($"Seeking (async) to {time.ToString("mm\\:ss")}");
         }
@@ -100,6 +97,18 @@ namespace PlayerLibrary.Core
         {
             await Task.Run(() => TimePositionChanged?.Invoke(timespan));
 
+        }
+
+        private void CoreSeek(TimeSpan time)
+        {
+            if (time < TimeSpan.Zero || time > Total || time == Current)
+            { return; }
+
+            PlaybackSession.audioPlayer.Reader.CurrentTime = time;
+        }
+        public void SeekSilentEvent(TimeSpan time)
+        {
+            CoreSeek(time);
         }
     }
 }
